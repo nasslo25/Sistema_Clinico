@@ -140,6 +140,18 @@
         window.firebaseAuth = auth;
         window.firebaseDb = db;
         window.firebaseAppId = appId;
+
+        // Exportar de forma explícita las funciones de Firebase al objeto global de window para darles visibilidad
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.getDoc = getDoc;
+        window.collection = collection;
+        window.onSnapshot = onSnapshot;
+        window.query = query;
+        window.addDoc = addDoc;
+        window.updateDoc = updateDoc;
+        window.deleteDoc = deleteDoc;
+        window.signInAnonymously = signInAnonymously;
     </script>
 </head>
 <body class="min-h-screen relative overflow-x-hidden">
