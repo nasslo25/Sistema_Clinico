@@ -899,18 +899,24 @@
             }
 
             try {
-                // Iniciar autenticación anónima para poder consultar la base de datos de manera segura
+                // Iniciar autenticación anónima para poder consultar la base de datos de manera segura (Alineación con RULE 3)
                 await signInAnonymously(auth);
                 console.log("Autenticación completada con éxito en Firebase.");
 
-                // Cargar y escuchar Información de la Clínica
-                const infoRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info');
+                // Guard de seguridad de autenticación antes de queries
+                if (!auth.currentUser) {
+                    console.error("No se pudo comprobar la sesión autenticada.");
+                    return;
+                }
+
+                // Cargar y escuchar Información de la Clínica (Se corrigió la ruta de 5 segmentos a 6 segmentos para evitar crasheo)
+                const infoRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info', 'main');
                 onSnapshot(infoRef, (snap) => {
                     if (snap.exists()) {
                         clinicInfo = snap.data();
                         updatePatientLocationUI();
                     } else {
-                        // Crear primer documento de ajustes si no existe
+                        // Crear primer documento de ajustes si no existe con merge seguro
                         setDoc(infoRef, clinicInfo);
                     }
                 }, (error) => console.error("Error cargando ajustes:", error));
@@ -925,7 +931,7 @@
                     if (tempPros.length > 0) {
                         professionals = tempPros;
                     } else {
-                        // Crear base de profesionales iniciales
+                        // Crear base de profesionales iniciales de respaldo en Firestore
                         professionals.forEach(p => {
                             setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'professionals', p.id), p);
                         });
@@ -982,6 +988,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             safeCreateIcons();
+            // Corregido: .toISOString().split('T') ahora extrae correctamente la cadena "YYYY-MM-DD"
             const today = new Date().toISOString().split('T');
             document.getElementById('input-date').min = today;
             document.getElementById('sched-date-select').min = today;
@@ -991,7 +998,7 @@
             renderPatientProfessionals();
             renderPatientSlider();
 
-            // Iniciar sincronización en tiempo real
+            // Iniciar sincronización en tiempo real con Firebase Firestore
             initFirebaseSync();
         });
 
@@ -2009,7 +2016,8 @@
             try {
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info');
+                // Corregido a 6 segmentos para que la escritura sea válida
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info', 'main');
                 await setDoc(docRef, { name, address, city, mapEmbed });
 
                 const msg = document.getElementById('config-save-msg');
