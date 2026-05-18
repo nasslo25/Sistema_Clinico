@@ -111,31 +111,31 @@
         }
     </style>
 
-    <!-- Firebase SDK v11 (módulos ES integrados de forma estructurada) -->
+    <!-- Firebase SDK v11 (ES Modules oficiales) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
-        // Variables de entorno globales del sandbox de ejecución
+        // APP ID para el sandboxing de base de datos
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'clinica-cony-default';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' 
-            ? JSON.parse(__firebase_config) 
-            : {
-                apiKey: "",
-                authDomain: "clinica-cony-default.firebaseapp.com",
-                projectId: "clinica-cony-default",
-                storageBucket: "clinica-cony-default.appspot.com",
-                messagingSenderId: "",
-                appId: ""
-              };
+        
+        // Credenciales oficiales de tu Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBWpFoKOmndIza-cUYDrd0Bq3apkjOhIkk",
+            authDomain: "sistema-clinico-292d9.firebaseapp.com",
+            projectId: "sistema-clinico-292d9",
+            storageBucket: "sistema-clinico-292d9.firebasestorage.app",
+            messagingSenderId: "415063868087",
+            appId: "1:415063868087:web:09a1c47a28a34b10810332"
+        };
 
         // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Guardar instancias globales para utilizarlas en el resto del script estructurado
+        // Exportar instancias al entorno global de navegación
         window.firebaseApp = app;
         window.firebaseAuth = auth;
         window.firebaseDb = db;
@@ -1144,7 +1144,7 @@
                 tabAdmin.className = activeClass;
                 viewAdmin.classList.remove('hidden');
                 bannerAdmin.classList.remove('hidden');
-                locationSection.add('hidden');
+                locationSection.classList.add('hidden');
                 
                 if(slideIntervalId) clearInterval(slideIntervalId);
                 checkLoginState();
@@ -1202,7 +1202,7 @@
             
             let proHoursForDay = standardHours;
             if (schedules[selectedPsychologistId] && schedules[selectedPsychologistId][selectedDate]) {
-                proHoursForDay = schedules[selectedPsychologistId][selectedDate];
+                proHoursForDay = schedules[selectedPsychologistId][selectedDate].hours || standardHours;
             }
             const bookedSlots = appointments
                 .filter(app => app.date === selectedDate && app.psychologistId === selectedPsychologistId && (!app.status || app.status === 'active'))
@@ -1299,7 +1299,7 @@
             };
 
             try {
-                // Guardar en Firebase Firestore
+                // Guardar en Firebase Firestore de forma asíncrona
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', docId);
