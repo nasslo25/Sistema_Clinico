@@ -89,7 +89,7 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(244, 63, 94, 0.1);
-            color: #475569;
+            color: #1e293b;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
@@ -152,6 +152,9 @@
         window.updateDoc = updateDoc;
         window.deleteDoc = deleteDoc;
         window.signInAnonymously = signInAnonymously;
+
+        // Disparar la sincronización de Firebase una vez que la carga del SDK haya completado de forma global
+        window.dispatchEvent(new CustomEvent('firebase-ready'));
     </script>
 </head>
 <body class="min-h-screen relative overflow-x-hidden">
@@ -194,7 +197,7 @@
                             <i data-lucide="sparkles" class="w-7 h-7 md:w-8 md:h-8"></i>
                         </div>
                         <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">Tu Bienestar Comienza Aquí</h1>
-                        <p class="text-sm md:text-base text-slate-500 max-w-lg mx-auto">Selecciona a tu especialista y encuentra el momento perfecto para ti.</p>
+                        <p class="text-sm md:text-base text-slate-700 max-w-lg mx-auto">Selecciona a tu especialista y encuentra el momento perfecto para ti.</p>
                     </div>
                 </div>
             </div>
@@ -207,7 +210,7 @@
                             <i data-lucide="calendar-x" class="w-7 h-7 md:w-8 md:h-8"></i>
                         </div>
                         <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">Gestionar Reserva</h1>
-                        <p class="text-sm md:text-base text-slate-500 max-w-lg mx-auto">Ingresa tu RUT para buscar, anular o reprogramar tus horas previamente agendadas.</p>
+                        <p class="text-sm md:text-base text-slate-700 max-w-lg mx-auto">Ingresa tu RUT para buscar, anular o reprogramar tus horas previamente agendadas.</p>
                     </div>
                 </div>
             </div>
@@ -220,7 +223,7 @@
                             <i data-lucide="shield-check" class="w-7 h-7 md:w-8 md:h-8"></i>
                         </div>
                         <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">Panel Administrativo</h1>
-                        <p class="text-sm md:text-base text-slate-500 max-w-lg mx-auto">Acceso exclusivo para el personal clínico del centro.</p>
+                        <p class="text-sm md:text-base text-slate-700 max-w-lg mx-auto">Acceso exclusivo para el personal clínico del centro.</p>
                     </div>
                 </div>
             </div>
@@ -249,10 +252,10 @@
                             <i data-lucide="check" class="w-10 h-10 md:w-12 md:h-12 text-green-500"></i>
                         </div>
                         <h3 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2 md:mb-3">¡Reserva Confirmada!</h3>
-                        <p class="text-slate-600 text-base md:text-lg mb-2 max-w-md mx-auto">
+                        <p class="text-slate-700 text-base md:text-lg mb-2 max-w-md mx-auto">
                             Tu sesión con <span id="success-psy" class="font-semibold text-brand-600"></span> ha sido agendada para el <br>
                             <span id="success-date" class="font-semibold text-slate-800"></span> a las <span id="success-time" class="font-semibold text-slate-800"></span> hrs.<br>
-                            <span class="text-sm mt-2 block text-slate-500">Detalles: <strong id="success-method" class="text-slate-700"></strong></span>
+                            <span class="text-sm mt-2 block text-slate-700">Detalles: <strong id="success-method" class="text-slate-800"></strong></span>
                         </p>
 
                         <!-- Contenedor para info extra (Bancaria o Fonasa) -->
@@ -287,16 +290,16 @@
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 bg-slate-50/50 p-5 md:p-6 rounded-2xl border border-slate-100">
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-600 mb-2 ml-1">Selecciona la fecha</label>
+                                    <label class="block text-sm font-medium text-slate-800 mb-2 ml-1">Selecciona la fecha</label>
                                     <input type="date" id="input-date" onchange="handleDateChange(event)" class="input-soft bg-white" />
                                 </div>
                                 
                                 <div id="time-container" class="opacity-30 pointer-events-none transition-opacity duration-300">
-                                    <label class="block text-sm font-medium text-slate-600 mb-2 ml-1">Horarios Disponibles</label>
+                                    <label class="block text-sm font-medium text-slate-800 mb-2 ml-1">Horarios Disponibles</label>
                                     <div id="time-slots-container" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 gap-2 md:gap-3">
                                         <!-- JS: Horas -->
                                     </div>
-                                    <div id="no-time-message" class="hidden text-sm text-amber-600 bg-amber-50 p-4 rounded-xl border border-amber-100 flex items-center gap-2">
+                                    <div id="no-time-message" class="hidden text-sm text-amber-850 bg-amber-50 p-4 rounded-xl border border-amber-100 flex items-center gap-2">
                                         <i data-lucide="info" class="w-4 h-4 shrink-0"></i> No hay horas disponibles este día.
                                     </div>
                                 </div>
@@ -313,36 +316,36 @@
                             <div class="bg-white p-5 md:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4 md:space-y-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div>
-                                        <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">RUT</label>
+                                        <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">RUT</label>
                                         <input type="text" id="input-rut" placeholder="Ej: 12.345.678-9" oninput="formatRut(this)" required class="input-soft" />
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Nombre Completo</label>
+                                        <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Nombre Completo</label>
                                         <input type="text" id="input-name" placeholder="Tu Nombre" required class="input-soft" />
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div>
-                                        <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Teléfono</label>
+                                        <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Teléfono</label>
                                         <input type="tel" id="input-phone" value="+56 9 " oninput="formatPhone(this)" required class="input-soft" />
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Correo Electrónico</label>
+                                        <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Correo Electrónico</label>
                                         <input type="email" id="input-email" placeholder="usuario@correo.com" required class="input-soft" />
                                     </div>
                                 </div>
 
                                 <!-- Modalidad de Pago -->
                                 <div class="border-t border-slate-100 pt-4 mt-2">
-                                    <label class="block text-xs font-medium text-slate-500 mb-3 ml-1 uppercase tracking-wide">Modalidad de Pago</label>
+                                    <label class="block text-xs font-medium text-slate-700 mb-3 ml-1 uppercase tracking-wide">Modalidad de Pago</label>
                                     <div class="flex gap-6 custom-radio pl-1">
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                             <input type="radio" name="payment_method" value="Fonasa" onchange="toggleFonasaMessage()" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                            <span class="text-sm font-medium text-slate-700 group-hover:text-brand-600 transition-colors">Bono Fonasa</span>
+                                            <span class="text-sm font-medium text-slate-800 group-hover:text-brand-600 transition-colors">Bono Fonasa</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                             <input type="radio" name="payment_method" value="Particular" onchange="toggleFonasaMessage()" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                            <span class="text-sm font-medium text-slate-700 group-hover:text-brand-600 transition-colors">Particular</span>
+                                            <span class="text-sm font-medium text-slate-800 group-hover:text-brand-600 transition-colors">Particular</span>
                                         </label>
                                     </div>
                                     
@@ -363,15 +366,15 @@
 
                                 <!-- Tipo de Atención -->
                                 <div class="border-t border-slate-100 pt-4 mt-2">
-                                    <label class="block text-xs font-medium text-slate-500 mb-3 ml-1 uppercase tracking-wide">Tipo de Atención</label>
+                                    <label class="block text-xs font-medium text-slate-700 mb-3 ml-1 uppercase tracking-wide">Tipo de Atención</label>
                                     <div class="flex gap-6 custom-radio pl-1">
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                             <input type="radio" name="attention_type" value="Presencial" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                            <span class="text-sm font-medium text-slate-700 group-hover:text-brand-600 transition-colors">Presencial</span>
+                                            <span class="text-sm font-medium text-slate-800 group-hover:text-brand-600 transition-colors">Presencial</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                             <input type="radio" name="attention_type" value="Online" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                            <span class="text-sm font-medium text-slate-700 group-hover:text-brand-600 transition-colors">Online (Videollamada)</span>
+                                            <span class="text-sm font-medium text-slate-800 group-hover:text-brand-600 transition-colors">Online (Videollamada)</span>
                                         </label>
                                     </div>
                                 </div>
@@ -392,7 +395,7 @@
                             <i data-lucide="check" class="w-10 h-10 md:w-12 md:h-12 text-green-500"></i>
                         </div>
                         <h3 id="cancel-success-title" class="text-2xl md:text-3xl font-bold text-slate-800 mb-2 md:mb-3">Operación Exitosa</h3>
-                        <p id="cancel-success-text" class="text-slate-600 text-base md:text-lg mb-6 md:mb-8 max-w-md mx-auto">
+                        <p id="cancel-success-text" class="text-slate-800 text-base md:text-lg mb-6 md:mb-8 max-w-md mx-auto">
                             Tu reserva ha sido gestionada.
                         </p>
                         <button onclick="resetCancelFlow()" class="px-6 py-2.5 md:px-8 md:py-3 btn-brand rounded-xl font-medium w-full sm:w-auto">
@@ -403,7 +406,7 @@
                     <!-- Formulario Búsqueda -->
                     <div id="cancel-form">
                         <form onsubmit="searchAppointmentsToCancel(event)" class="mb-8">
-                            <label class="block text-xs font-medium text-slate-500 mb-2 ml-1 uppercase tracking-wide">Busca tus reservas ingresando tu RUT</label>
+                            <label class="block text-xs font-medium text-slate-700 mb-2 ml-1 uppercase tracking-wide">Busca tus reservas ingresando tu RUT</label>
                             <div class="flex flex-col sm:flex-row gap-4">
                                 <input type="text" id="cancel-rut" placeholder="Ej: 12.345.678-9" oninput="formatRut(this)" required class="input-soft flex-1" />
                                 <button type="submit" class="btn-brand px-6 py-3 rounded-xl font-semibold shrink-0">Buscar Reservas</button>
@@ -411,7 +414,7 @@
                         </form>
 
                         <div id="cancel-empty" class="hidden text-center py-8 bg-slate-50 rounded-2xl border border-slate-100">
-                            <p class="text-slate-500 font-medium">No se encontraron reservas activas vinculadas a este RUT.</p>
+                            <p class="text-slate-700 font-medium">No se encontraron reservas activas vinculadas a este RUT.</p>
                         </div>
 
                         <div id="cancel-results" class="hidden">
@@ -421,15 +424,15 @@
                             </div>
                             
                             <div id="cancel-confirm-section" class="hidden border-t border-slate-100 pt-6">
-                                <label class="block text-xs font-medium text-slate-500 mb-3 ml-1 uppercase tracking-wide">¿Qué deseas hacer?</label>
+                                <label class="block text-xs font-medium text-slate-700 mb-3 ml-1 uppercase tracking-wide">¿Qué deseas hacer?</label>
                                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 custom-radio pl-1 mb-6">
                                     <label class="flex items-center gap-2 cursor-pointer group">
                                         <input type="radio" name="cancel_action" value="cancel" checked onchange="toggleCancelAction()" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                        <span class="text-sm font-medium text-slate-700">Anular definitivamente</span>
+                                        <span class="text-sm font-medium text-slate-800">Anular definitivamente</span>
                                     </label>
                                     <label class="flex items-center gap-2 cursor-pointer group">
                                         <input type="radio" name="cancel_action" value="reschedule" onchange="toggleCancelAction()" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                        <span class="text-sm font-medium text-slate-700">Reprogramar (Cambiar fecha/hora)</span>
+                                        <span class="text-sm font-medium text-slate-800">Reprogramar (Cambiar fecha/hora)</span>
                                     </label>
                                 </div>
 
@@ -437,18 +440,18 @@
                                 <div id="cancel-reschedule-section" class="hidden bg-slate-50 p-5 rounded-2xl border border-slate-200 mb-6">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-600 mb-2 ml-1">Nueva fecha</label>
+                                            <label class="block text-xs font-medium text-slate-800 mb-2 ml-1">Nueva fecha</label>
                                             <input type="date" id="cancel-input-date" onchange="handleCancelDateChange(event)" class="input-soft bg-white text-sm" />
                                         </div>
                                         <div id="cancel-time-container" class="opacity-30 pointer-events-none transition-opacity duration-300">
-                                            <label class="block text-xs font-medium text-slate-600 mb-2 ml-1">Nuevos horarios disponibles</label>
+                                            <label class="block text-xs font-medium text-slate-800 mb-2 ml-1">Nuevos horarios disponibles</label>
                                             <div id="cancel-time-slots-container" class="grid grid-cols-3 gap-2"></div>
-                                            <div id="cancel-no-time-message" class="hidden text-xs text-amber-600 bg-amber-50 p-2 rounded-lg border border-amber-100">Sin horas.</div>
+                                            <div id="cancel-no-time-message" class="hidden text-xs text-amber-850 bg-amber-50 p-2 rounded-lg border border-amber-100">Sin horas.</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <label class="block text-xs font-medium text-slate-500 mb-2 ml-1 uppercase tracking-wide">Motivo (Requerido)</label>
+                                <label class="block text-xs font-medium text-slate-700 mb-2 ml-1 uppercase tracking-wide">Motivo (Requerido)</label>
                                 <textarea id="cancel-reason" required placeholder="Por favor indícanos el motivo de la anulación o cambio..." class="input-soft resize-none h-20 mb-4 text-sm"></textarea>
                                 
                                 <button onclick="submitCancellation(event)" class="btn-brand w-full py-3.5 md:py-4 rounded-xl font-semibold text-base md:text-lg flex items-center justify-center gap-2">
@@ -477,7 +480,7 @@
                                 <button type="submit" class="btn-brand w-full py-3 rounded-xl font-semibold">
                                     Ingresar al Sistema
                                 </button>
-                                <p class="text-[11px] text-center text-slate-400 mt-4">Acceso exclusivo para administradores y profesionales</p>
+                                <p class="text-[11px] text-center text-slate-600 mt-4">Acceso exclusivo para administradores y profesionales</p>
                             </form>
                         </div>
                     </div>
@@ -493,18 +496,18 @@
                                 </div>
                                 <div>
                                     <h2 class="text-lg md:text-xl font-bold text-slate-800" id="dash-user-name">Centro Clínico</h2>
-                                    <p class="text-xs text-slate-500" id="dash-user-role">Gestión general del sistema</p>
+                                    <p class="text-xs text-slate-700" id="dash-user-role">Gestión general del sistema</p>
                                 </div>
                             </div>
                             
                             <!-- Navegación interna Admin -->
                             <div class="flex flex-wrap justify-center w-full lg:w-auto bg-slate-50 rounded-xl p-1 border border-slate-200 shadow-inner gap-1">
                                 <button onclick="switchAdminTab('reservas')" id="tab-admin-reservas" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors bg-white text-brand-600 shadow-sm border border-slate-200 flex-1 text-center">Citas</button>
-                                <button onclick="switchAdminTab('profesionales')" id="tab-admin-profesionales" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center">Profesionales</button>
-                                <button onclick="switchAdminTab('horarios')" id="tab-admin-horarios" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center">Horarios</button>
-                                <button onclick="switchAdminTab('banners')" id="tab-admin-banners" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center">Banners</button>
-                                <button onclick="switchAdminTab('ficha')" id="tab-admin-ficha" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center">Fichas Clínicas</button>
-                                <button onclick="switchAdminTab('ajustes')" id="tab-admin-ajustes" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center">Ajustes</button>
+                                <button onclick="switchAdminTab('profesionales')" id="tab-admin-profesionales" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-700 hover:text-slate-800 border border-transparent flex-1 text-center">Profesionales</button>
+                                <button onclick="switchAdminTab('horarios')" id="tab-admin-horarios" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-700 hover:text-slate-800 border border-transparent flex-1 text-center">Horarios</button>
+                                <button onclick="switchAdminTab('banners')" id="tab-admin-banners" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-700 hover:text-slate-800 border border-transparent flex-1 text-center">Banners</button>
+                                <button onclick="switchAdminTab('ficha')" id="tab-admin-ficha" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-700 hover:text-slate-800 border border-transparent flex-1 text-center">Fichas Clínicas</button>
+                                <button onclick="switchAdminTab('ajustes')" id="tab-admin-ajustes" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-700 hover:text-slate-800 border border-transparent flex-1 text-center">Ajustes</button>
                             </div>
                             <button onclick="logout()" class="p-2 text-slate-400 hover:text-red-500 transition-colors hidden lg:block" title="Cerrar Sesión">
                                 <i data-lucide="log-out" class="w-5 h-5"></i>
@@ -528,13 +531,13 @@
                                 <div class="w-14 h-14 md:w-16 md:h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 border border-slate-100 text-slate-400">
                                     <i data-lucide="inbox" class="w-6 h-6 md:w-8 h-8"></i>
                                 </div>
-                                <p class="text-slate-500 text-sm">No hay actividad en la agenda.</p>
+                                <p class="text-slate-700 text-sm">No hay actividad en la agenda.</p>
                             </div>
 
                             <div id="admin-table-container" class="overflow-x-auto rounded-xl md:rounded-2xl border border-slate-200 hidden bg-white">
                                 <table class="w-full text-left border-collapse whitespace-nowrap">
                                     <thead>
-                                        <tr class="bg-slate-50 text-slate-500 text-[10px] md:text-xs uppercase tracking-wider border-b border-slate-200">
+                                        <tr class="bg-slate-50 text-slate-700 text-[10px] md:text-xs uppercase tracking-wider border-b border-slate-200">
                                             <th class="p-3 md:p-4 font-semibold">Fecha y Hora</th>
                                             <th class="p-3 md:p-4 font-semibold">Profesional</th>
                                             <th class="p-3 md:p-4 font-semibold">Paciente / Detalles</th>
@@ -558,36 +561,36 @@
                                     </h4>
                                     <div class="space-y-4">
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Nombre</label>
+                                            <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Nombre</label>
                                             <input type="text" id="new-pro-name" placeholder="Ej. Ps. Ana" class="input-soft py-2 text-sm">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Especialidad</label>
+                                            <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Especialidad</label>
                                             <input type="text" id="new-pro-spec" placeholder="Ej. Psicología Adultos" class="input-soft py-2 text-sm">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Cód. Fonasa</label>
+                                            <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Cód. Fonasa</label>
                                             <input type="text" id="new-pro-code" placeholder="Ej. 092001 (Opcional)" class="input-soft py-2 text-sm">
                                         </div>
                                         <div class="border-t border-slate-100 pt-3 mt-2">
                                             <label class="block text-xs font-medium text-brand-600 mb-2 ml-1 uppercase tracking-wide"><i data-lucide="key" class="w-3 h-3 inline"></i> Credenciales de Acceso</label>
                                             <div class="grid grid-cols-2 gap-3">
                                                 <div>
-                                                    <label class="block text-[10px] font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">RUT Acceso</label>
+                                                    <label class="block text-[10px] font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">RUT Acceso</label>
                                                     <input type="text" id="new-pro-rut" oninput="formatRut(this)" placeholder="Ej: 11.222.333-4" class="input-soft py-2 text-sm" required>
                                                 </div>
                                                 <div>
-                                                    <label class="block text-[10px] font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Contraseña</label>
+                                                    <label class="block text-[10px] font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Contraseña</label>
                                                     <input type="password" id="new-pro-pass" placeholder="Clave asignada" class="input-soft py-2 text-sm" required>
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Biografía / Reseña</label>
+                                            <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Biografía / Reseña</label>
                                             <textarea id="new-pro-bio" placeholder="Breve reseña que verá el paciente..." class="input-soft py-2 text-sm resize-none h-16"></textarea>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Datos Bancarios</label>
+                                            <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Datos Bancarios</label>
                                             <textarea id="new-pro-bank" placeholder="Para consultas particulares..." class="input-soft py-2 text-sm resize-none h-20"></textarea>
                                         </div>
                                         <div class="flex gap-2 pt-2">
@@ -618,23 +621,23 @@
                         <div id="admin-view-horarios" class="hidden">
                             <div class="max-w-3xl mx-auto">
                                 <h3 class="text-base md:text-lg font-bold text-slate-800 mb-1 md:mb-2">Disponibilidad Horaria</h3>
-                                <p class="text-xs md:text-sm text-slate-500 mb-6 md:mb-8">Administra los bloques de tiempo en los que atenderá cada especialista.</p>
+                                <p class="text-xs md:text-sm text-slate-700 mb-6 md:mb-8">Administra los bloques de tiempo en los que atenderá cada especialista.</p>
                                 
                                 <div class="bg-white p-5 md:p-8 rounded-2xl md:rounded-3xl border border-slate-200 shadow-sm space-y-6">
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                                         <div>
-                                            <label class="block text-[10px] md:text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide ml-1">1. Especialista</label>
+                                            <label class="block text-[10px] md:text-xs font-medium text-slate-700 mb-2 uppercase tracking-wide ml-1">1. Especialista</label>
                                             <select id="sched-pro-select" onchange="loadScheduleConfig()" class="input-soft text-sm bg-slate-50">
                                             </select>
                                         </div>
                                         <div>
-                                            <label class="block text-[10px] md:text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide ml-1">2. Fecha a modificar</label>
+                                            <label class="block text-[10px] md:text-xs font-medium text-slate-700 mb-2 uppercase tracking-wide ml-1">2. Fecha a modificar</label>
                                             <input type="date" id="sched-date-select" onchange="loadScheduleConfig()" class="input-soft text-sm bg-slate-50">
                                         </div>
                                     </div>
 
                                     <div id="sched-hours-container" class="opacity-30 pointer-events-none transition-opacity duration-300 pt-5 md:pt-6 border-t border-slate-100">
-                                        <label class="block text-[10px] md:text-xs font-medium text-slate-500 mb-4 uppercase tracking-wide ml-1">3. Selecciona bloques activos</label>
+                                        <label class="block text-[10px] md:text-xs font-medium text-slate-700 mb-4 uppercase tracking-wide ml-1">3. Selecciona bloques activos</label>
                                         <div id="sched-checkboxes" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 md:gap-3">
                                         </div>
                                         
@@ -660,15 +663,15 @@
                                     </h4>
                                     <div class="space-y-4">
                                         <div>
-                                            <label class="block text-xs text-slate-500 mb-1 ml-1">URL Imagen</label>
+                                            <label class="block text-xs text-slate-700 mb-1 ml-1">URL Imagen</label>
                                             <input type="text" id="new-banner-img" placeholder="https://ejemplo.com/imagen.jpg" class="input-soft py-2 text-sm">
                                         </div>
                                         <div>
-                                            <label class="block text-xs text-slate-500 mb-1 ml-1">Título</label>
+                                            <label class="block text-xs text-slate-700 mb-1 ml-1">Título</label>
                                             <input type="text" id="new-banner-title" placeholder="Ej. Bienestar Integral" class="input-soft py-2 text-sm">
                                         </div>
                                         <div>
-                                            <label class="block text-xs text-slate-500 mb-1 ml-1">Texto</label>
+                                            <label class="block text-xs text-slate-700 mb-1 ml-1">Texto</label>
                                             <input type="text" id="new-banner-text" placeholder="Te acompañamos..." class="input-soft py-2 text-sm">
                                         </div>
                                         <button onclick="addBanner()" class="w-full py-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors text-sm font-semibold mt-2">
@@ -678,7 +681,7 @@
                                 </div>
                                 
                                 <div class="lg:col-span-2 space-y-4">
-                                    <p class="text-sm text-slate-500">Banners activos en el Slider:</p>
+                                    <p class="text-sm text-slate-700">Banners activos en el Slider:</p>
                                     <div id="admin-banner-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     </div>
                                 </div>
@@ -693,7 +696,7 @@
                                 <!-- Buscador y Lista de Sesiones -->
                                 <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
                                     <form onsubmit="searchPatientRecords(event)">
-                                        <label class="block text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide ml-1">Buscar por RUT</label>
+                                        <label class="block text-xs font-medium text-slate-700 mb-2 uppercase tracking-wide ml-1">Buscar por RUT</label>
                                         <div class="flex gap-2">
                                             <input type="text" id="search-record-rut" placeholder="Ej: 12.345.678-9" oninput="formatRut(this)" required class="input-soft py-2 text-sm flex-1">
                                             <button type="submit" class="btn-brand px-4 py-2 rounded-xl text-sm font-semibold" title="Buscar"><i data-lucide="search" class="w-4 h-4 mx-auto"></i></button>
@@ -701,13 +704,13 @@
                                     </form>
                                     
                                     <div id="record-list-container" class="mt-6 hidden">
-                                        <h5 class="text-xs font-bold text-slate-600 mb-3 uppercase tracking-wider ml-1">Sesiones Encontradas</h5>
+                                        <h5 class="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wider ml-1">Sesiones Encontradas</h5>
                                         <div id="record-appointments-list" class="space-y-2 max-h-64 overflow-y-auto pr-1">
                                             <!-- JS injected list -->
                                         </div>
                                     </div>
                                     <div id="record-empty-state" class="mt-6 text-center hidden">
-                                        <p class="text-xs text-slate-500 font-medium">No se encontraron sesiones para este RUT.</p>
+                                        <p class="text-xs text-slate-700 font-medium">No se encontraron sesiones para este RUT.</p>
                                     </div>
                                 </div>
                                 
@@ -719,8 +722,8 @@
                                                 <h4 class="text-lg font-bold text-slate-800 flex items-center gap-2">
                                                     <i data-lucide="file-text" class="w-5 h-5 text-brand-500"></i> Informe Clínico
                                                 </h4>
-                                                <p id="record-patient-name" class="text-sm text-slate-600 font-medium mt-1">Nombre Paciente</p>
-                                                <p id="record-session-info" class="text-xs text-slate-500 mt-0.5">Fecha - Profesional</p>
+                                                <p id="record-patient-name" class="text-sm text-slate-800 font-medium mt-1">Nombre Paciente</p>
+                                                <p id="record-session-info" class="text-xs text-slate-700 mt-0.5">Fecha - Profesional</p>
                                             </div>
                                             <div class="flex gap-2">
                                                 <button onclick="printClinicalRecord()" class="p-2.5 bg-slate-50 text-slate-600 border border-slate-200 hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 rounded-lg transition-all" title="Exportar a PDF / Imprimir">
@@ -732,11 +735,11 @@
                                         <div class="space-y-5">
                                             <input type="hidden" id="current-record-id">
                                             <div>
-                                                <label class="block text-xs font-medium text-slate-500 mb-2 ml-1 uppercase tracking-wide">Motivo de Consulta</label>
+                                                <label class="block text-xs font-medium text-slate-700 mb-2 ml-1 uppercase tracking-wide">Motivo de Consulta</label>
                                                 <textarea id="record-reason" placeholder="Describa el motivo por el que asiste el paciente..." class="input-soft resize-y h-24 text-sm leading-relaxed"></textarea>
                                             </div>
                                             <div>
-                                                <label class="block text-xs font-medium text-slate-500 mb-2 ml-1 uppercase tracking-wide">Informe Clínico / Evolución</label>
+                                                <label class="block text-xs font-medium text-slate-700 mb-2 ml-1 uppercase tracking-wide">Informe Clínico / Evolución</label>
                                                 <textarea id="record-report" placeholder="Redacte aquí el informe clínico, observaciones y plan a seguir de la sesión..." class="input-soft resize-y h-48 text-sm leading-relaxed"></textarea>
                                             </div>
                                             <button onclick="saveClinicalRecord()" class="btn-brand w-full py-3.5 rounded-xl font-semibold mt-2 flex justify-center items-center gap-2 text-sm md:text-base">
@@ -768,21 +771,21 @@
                                     </h4>
                                     <div class="space-y-4">
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide ml-1">Nombre del Centro</label>
+                                            <label class="block text-xs font-medium text-slate-700 mb-1 uppercase tracking-wide ml-1">Nombre del Centro</label>
                                             <input type="text" id="config-clinic-name" class="input-soft bg-slate-50">
                                         </div>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
-                                                <label class="block text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide ml-1">Dirección (Calle y N°)</label>
+                                                <label class="block text-xs font-medium text-slate-700 mb-1 uppercase tracking-wide ml-1">Dirección (Calle y N°)</label>
                                                 <input type="text" id="config-clinic-address" class="input-soft bg-slate-50">
                                             </div>
                                             <div>
-                                                <label class="block text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide ml-1">Ciudad / Región</label>
+                                                <label class="block text-xs font-medium text-slate-700 mb-1 uppercase tracking-wide ml-1">Ciudad / Región</label>
                                                 <input type="text" id="config-clinic-city" class="input-soft bg-slate-50">
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide ml-1 flex justify-between">
+                                            <label class="block text-xs font-medium text-slate-700 mb-1 uppercase tracking-wide ml-1 flex justify-between">
                                                 <span>Enlace Iframe de Google Maps (Opcional)</span>
                                             </label>
                                             <input type="text" id="config-clinic-map" class="input-soft bg-slate-50 text-xs" placeholder="URL src del iframe">
@@ -847,7 +850,7 @@
 
     </div>
 
-    <!-- LÓGICA JAVASCRIPT -->
+    <!-- LÓGICA JAVASCRIPT PRINCIPAL -->
     <script>
         // Elementos reactivos conectados a Firebase
         let currentUser = null;
@@ -860,19 +863,25 @@
             mapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3112.9238382995393!2d-72.59161208465451!3d-38.7366304795954!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9614d3e8e25d2c2f%3A0x1d950d5ec42c0eb4!2sAntonio%20Varas%20708%2C%20Temuco%2C%20Araucan%C3%ADa!5e0!3m2!1ses-419!2scl!4v1716492000000!5m2!1ses-419!2scl"
         };
         
-        let professionals = [
+        // Profesionales semilla (De respaldo, solo si la base de datos se encuentra totalmente vacía)
+        const defaultProfessionals = [
             { id: 'pro_1', name: 'Ps. Constanza Beroiza', specialty: 'Terapia Adultos', color: 'rose', code: '0920011', bio: 'Especialista en manejo de ansiedad y depresión.', bankDetails: 'Banco Estado\nCta Rut: 16.843.499-5\nconstanza@clinica.cl', rut: '11.111.111-1', pass: 'demo1' },
             { id: 'pro_2', name: 'Ps. Roberto Gómez', specialty: 'Infantil & Adolescentes', color: 'blue', code: '0920012', bio: 'Enfoque lúdico y acompañamiento parental.', bankDetails: 'Banco Santander\nCta Corriente: 12345678\nroberto@clinica.cl', rut: '22.222.222-2', pass: 'demo2' },
             { id: 'pro_3', name: 'Ps. María Paz', specialty: 'Terapia de Pareja', color: 'purple', code: '0920013', bio: 'Terapia sistémica y resolución de conflictos.', bankDetails: 'Banco BCI\nCta Vista: 98765432\nmariapaz@clinica.cl', rut: '33.333.333-3', pass: 'demo3' }
         ];
 
+        // Se inician vacíos para evitar parpadeos visuales al cargar la página
+        let professionals = [];
         let appointments = [];
 
-        let sliderBanners = [
-            { id: 'slide_1', img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200&auto=format&fit=crop', title: 'Cuidado Mental Integral', text: 'Acompañamiento profesional en cada etapa de tu vida.' },
-            { id: 'slide_2', img: 'https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?q=80&w=1200&auto=format&fit=crop', title: 'Espacios de Confianza', text: 'Un ambiente seguro, privado y empático diseñado para ti.' }
+        // Banners semilla con temática de Clínica Psicológica y alta resolución (Modificados)
+        const defaultBanners = [
+            { id: 'slide_1', img: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop', title: 'Un Espacio Seguro para Ti', text: 'Te ofrecemos un ambiente cálido, privado y de absoluta confianza para iniciar tu proceso.' },
+            { id: 'slide_2', img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200&auto=format&fit=crop', title: 'Acompañamiento Profesional', text: 'Psicólogos calificados comprometidos con tu bienestar emocional y tu crecimiento personal.' },
+            { id: 'slide_3', img: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1200&auto=format&fit=crop', title: 'Encuentra tu Equilibrio Emocional', text: 'Te brindamos herramientas personalizadas para superar la ansiedad, el estrés y conectar contigo mismo.' }
         ];
         
+        let sliderBanners = [];
         let currentSlide = 0;
         let slideIntervalId = null;
 
@@ -915,7 +924,7 @@
                 await signInAnonymously(auth);
                 console.log("Autenticación completada con éxito en Firebase.");
 
-                // Guard de seguridad de autenticación antes de queries
+                // Guard de seguridad de autenticación antes de realizar queries
                 if (!auth.currentUser) {
                     console.error("No se pudo comprobar la sesión autenticada.");
                     return;
@@ -942,14 +951,14 @@
                     });
                     if (tempPros.length > 0) {
                         professionals = tempPros;
+                        renderPatientProfessionals();
+                        if (currentUser && currentUser.role === 'admin') renderAdminProfesionales();
                     } else {
-                        // Crear base de profesionales iniciales de respaldo en Firestore
-                        professionals.forEach(p => {
+                        // Crear base de profesionales iniciales de respaldo en Firestore si está totalmente vacío
+                        defaultProfessionals.forEach(p => {
                             setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'professionals', p.id), p);
                         });
                     }
-                    renderPatientProfessionals();
-                    if (currentUser && currentUser.role === 'admin') renderAdminProfesionales();
                 }, (error) => console.error("Error cargando profesionales:", error));
 
                 // Escuchar Colección de Citas
@@ -984,13 +993,14 @@
                     });
                     if (tempBanners.length > 0) {
                         sliderBanners = tempBanners;
+                        renderAdminBanners();
+                        renderPatientSlider();
                     } else {
-                        sliderBanners.forEach(b => {
+                        // Crear base de banners iniciales si está vacío
+                        defaultBanners.forEach(b => {
                             setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'banners', b.id), b);
                         });
                     }
-                    renderAdminBanners();
-                    renderPatientSlider();
                 }, (error) => console.error("Error cargando banners:", error));
 
             } catch (err) {
@@ -998,9 +1008,9 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            safeCreateIcons();
-            // Corregido: .toISOString().split('T') ahora extrae correctamente la cadena "YYYY-MM-DD"
+        // Evento de escucha para iniciar sincronización cuando Firebase esté disponible
+        window.addEventListener('firebase-ready', () => {
+            // Corregido: split('T') de manera explícita para no heredar arreglos
             const today = new Date().toISOString().split('T');
             document.getElementById('input-date').min = today;
             document.getElementById('sched-date-select').min = today;
@@ -1056,7 +1066,7 @@
             if(!track || !dots) return;
 
             if(sliderBanners.length === 0) {
-                 track.innerHTML = '<div class="w-full h-full flex-shrink-0 bg-brand-50 flex items-center justify-center text-brand-400 font-medium">Sin banners configurados</div>';
+                 track.innerHTML = '<div class="w-full h-full flex-shrink-0 bg-brand-50 flex items-center justify-center text-brand-400 font-medium">Cargando banners...</div>';
                  dots.innerHTML = '';
                  return;
             }
@@ -1173,7 +1183,7 @@
         function renderPatientProfessionals() {
             const container = document.getElementById('patient-professionals-container');
             if (professionals.length === 0) {
-                container.innerHTML = '<p class="col-span-full text-center text-slate-500 text-sm">No hay profesionales registrados.</p>';
+                container.innerHTML = '<p class="col-span-full text-center text-slate-700 text-sm py-8 font-medium">Cargando especialistas...</p>';
                 return;
             }
             container.innerHTML = professionals.map(pro => {
@@ -1186,10 +1196,10 @@
                             <div class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600 font-bold text-base md:text-lg border border-rose-200 transition-colors">${initials}</div>
                             <div>
                                 <h4 class="font-semibold text-slate-800 text-sm md:text-base leading-tight mb-0.5 md:mb-1">${pro.name}</h4>
-                                <p class="text-[10px] md:text-xs text-slate-500 font-medium">${pro.specialty}</p>
+                                <p class="text-[10px] md:text-xs text-slate-700 font-medium">${pro.specialty}</p>
                             </div>
                         </div>
-                        <p class="text-[10px] text-slate-400 line-clamp-2 leading-tight mt-1" title="${pro.bio || ''}">${pro.bio || ''}</p>
+                        <p class="text-[10px] text-slate-600 line-clamp-2 leading-tight mt-1" title="${pro.bio || ''}">${pro.bio || ''}</p>
                     </div>
                 </label>`;
             }).join('');
@@ -1237,7 +1247,7 @@
                     btn.type = 'button';
                     btn.innerText = time;
                     btn.onclick = () => selectTime(time, btn);
-                    btn.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-brand-300 hover:text-brand-600 hover:shadow-[0_4px_10px_rgba(244,63,94,0.1)] transition-all font-medium text-xs md:text-sm";
+                    btn.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border border-slate-200 bg-white text-slate-800 hover:border-brand-300 hover:text-brand-600 hover:shadow-[0_4px_10px_rgba(244,63,94,0.15)] transition-all font-medium text-xs md:text-sm";
                     container.appendChild(btn);
                 });
             } else {
@@ -1249,7 +1259,7 @@
         function selectTime(time, buttonElement) {
             selectedTime = time;
             document.querySelectorAll('.time-slot-btn').forEach(btn => {
-                btn.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-brand-300 hover:text-brand-600 hover:shadow-[0_4px_10px_rgba(244,63,94,0.1)] transition-all font-medium text-xs md:text-sm";
+                btn.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border border-slate-200 bg-white text-slate-800 hover:border-brand-300 hover:text-brand-600 hover:shadow-[0_4px_10px_rgba(244,63,94,0.15)] transition-all font-medium text-xs md:text-sm";
             });
             buttonElement.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border-transparent bg-brand-50 text-brand-700 font-bold shadow-[0_0_0_2px_#f43f5e,0_4px_15px_rgba(244,63,94,0.2)] text-xs md:text-sm";
 
@@ -1321,8 +1331,8 @@
                 // Guardar en Firebase Firestore de forma asíncrona
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', docId);
-                await setDoc(docRef, newAppointment);
+                const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', docId);
+                await window.setDoc(docRef, newAppointment);
 
                 document.getElementById('booking-form').classList.add('hidden');
                 document.getElementById('success-message').classList.remove('hidden');
@@ -1336,9 +1346,9 @@
                 const extraInfoDiv = document.getElementById('success-extra-info');
                 extraInfoDiv.classList.remove('hidden');
                 if (paymentMethod === 'Fonasa') {
-                    extraInfoDiv.innerHTML = `<span class="text-xs font-bold text-slate-400 uppercase">Código de Prestación Fonasa</span><br><span class="text-brand-600 font-semibold text-lg">${pro.code || 'No configurado'}</span>`;
+                    extraInfoDiv.innerHTML = `<span class="text-xs font-bold text-slate-500 uppercase">Código de Prestación Fonasa</span><br><span class="text-brand-600 font-semibold text-lg">${pro.code || 'No configurado'}</span>`;
                 } else {
-                    extraInfoDiv.innerHTML = `<span class="text-xs font-bold text-slate-400 uppercase">Datos para Transferencia</span><br><span class="text-slate-700 whitespace-pre-wrap">${pro.bankDetails || 'No configurados por el profesional'}</span>`;
+                    extraInfoDiv.innerHTML = `<span class="text-xs font-bold text-slate-500 uppercase">Datos para Transferencia</span><br><span class="text-slate-800 whitespace-pre-wrap">${pro.bankDetails || 'No configurados por el profesional'}</span>`;
                 }
                 
                 submitBtn.innerHTML = originalBtnText;
@@ -1418,9 +1428,9 @@
                     <label class="flex items-start gap-4 p-4 border-2 border-slate-100 rounded-xl cursor-pointer hover:bg-brand-50 hover:border-brand-200 transition-all custom-radio">
                         <input type="radio" name="cancel_appointment" value="${app.id}" onchange="selectAppointmentToCancel(this)" class="mt-1 w-4 h-4 text-brand-500 focus:ring-brand-400">
                         <div class="flex-1">
-                            <p class="font-bold text-slate-800">${d}/${m}/${y} a las ${app.time} hrs</p>
-                            <p class="text-sm text-slate-600 font-medium">${app.psychologistName}</p>
-                            <p class="text-[11px] text-slate-500 mt-1 uppercase tracking-wider">${app.attentionType} | ${app.paymentMethod}</p>
+                            <p class="font-bold text-slate-850">${d}/${m}/${y} a las ${app.time} hrs</p>
+                            <p class="text-sm text-slate-700 font-medium">${app.psychologistName}</p>
+                            <p class="text-[11px] text-slate-600 mt-1 uppercase tracking-wider">${app.attentionType} | ${app.paymentMethod}</p>
                         </div>
                     </label>
                 `}).join('');
@@ -1484,7 +1494,7 @@
                     btn.type = 'button';
                     btn.innerText = time;
                     btn.onclick = () => selectCancelTime(time, btn);
-                    btn.className = "cancel-time-slot-btn py-1.5 px-1 rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-brand-300 hover:text-brand-600 transition-all font-medium text-xs";
+                    btn.className = "cancel-time-slot-btn py-1.5 px-1 rounded-lg border border-slate-200 bg-white text-slate-800 hover:border-brand-300 hover:text-brand-600 transition-all font-medium text-xs";
                     container.appendChild(btn);
                 });
             } else {
@@ -1496,7 +1506,7 @@
         function selectCancelTime(time, buttonElement) {
             cancelSelectedTime = time;
             document.querySelectorAll('.cancel-time-slot-btn').forEach(btn => {
-                btn.className = "cancel-time-slot-btn py-1.5 px-1 rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-brand-300 hover:text-brand-600 transition-all font-medium text-xs";
+                btn.className = "cancel-time-slot-btn py-1.5 px-1 rounded-lg border border-slate-200 bg-white text-slate-800 hover:border-brand-300 hover:text-brand-600 transition-all font-medium text-xs";
             });
             buttonElement.className = "cancel-time-slot-btn py-1.5 px-1 rounded-lg border-transparent bg-brand-50 text-brand-700 font-bold shadow-[0_0_0_2px_#f43f5e] text-xs";
         }
@@ -1526,8 +1536,8 @@
             if (action === 'cancel') {
                 if(confirm("¿Confirmas la anulación de esta reserva? La hora quedará libre inmediatamente.")) {
                     try {
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', cancelSelectedAppointmentId);
-                        await updateDoc(docRef, {
+                        const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', cancelSelectedAppointmentId);
+                        await window.updateDoc(docRef, {
                             status: 'cancelled',
                             cancelReason: reason
                         });
@@ -1550,15 +1560,15 @@
                 if(confirm(`¿Confirmas la reprogramación de esta reserva para el ${cancelSelectedDate} a las ${cancelSelectedTime} hrs?`)) {
                     try {
                         // 1. Anular cita previa
-                        const prevDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', cancelSelectedAppointmentId);
-                        await updateDoc(prevDocRef, {
+                        const prevDocRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', cancelSelectedAppointmentId);
+                        await window.updateDoc(prevDocRef, {
                             status: 'rescheduled',
                             cancelReason: "Reprogramada. Motivo original: " + reason
                         });
 
                         // 2. Crear nueva cita
                         const newId = Date.now().toString();
-                        const newDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', newId);
+                        const newDocRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', newId);
                         const newApp = { 
                             ...app, 
                             date: cancelSelectedDate, 
@@ -1567,7 +1577,7 @@
                             cancelReason: null
                         };
                         delete newApp.id; // Remover la ID interna si existía
-                        await setDoc(newDocRef, newApp);
+                        await window.setDoc(newDocRef, newApp);
 
                         const [y, m, d] = cancelSelectedDate.split('-');
                         document.getElementById('cancel-success-title').innerText = "Reserva Reprogramada";
@@ -1637,6 +1647,7 @@
             document.getElementById('login-error').classList.remove('hidden');
         }
 
+        // logout
         function logout() {
             currentUser = null;
             checkLoginState();
@@ -1652,7 +1663,7 @@
                     btn.className = "px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors bg-white text-brand-600 shadow-sm border border-slate-200 flex-1 text-center";
                     view.classList.remove('hidden');
                 } else {
-                    btn.className = "px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center";
+                    btn.className = "px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-800 hover:text-slate-800 border border-transparent flex-1 text-center";
                     view.classList.add('hidden');
                 }
             });
@@ -1716,13 +1727,13 @@
                                 <div class="text-[8px] md:text-[10px] text-brand-500 font-bold uppercase leading-none">${month}</div>
                                 <div class="text-sm md:text-base text-slate-800 font-bold leading-tight mt-0.5 md:mt-1">${day}</div>
                             </div>
-                            <div class="bg-slate-50 border border-slate-100 text-slate-600 px-1.5 md:px-2 py-0.5 md:py-1 rounded-md text-[10px] md:text-xs font-semibold flex items-center gap-1">
+                            <div class="bg-slate-50 border border-slate-100 text-slate-800 px-1.5 md:px-2 py-0.5 md:py-1 rounded-md text-[10px] md:text-xs font-semibold flex items-center gap-1">
                                 <i data-lucide="clock" class="w-2.5 h-2.5 md:w-3 md:h-3"></i> ${app.time}
                             </div>
                         </div>
                     </td>
                     <td class="p-3 md:p-4 align-top">
-                        <span class="font-medium text-slate-700 text-xs md:text-sm">${app.psychologistName}</span>
+                        <span class="font-medium text-slate-800 text-xs md:text-sm">${app.psychologistName}</span>
                     </td>
                     <td class="p-3 md:p-4 align-top">
                         <p class="font-semibold text-slate-800 text-xs md:text-sm flex flex-wrap items-center gap-1">
@@ -1732,7 +1743,7 @@
                             <span class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${methodBadgeColor}">${app.paymentMethod}</span>
                             <span class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${attentionBadgeColor}">${app.attentionType || 'N/A'}</span>
                         </p>
-                        <p class="text-[9px] md:text-[11px] text-slate-500 mt-1">${app.patientRut} | ${app.patientPhone}</p>
+                        <p class="text-[9px] md:text-[11px] text-slate-700 mt-1">${app.patientRut} | ${app.patientPhone}</p>
                         ${app.cancelReason ? `<p class="text-[10px] md:text-xs ${app.status === 'cancelled' ? 'text-red-600' : 'text-blue-600'} mt-1.5 bg-white/50 border border-slate-200 p-2 rounded shadow-sm"><strong>Motivo:</strong> ${app.cancelReason}</p>` : ''}
                     </td>
                     <td class="p-3 md:p-4 text-right align-top">
@@ -1755,8 +1766,8 @@
                 try {
                     const db = window.firebaseDb;
                     const appId = window.firebaseAppId;
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', id);
-                    await updateDoc(docRef, {
+                    const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', id);
+                    await window.updateDoc(docRef, {
                         status: 'cancelled',
                         cancelReason: reason || 'Anulada por la administración'
                     });
@@ -1771,9 +1782,9 @@
             list.innerHTML = professionals.map(pro => `
                 <tr class="hover:bg-slate-50 transition-colors group">
                     <td class="p-3 md:p-4 font-sans">
-                        <p class="font-semibold text-slate-800 text-sm">${pro.name}</p>
-                        <p class="text-[10px] md:text-xs text-slate-500">${pro.specialty}</p>
-                        <p class="text-[10px] text-slate-400 mt-1">RUT: ${pro.rut || 'No asignado'} | Clave: ${pro.pass || 'No asignada'}</p>
+                        <p class="font-semibold text-slate-850 text-sm">${pro.name}</p>
+                        <p class="text-[10px] md:text-xs text-slate-700">${pro.specialty}</p>
+                        <p class="text-[10px] text-slate-600 mt-1">RUT: ${pro.rut || 'No asignado'} | Clave: ${pro.pass || 'No asignada'}</p>
                         <p class="text-[10px] text-brand-600 mt-0.5 font-medium">Cód: ${pro.code || 'N/A'}</p>
                     </td>
                     <td class="p-3 md:p-4 text-right flex justify-end gap-2 items-center h-full pt-4">
@@ -1860,8 +1871,8 @@
             }
 
             try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'professionals', targetId);
-                await setDoc(docRef, proData);
+                const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'professionals', targetId);
+                await window.setDoc(docRef, proData);
 
                 cancelEditPro();
                 renderAdminProfesionales();
@@ -1875,8 +1886,8 @@
                 try {
                     const db = window.firebaseDb;
                     const appId = window.firebaseAppId;
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'professionals', id);
-                    await deleteDoc(docRef);
+                    const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'professionals', id);
+                    await window.deleteDoc(docRef);
                 } catch(e) {
                     alert("Error al eliminar profesional.");
                 }
@@ -1900,7 +1911,7 @@
             checksContainer.innerHTML = standardHours.map(time => `
                 <label class="cursor-pointer">
                     <input type="checkbox" value="${time}" class="peer hidden sched-time-chk">
-                    <div class="border border-slate-200 text-slate-500 bg-white shadow-sm rounded-xl p-2 md:p-3 text-center transition-all peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-400 peer-checked:shadow-[0_0_10px_rgba(244,63,94,0.15)] hover:border-brand-300 text-[10px] md:text-xs font-semibold">
+                    <div class="border border-slate-200 text-slate-800 bg-white shadow-sm rounded-xl p-2 md:p-3 text-center transition-all peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-400 peer-checked:shadow-[0_0_10px_rgba(244,63,94,0.15)] hover:border-brand-300 text-[10px] md:text-xs font-semibold">
                         ${time}
                     </div>
                 </label>
@@ -1935,14 +1946,15 @@
             try {
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', proId);
+                const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'schedules', proId);
                 
                 // Actualizar o setear el documento en Firestore
-                await setDoc(docRef, {
+                await window.setDoc(docRef, {
                     [date]: { hours: selectedHours }
                 }, { merge: true });
 
                 const msg = document.getElementById('sched-save-msg');
+                msg.className = "hidden text-center text-xs md:text-sm font-medium text-brand-600 mt-4 flex items-center justify-center gap-2 bg-brand-50 py-2 rounded-lg border border-brand-100";
                 msg.classList.remove('hidden');
                 setTimeout(() => msg.classList.add('hidden'), 3000);
             } catch(e) {
@@ -1953,7 +1965,7 @@
         function renderAdminBanners() {
             const list = document.getElementById('admin-banner-list');
             if (sliderBanners.length === 0) {
-                list.innerHTML = '<p class="text-sm text-slate-400 italic">No hay banners.</p>'; return;
+                list.innerHTML = '<p class="text-sm text-slate-700 italic">No hay banners.</p>'; return;
             }
             list.innerHTML = sliderBanners.map((banner, index) => `
                 <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col">
@@ -1964,8 +1976,8 @@
                     </div>
                     <div class="p-3 flex-1 flex flex-col justify-between">
                         <div>
-                            <h5 class="font-bold text-slate-800 text-xs truncate" title="${banner.title}">${banner.title}</h5>
-                            <p class="text-[10px] text-slate-500 line-clamp-2 mt-0.5">${banner.text}</p>
+                            <h5 class="font-bold text-slate-850 text-xs truncate" title="${banner.title}">${banner.title}</h5>
+                            <p class="text-[10px] text-slate-700 line-clamp-2 mt-0.5">${banner.text}</p>
                         </div>
                         <button onclick="deleteBanner('${banner.id}')" class="mt-3 text-red-500 hover:text-red-700 text-xs font-semibold self-start flex items-center gap-1">
                             <i data-lucide="trash-2" class="w-3 h-3"></i> Eliminar
@@ -1987,8 +1999,8 @@
             const appId = window.firebaseAppId;
 
             try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'banners', id);
-                await setDoc(docRef, { img, title, text });
+                const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'banners', id);
+                await window.setDoc(docRef, { img, title, text });
 
                 document.getElementById('new-banner-img').value = ''; 
                 document.getElementById('new-banner-title').value = ''; 
@@ -2003,10 +2015,10 @@
                 try {
                     const db = window.firebaseDb;
                     const appId = window.firebaseAppId;
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'banners', id);
-                    await deleteDoc(docRef);
+                    const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'banners', id);
+                    await window.deleteDoc(docRef);
                 } catch(e) {
-                    alert("Error al eliminar banner.");
+                    alert("Error al de eliminar banner.");
                 }
             }
         }
@@ -2029,8 +2041,8 @@
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
                 // Corregido a 6 segmentos para que la escritura sea válida
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info', 'main');
-                await setDoc(docRef, { name, address, city, mapEmbed });
+                const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info', 'main');
+                await window.setDoc(docRef, { name, address, city, mapEmbed });
 
                 const msg = document.getElementById('config-save-msg');
                 msg.classList.remove('hidden');
@@ -2076,8 +2088,8 @@
                             <span class="font-bold text-slate-800 text-sm">${d}/${m}/${y}</span>
                             <span class="text-[10px] font-bold uppercase tracking-wider ${statusColor} bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">${statusText}</span>
                         </div>
-                        <p class="text-xs font-medium text-slate-700 truncate">${app.psychologistName}</p>
-                        <p class="text-[10px] text-slate-500 mt-0.5"><i data-lucide="clock" class="w-3 h-3 inline pb-0.5"></i> ${app.time} hrs</p>
+                        <p class="text-xs font-medium text-slate-800 truncate">${app.psychologistName}</p>
+                        <p class="text-[10px] text-slate-700 mt-0.5"><i data-lucide="clock" class="w-3 h-3 inline pb-0.5"></i> ${app.time} hrs</p>
                     </div>
                     `;
                 }).join('');
@@ -2112,8 +2124,8 @@
             try {
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', id);
-                await updateDoc(docRef, {
+                const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', id);
+                await window.updateDoc(docRef, {
                     clinicalReason: reason,
                     clinicalReport: report
                 });
@@ -2147,7 +2159,24 @@
                     <meta charset="UTF-8">
                     <title>Informe Clínico - ${app.patientName}</title>
                     <style>
-                        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; padding: 40px; color: #333; max-width: 800px; margin: auto; }
+                        @page {
+                            size: 216mm 330mm; /* Tamaño Oficio estándar */
+                            margin: 15mm;
+                        }
+                        body { 
+                            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+                            line-height: 1.6; 
+                            color: #333; 
+                            margin: 0; 
+                            padding: 0; 
+                            height: 100%;
+                        }
+                        .wrapper {
+                            position: relative;
+                            min-height: 290mm; /* Forzar el fin de hoja de oficio menos márgenes */
+                            box-sizing: border-box;
+                            padding-bottom: 160px; /* Margen para evitar solapamiento con firma */
+                        }
                         .header { text-align: center; border-bottom: 2px solid #f43f5e; padding-bottom: 20px; margin-bottom: 30px; }
                         .title { font-size: 24px; font-weight: bold; color: #be123c; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; }
                         .clinic-name { font-size: 14px; color: #666; }
@@ -2157,8 +2186,26 @@
                         .label { font-weight: bold; width: 180px; color: #4b5563; }
                         .value { flex: 1; color: #111827; }
                         .content-box { border: 1px solid #e5e7eb; padding: 15px; border-radius: 6px; white-space: pre-wrap; min-height: 80px; font-size: 14px; color: #1f2937; background: #fff; }
-                        .footer { margin-top: 50px; text-align: center; font-size: 11px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 20px; }
-                        .signature { margin-top: 80px; text-align: center; float: right; width: 280px; page-break-inside: avoid; }
+                        .footer { 
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            text-align: center; 
+                            font-size: 11px; 
+                            color: #9ca3af; 
+                            border-top: 1px solid #e5e7eb; 
+                            padding-top: 10px; 
+                        }
+                        .signature { 
+                            position: absolute;
+                            bottom: 40mm;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            text-align: center; 
+                            width: 280px; 
+                            page-break-inside: avoid; 
+                        }
                         .sig-line { border-bottom: 1px solid #111827; margin-bottom: 10px; }
                         .sig-name { font-weight: bold; font-size: 15px; color: #111827; }
                         .sig-role { font-size: 13px; color: #4b5563; }
@@ -2166,48 +2213,47 @@
                     </style>
                 </head>
                 <body>
-                    <div class="header">
-                        <h1 class="title">Informe Clínico</h1>
-                        <div class="clinic-name"><strong>${clinicInfo.name}</strong></div>
-                        <div class="clinic-name">${clinicInfo.address}, ${clinicInfo.city}</div>
-                    </div>
+                    <div class="wrapper">
+                        <div class="header">
+                            <h1 class="title">Informe Clínico</h1>
+                            <div class="clinic-name"><strong>${clinicInfo.name}</strong></div>
+                            <div class="clinic-name">${clinicInfo.address}, ${clinicInfo.city}</div>
+                        </div>
 
-                    <div class="section">
-                        <div class="section-title">Antecedentes del Paciente</div>
-                        <div class="row"><div class="label">Nombre Completo:</div><div class="value">${app.patientName}</div></div>
-                        <div class="row"><div class="label">RUT:</div><div class="value">${app.patientRut}</div></div>
-                        <div class="row"><div class="label">Teléfono:</div><div class="value">${app.patientPhone}</div></div>
-                        <div class="row"><div class="label">Correo Electrónico:</div><div class="value">${app.patientEmail}</div></div>
-                    </div>
+                        <div class="section">
+                            <div class="section-title">Antecedentes del Paciente</div>
+                            <div class="row"><div class="label">Nombre Completo:</div><div class="value">${app.patientName}</div></div>
+                            <div class="row"><div class="label">RUT:</div><div class="value">${app.patientRut}</div></div>
+                            <div class="row"><div class="label">Teléfono:</div><div class="value">${app.patientPhone}</div></div>
+                            <div class="row"><div class="label">Correo Electrónico:</div><div class="value">${app.patientEmail}</div></div>
+                        </div>
 
-                    <div class="section">
-                        <div class="section-title">Antecedentes de la Atención</div>
-                        <div class="row"><div class="label">Profesional Tratante:</div><div class="value">${app.psychologistName}</div></div>
-                        <div class="row"><div class="label">Fecha de Sesión:</div><div class="value">${printDate} a las ${app.time} hrs</div></div>
-                        <div class="row"><div class="label">Modalidad:</div><div class="value">${app.attentionType || 'No especificada'}</div></div>
-                        <div class="row"><div class="label">Previsión:</div><div class="value">${app.paymentMethod || 'No especificada'}</div></div>
-                    </div>
+                        <div class="section">
+                            <div class="section-title">Antecedentes de la Atención</div>
+                            <div class="row"><div class="label">Profesional Tratante:</div><div class="value">${app.psychologistName}</div></div>
+                            <div class="row"><div class="label">Fecha de Sesión:</div><div class="value">${printDate} a las ${app.time} hrs</div></div>
+                        </div>
 
-                    <div class="section">
-                        <div class="section-title">Motivo de Consulta</div>
-                        <div class="content-box">${app.clinicalReason || 'Sin información registrada.'}</div>
-                    </div>
+                        <div class="section">
+                            <div class="section-title">Motivo de Consulta</div>
+                            <div class="content-box">${app.clinicalReason || 'Sin información registrada.'}</div>
+                        </div>
 
-                    <div class="section">
-                        <div class="section-title">Informe Clínico / Evolución</div>
-                        <div class="content-box">${app.clinicalReport || 'Sin informe registrado.'}</div>
-                    </div>
+                        <div class="section">
+                            <div class="section-title">Informe Clínico / Evolución</div>
+                            <div class="content-box">${app.clinicalReport || 'Sin informe registrado.'}</div>
+                        </div>
 
-                    <div class="signature">
-                        <div class="sig-line"></div>
-                        <div class="sig-name">${app.psychologistName}</div>
-                        <div class="sig-role">Psicólogo/a Clínico</div>
-                        <div class="sig-role">RUT Prestador: ${pro.code || 'No registrado'}</div>
-                    </div>
-                    <div class="clear"></div>
+                        <div class="signature">
+                            <div class="sig-line"></div>
+                            <div class="sig-name">${app.psychologistName}</div>
+                            <div class="sig-role">Psicólogo/a Clínico</div>
+                            <div class="sig-role">RUT Prestador: ${pro.code || 'No registrado'}</div>
+                        </div>
 
-                    <div class="footer">
-                        Documento confidencial generado el ${new Date().toLocaleDateString('es-CL')} mediante plataforma de gestión clínica.
+                        <div class="footer">
+                            Documento confidencial generado el ${new Date().toLocaleDateString('es-CL')} mediante plataforma de gestión clínica.
+                        </div>
                     </div>
                 </body>
                 </html>
