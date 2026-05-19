@@ -870,18 +870,25 @@
             { id: 'pro_3', name: 'Ps. María Paz', specialty: 'Terapia de Pareja', color: 'purple', code: '0920013', bio: 'Terapia sistémica y resolución de conflictos.', bankDetails: 'Banco BCI\nCta Vista: 98765432\nmariapaz@clinica.cl', rut: '33.333.333-3', pass: 'demo3' }
         ];
 
-        // Se inician vacíos para evitar parpadeos visuales al cargar la página
-        let professionals = [];
+        // Se inician con los datos semilla por defecto para una renderización y carga instantánea
+        let professionals = [
+            { id: 'pro_1', name: 'Ps. Constanza Beroiza', specialty: 'Terapia Adultos', color: 'rose', code: '0920011', bio: 'Especialista en manejo de ansiedad y depresión.', bankDetails: 'Banco Estado\nCta Rut: 16.843.499-5\nconstanza@clinica.cl', rut: '11.111.111-1', pass: 'demo1' }
+        ];
         let appointments = [];
 
-        // Banners semilla con temática de Clínica Psicológica y alta resolución (Modificados)
+        // Banners semilla con temática de Clínica Psicológica y alta resolución (Pre-poblados)
         const defaultBanners = [
             { id: 'slide_1', img: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop', title: 'Un Espacio Seguro para Ti', text: 'Te ofrecemos un ambiente cálido, privado y de absoluta confianza para iniciar tu proceso.' },
             { id: 'slide_2', img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200&auto=format&fit=crop', title: 'Acompañamiento Profesional', text: 'Psicólogos calificados comprometidos con tu bienestar emocional y tu crecimiento personal.' },
             { id: 'slide_3', img: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1200&auto=format&fit=crop', title: 'Encuentra tu Equilibrio Emocional', text: 'Te brindamos herramientas personalizadas para superar la ansiedad, el estrés y conectar contigo mismo.' }
         ];
         
-        let sliderBanners = [];
+        let sliderBanners = [
+            { id: 'slide_1', img: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop', title: 'Un Espacio Seguro para Ti', text: 'Te ofrecemos un ambiente cálido, privado y de absoluta confianza para iniciar tu proceso.' },
+            { id: 'slide_2', img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200&auto=format&fit=crop', title: 'Acompañamiento Profesional', text: 'Psicólogos calificados comprometidos con tu bienestar emocional y tu crecimiento personal.' },
+            { id: 'slide_3', img: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1200&auto=format&fit=crop', title: 'Encuentra tu Equilibrio Emocional', text: 'Te brindamos herramientas personalizadas para superar la ansiedad, el estrés y conectar contigo mismo.' }
+        ];
+        
         let currentSlide = 0;
         let slideIntervalId = null;
 
@@ -1195,7 +1202,7 @@
                         <div class="flex items-center gap-3 md:gap-4 mb-2">
                             <div class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600 font-bold text-base md:text-lg border border-rose-200 transition-colors">${initials}</div>
                             <div>
-                                <h4 class="font-semibold text-slate-800 text-sm md:text-base leading-tight mb-0.5 md:mb-1">${pro.name}</h4>
+                                <h4 class="font-semibold text-slate-850 text-sm md:text-base leading-tight mb-0.5 md:mb-1">${pro.name}</h4>
                                 <p class="text-[10px] md:text-xs text-slate-700 font-medium">${pro.specialty}</p>
                             </div>
                         </div>
@@ -1663,7 +1670,7 @@
                     btn.className = "px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors bg-white text-brand-600 shadow-sm border border-slate-200 flex-1 text-center";
                     view.classList.remove('hidden');
                 } else {
-                    btn.className = "px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-800 hover:text-slate-800 border border-transparent flex-1 text-center";
+                    btn.className = "px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-850 hover:text-slate-800 border border-transparent flex-1 text-center";
                     view.classList.add('hidden');
                 }
             });
@@ -1784,7 +1791,7 @@
                     <td class="p-3 md:p-4 font-sans">
                         <p class="font-semibold text-slate-850 text-sm">${pro.name}</p>
                         <p class="text-[10px] md:text-xs text-slate-700">${pro.specialty}</p>
-                        <p class="text-[10px] text-slate-600 mt-1">RUT: ${pro.rut || 'No asignado'} | Clave: ${pro.pass || 'No asignada'}</p>
+                        <p class="text-[10px] text-slate-600 mt-1">RUT Acceso: ${pro.rut || 'No asignado'} | Clave: <span class="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs select-none">••••••••</span></p>
                         <p class="text-[10px] text-brand-600 mt-0.5 font-medium">Cód: ${pro.code || 'N/A'}</p>
                     </td>
                     <td class="p-3 md:p-4 text-right flex justify-end gap-2 items-center h-full pt-4">
