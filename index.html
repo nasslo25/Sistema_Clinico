@@ -27,7 +27,7 @@
         body { 
             font-family: 'Poppins', sans-serif; 
             background-color: #fff1f2;
-            color: #334155;
+            color: #1e293b; /* Color base más oscuro */
         }
         
         .step-hidden {
@@ -53,14 +53,15 @@
 
         .input-soft {
             background: #ffffff;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #cbd5e1; /* Borde levemente más oscuro */
             border-radius: 1rem;
             padding: 0.875rem 1.25rem;
             width: 100%;
             outline: none;
             transition: all 0.3s ease;
-            color: #334155;
+            color: #1e293b;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-weight: 500;
         }
         .input-soft:focus {
             border-color: #fb7185;
@@ -89,7 +90,7 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(244, 63, 94, 0.1);
-            color: #475569;
+            color: #334155;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
@@ -101,13 +102,29 @@
 
         ::-webkit-calendar-picker-indicator {
             cursor: pointer;
-            opacity: 0.6;
+            opacity: 0.8;
             transition: 0.2s;
         }
         ::-webkit-calendar-picker-indicator:hover { opacity: 1; color: #f43f5e; }
         
         .custom-radio input[type="radio"] {
             accent-color: #f43f5e;
+        }
+
+        /* Utilidad para inputs de archivo */
+        input[type=file]::file-selector-button {
+            border: none;
+            background: #fff1f2;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #e11d48;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s ease-in-out;
+            margin-right: 12px;
+        }
+        input[type=file]::file-selector-button:hover {
+            background: #ffe4e6;
         }
     </style>
 
@@ -117,10 +134,8 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
-        // APP ID para el sandboxing de base de datos
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'clinica-cony-default';
         
-        // Credenciales oficiales de tu Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBWpFoKOmndIza-cUYDrd0Bq3apkjOhIkk",
             authDomain: "sistema-clinico-292d9.firebaseapp.com",
@@ -130,18 +145,15 @@
             appId: "1:415063868087:web:09a1c47a28a34b10810332"
         };
 
-        // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Exportar instancias al entorno global de navegación
         window.firebaseApp = app;
         window.firebaseAuth = auth;
         window.firebaseDb = db;
         window.firebaseAppId = appId;
 
-        // Exportar de forma explícita las funciones de Firebase al objeto global de window para darles visibilidad
         window.doc = doc;
         window.setDoc = setDoc;
         window.getDoc = getDoc;
@@ -156,24 +168,18 @@
 </head>
 <body class="min-h-screen relative overflow-x-hidden">
 
-    <!-- Fondos decorativos de fondo -->
+    <!-- Fondos decorativos -->
     <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-pink-200 rounded-full mix-blend-multiply filter blur-[120px] opacity-50 z-0 pointer-events-none"></div>
     <div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-rose-200 rounded-full mix-blend-multiply filter blur-[120px] opacity-50 z-0 pointer-events-none"></div>
 
     <div class="relative z-10 p-3 md:p-8 max-w-5xl mx-auto">
         
-        <!-- Contenedor Principal (Única gran Glass Card) -->
         <div class="glass-card rounded-2xl md:rounded-[2rem] overflow-hidden shadow-lg mb-6 md:mb-8">
             
-            <!-- ================= ENCABEZADOS DINÁMICOS ================= -->
-            
-            <!-- Encabezado Paciente (Slider + Título) -->
+            <!-- ENCABEZADOS DINÁMICOS -->
             <div id="patient-banner">
-                <!-- Slider / Banner -->
                 <div class="relative w-full h-48 md:h-72 overflow-hidden group bg-slate-100">
-                    <div id="slider-track" class="flex transition-transform duration-700 ease-in-out h-full w-full">
-                        <!-- JS: Slides -->
-                    </div>
+                    <div id="slider-track" class="flex transition-transform duration-700 ease-in-out h-full w-full"></div>
                     <div class="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                         <button onclick="prevSlide()" class="pointer-events-auto p-2 rounded-full bg-white/20 hover:bg-white/40 text-white backdrop-blur-md transition-all">
                             <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -182,24 +188,19 @@
                             <i data-lucide="chevron-right" class="w-6 h-6"></i>
                         </button>
                     </div>
-                    <div id="slider-dots" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-                        <!-- JS: Puntos -->
-                    </div>
+                    <div id="slider-dots" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2"></div>
                 </div>
-
-                <!-- Título -->
                 <div class="px-5 py-6 md:px-8 md:py-8 text-center relative">
                     <div class="relative z-10">
                         <div class="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-brand-100 text-brand-500 mb-3 shadow-sm border border-brand-50">
                             <i data-lucide="sparkles" class="w-7 h-7 md:w-8 md:h-8"></i>
                         </div>
                         <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">Tu Bienestar Comienza Aquí</h1>
-                        <p class="text-sm md:text-base text-slate-500 max-w-lg mx-auto">Selecciona a tu especialista y encuentra el momento perfecto para ti.</p>
+                        <p class="text-sm md:text-base text-slate-600 font-medium max-w-lg mx-auto">Selecciona a tu especialista y encuentra el momento perfecto para ti.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Encabezado Anular/Reprogramar -->
             <div id="cancel-banner" class="hidden">
                 <div class="px-5 py-8 md:px-8 md:py-10 text-center relative">
                     <div class="relative z-10">
@@ -207,12 +208,11 @@
                             <i data-lucide="calendar-x" class="w-7 h-7 md:w-8 md:h-8"></i>
                         </div>
                         <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">Gestionar Reserva</h1>
-                        <p class="text-sm md:text-base text-slate-500 max-w-lg mx-auto">Ingresa tu RUT para buscar, anular o reprogramar tus horas previamente agendadas.</p>
+                        <p class="text-sm md:text-base text-slate-600 font-medium max-w-lg mx-auto">Ingresa tu RUT para buscar, anular o reprogramar tus horas previamente agendadas.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Encabezado Administración -->
             <div id="admin-banner" class="hidden">
                 <div class="px-5 py-8 md:px-8 md:py-10 text-center relative">
                     <div class="relative z-10">
@@ -220,163 +220,150 @@
                             <i data-lucide="shield-check" class="w-7 h-7 md:w-8 md:h-8"></i>
                         </div>
                         <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">Panel Administrativo</h1>
-                        <p class="text-sm md:text-base text-slate-500 max-w-lg mx-auto">Acceso exclusivo para el personal clínico del centro.</p>
+                        <p class="text-sm md:text-base text-slate-600 font-medium max-w-lg mx-auto">Acceso exclusivo para el personal clínico del centro.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= MENÚ DE NAVEGACIÓN GLOBAL ================= -->
             <nav class="bg-brand-50/40 border-y border-brand-100/60 py-5 px-4 flex flex-wrap justify-center gap-3 md:gap-4">
-                <button id="tab-patient" onclick="switchMainView('patient')" class="px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-semibold btn-brand text-sm md:text-base w-full sm:w-auto">
+                <button id="tab-patient" onclick="switchMainView('patient')" class="px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-bold btn-brand text-sm md:text-base w-full sm:w-auto tracking-wide">
                     Agendar Sesión
                 </button>
-                <button id="tab-cancel" onclick="switchMainView('cancel')" class="px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-semibold btn-glass text-sm md:text-base w-full sm:w-auto">
+                <button id="tab-cancel" onclick="switchMainView('cancel')" class="px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-bold btn-glass text-sm md:text-base w-full sm:w-auto tracking-wide">
                     Anular / Reprogramar
                 </button>
-                <button id="tab-admin" onclick="switchMainView('admin')" class="px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-semibold btn-glass text-sm md:text-base w-full sm:w-auto">
+                <button id="tab-admin" onclick="switchMainView('admin')" class="px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-bold btn-glass text-sm md:text-base w-full sm:w-auto tracking-wide">
                     Administración
                 </button>
             </nav>
 
-            <!-- ================= CONTENEDOR DE VISTAS (SECCIONES) ================= -->
             <main>
-                
                 <!-- VISTA PACIENTE -->
                 <section id="view-patient" class="p-5 md:p-8 mx-auto">
-                    <!-- Pantalla de Éxito -->
                     <div id="success-message" class="hidden text-center py-8 md:py-12">
                         <div class="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-sm border border-green-200">
                             <i data-lucide="check" class="w-10 h-10 md:w-12 md:h-12 text-green-500"></i>
                         </div>
                         <h3 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2 md:mb-3">¡Reserva Confirmada!</h3>
-                        <p class="text-slate-600 text-base md:text-lg mb-2 max-w-md mx-auto">
-                            Tu sesión con <span id="success-psy" class="font-semibold text-brand-600"></span> ha sido agendada para el <br>
-                            <span id="success-date" class="font-semibold text-slate-800"></span> a las <span id="success-time" class="font-semibold text-slate-800"></span> hrs.<br>
-                            <span class="text-sm mt-2 block text-slate-500">Detalles: <strong id="success-method" class="text-slate-700"></strong></span>
+                        <p class="text-slate-700 font-medium text-base md:text-lg mb-2 max-w-md mx-auto">
+                            Tu sesión con <span id="success-psy" class="font-bold text-brand-600"></span> ha sido agendada para el <br>
+                            <span id="success-date" class="font-bold text-slate-800"></span> a las <span id="success-time" class="font-bold text-slate-800"></span> hrs.<br>
+                            <span class="text-sm mt-2 block text-slate-600">Detalles: <strong id="success-method" class="text-slate-800"></strong></span>
                         </p>
 
-                        <!-- Contenedor para info extra (Bancaria o Fonasa) -->
                         <div id="success-extra-info" class="hidden max-w-md mx-auto mb-6 md:mb-8 mt-4 p-4 bg-brand-50 rounded-xl text-sm text-left border border-brand-100 shadow-inner">
                         </div>
 
-                        <button onclick="resetBooking()" class="px-6 py-2.5 md:px-8 md:py-3 btn-brand rounded-xl font-medium w-full sm:w-auto">
+                        <button onclick="resetBooking()" class="px-6 py-2.5 md:px-8 md:py-3 btn-brand rounded-xl font-bold tracking-wide w-full sm:w-auto">
                             Hacer otra reserva
                         </button>
                     </div>
 
-                    <!-- Formulario -->
                     <form id="booking-form" onsubmit="handleBookingSubmit(event)">
                         
-                        <!-- PASO 1 -->
                         <div id="step-1" class="step-visible mb-8 md:mb-10">
-                            <h3 class="text-base md:text-lg font-semibold text-slate-800 mb-4 md:mb-5 flex items-center gap-2">
+                            <h3 class="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-5 flex items-center gap-2">
                                 <span class="bg-brand-500 text-white w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-xs md:text-sm shadow-md shrink-0">1</span>
                                 Elige a tu Profesional
                             </h3>
                             <div id="patient-professionals-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
-                                <!-- JS: Cards Profesionales -->
+                                <!-- JS Cards -->
                             </div>
                         </div>
 
-                        <!-- PASO 2 -->
-                        <div id="step-2" class="step-hidden pt-6 md:pt-8 border-t border-slate-100 mb-8 md:mb-10">
-                            <h3 class="text-base md:text-lg font-semibold text-slate-800 mb-4 md:mb-5 flex items-center gap-2">
+                        <div id="step-2" class="step-hidden pt-6 md:pt-8 border-t border-slate-200 mb-8 md:mb-10">
+                            <h3 class="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-5 flex items-center gap-2">
                                 <span class="bg-brand-500 text-white w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-xs md:text-sm shadow-md shrink-0">2</span>
                                 ¿Cuándo nos vemos?
                             </h3>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 bg-slate-50/50 p-5 md:p-6 rounded-2xl border border-slate-100">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 bg-slate-50/80 p-5 md:p-6 rounded-2xl border border-slate-200">
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-600 mb-2 ml-1">Selecciona la fecha</label>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Selecciona la fecha</label>
                                     <input type="date" id="input-date" onchange="handleDateChange(event)" class="input-soft bg-white" />
                                 </div>
                                 
                                 <div id="time-container" class="opacity-30 pointer-events-none transition-opacity duration-300">
-                                    <label class="block text-sm font-medium text-slate-600 mb-2 ml-1">Horarios Disponibles</label>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Horarios Disponibles</label>
                                     <div id="time-slots-container" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 gap-2 md:gap-3">
-                                        <!-- JS: Horas -->
                                     </div>
-                                    <div id="no-time-message" class="hidden text-sm text-amber-600 bg-amber-50 p-4 rounded-xl border border-amber-100 flex items-center gap-2">
+                                    <div id="no-time-message" class="hidden text-sm font-medium text-amber-700 bg-amber-50 p-4 rounded-xl border border-amber-200 flex items-center gap-2">
                                         <i data-lucide="info" class="w-4 h-4 shrink-0"></i> No hay horas disponibles este día.
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- PASO 3 -->
-                        <div id="step-3" class="step-hidden pt-6 md:pt-8 border-t border-slate-100">
-                            <h3 class="text-base md:text-lg font-semibold text-slate-800 mb-4 md:mb-5 flex items-center gap-2">
+                        <div id="step-3" class="step-hidden pt-6 md:pt-8 border-t border-slate-200">
+                            <h3 class="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-5 flex items-center gap-2">
                                 <span class="bg-brand-500 text-white w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-xs md:text-sm shadow-md shrink-0">3</span>
                                 Tus Datos de Contacto
                             </h3>
                             
-                            <div class="bg-white p-5 md:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4 md:space-y-6">
+                            <div class="bg-white p-5 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4 md:space-y-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div>
-                                        <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">RUT</label>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">RUT</label>
                                         <input type="text" id="input-rut" placeholder="Ej: 12.345.678-9" oninput="formatRut(this)" required class="input-soft" />
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Nombre Completo</label>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">Nombre Completo</label>
                                         <input type="text" id="input-name" placeholder="Tu Nombre" required class="input-soft" />
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div>
-                                        <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Teléfono</label>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">Teléfono</label>
                                         <input type="tel" id="input-phone" value="+56 9 " oninput="formatPhone(this)" required class="input-soft" />
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Correo Electrónico</label>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">Correo Electrónico</label>
                                         <input type="email" id="input-email" placeholder="usuario@correo.com" required class="input-soft" />
                                     </div>
                                 </div>
 
-                                <!-- Modalidad de Pago -->
                                 <div class="border-t border-slate-100 pt-4 mt-2">
-                                    <label class="block text-xs font-medium text-slate-500 mb-3 ml-1 uppercase tracking-wide">Modalidad de Pago</label>
+                                    <label class="block text-xs font-bold text-slate-600 mb-3 ml-1 uppercase tracking-wider">Modalidad de Pago</label>
                                     <div class="flex gap-6 custom-radio pl-1">
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                             <input type="radio" name="payment_method" value="Fonasa" onchange="toggleFonasaMessage()" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                            <span class="text-sm font-medium text-slate-700 group-hover:text-brand-600 transition-colors">Bono Fonasa</span>
+                                            <span class="text-sm font-semibold text-slate-700 group-hover:text-brand-600 transition-colors">Bono Fonasa</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                             <input type="radio" name="payment_method" value="Particular" onchange="toggleFonasaMessage()" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                            <span class="text-sm font-medium text-slate-700 group-hover:text-brand-600 transition-colors">Particular</span>
+                                            <span class="text-sm font-semibold text-slate-700 group-hover:text-brand-600 transition-colors">Particular</span>
                                         </label>
                                     </div>
                                     
-                                    <!-- Mensaje Código Fonasa -->
                                     <div id="fonasa-message-container" class="hidden mt-4 p-3.5 bg-brand-50 rounded-xl border border-brand-100 shadow-sm transition-all">
                                         <div class="flex items-start gap-2.5">
                                             <div class="mt-0.5 w-6 h-6 rounded-full bg-brand-100 flex items-center justify-center shrink-0">
-                                                <i data-lucide="info" class="w-4 h-4 text-brand-600"></i>
+                                                <i data-lucide="info" class="w-4 h-4 text-brand-700"></i>
                                             </div>
-                                            <p class="text-sm text-brand-800">
+                                            <p class="text-sm font-medium text-brand-800">
                                                 El código de prestación del profesional es el siguiente: 
                                                 <br class="md:hidden">
-                                                <strong id="display-pro-code" class="text-lg text-brand-600 bg-white px-2 py-0.5 rounded shadow-sm border border-brand-100 ml-1 inline-block mt-1 md:mt-0"></strong>
+                                                <strong id="display-pro-code" class="text-lg text-brand-700 bg-white px-2 py-0.5 rounded shadow-sm border border-brand-200 ml-1 inline-block mt-1 md:mt-0"></strong>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Tipo de Atención -->
                                 <div class="border-t border-slate-100 pt-4 mt-2">
-                                    <label class="block text-xs font-medium text-slate-500 mb-3 ml-1 uppercase tracking-wide">Tipo de Atención</label>
+                                    <label class="block text-xs font-bold text-slate-600 mb-3 ml-1 uppercase tracking-wider">Tipo de Atención</label>
                                     <div class="flex gap-6 custom-radio pl-1">
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                             <input type="radio" name="attention_type" value="Presencial" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                            <span class="text-sm font-medium text-slate-700 group-hover:text-brand-600 transition-colors">Presencial</span>
+                                            <span class="text-sm font-semibold text-slate-700 group-hover:text-brand-600 transition-colors">Presencial</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                             <input type="radio" name="attention_type" value="Online" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                            <span class="text-sm font-medium text-slate-700 group-hover:text-brand-600 transition-colors">Online (Videollamada)</span>
+                                            <span class="text-sm font-semibold text-slate-700 group-hover:text-brand-600 transition-colors">Online (Videollamada)</span>
                                         </label>
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn-brand w-full py-3.5 md:py-4 mt-6 rounded-xl font-semibold text-base md:text-lg flex items-center justify-center gap-2">
+                                <button type="submit" class="btn-brand w-full py-3.5 md:py-4 mt-6 rounded-xl font-bold tracking-wide text-base md:text-lg flex items-center justify-center gap-2">
                                     Confirmar Reserva <i data-lucide="calendar-check" class="w-5 h-5"></i>
                                 </button>
                             </div>
@@ -386,72 +373,67 @@
 
                 <!-- VISTA ANULAR / REPROGRAMAR RESERVA -->
                 <section id="view-cancel" class="hidden p-5 md:p-8 mx-auto">
-                    <!-- Pantalla de Éxito Anulación/Reprogramación -->
                     <div id="cancel-success" class="hidden text-center py-8 md:py-12">
                         <div class="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-sm border border-green-200">
                             <i data-lucide="check" class="w-10 h-10 md:w-12 md:h-12 text-green-500"></i>
                         </div>
                         <h3 id="cancel-success-title" class="text-2xl md:text-3xl font-bold text-slate-800 mb-2 md:mb-3">Operación Exitosa</h3>
-                        <p id="cancel-success-text" class="text-slate-600 text-base md:text-lg mb-6 md:mb-8 max-w-md mx-auto">
+                        <p id="cancel-success-text" class="text-slate-700 font-medium text-base md:text-lg mb-6 md:mb-8 max-w-md mx-auto">
                             Tu reserva ha sido gestionada.
                         </p>
-                        <button onclick="resetCancelFlow()" class="px-6 py-2.5 md:px-8 md:py-3 btn-brand rounded-xl font-medium w-full sm:w-auto">
+                        <button onclick="resetCancelFlow()" class="px-6 py-2.5 md:px-8 md:py-3 btn-brand rounded-xl font-bold tracking-wide w-full sm:w-auto">
                             Volver al inicio
                         </button>
                     </div>
 
-                    <!-- Formulario Búsqueda -->
                     <div id="cancel-form">
                         <form onsubmit="searchAppointmentsToCancel(event)" class="mb-8">
-                            <label class="block text-xs font-medium text-slate-500 mb-2 ml-1 uppercase tracking-wide">Busca tus reservas ingresando tu RUT</label>
+                            <label class="block text-xs font-bold text-slate-600 mb-2 ml-1 uppercase tracking-wider">Busca tus reservas ingresando tu RUT</label>
                             <div class="flex flex-col sm:flex-row gap-4">
                                 <input type="text" id="cancel-rut" placeholder="Ej: 12.345.678-9" oninput="formatRut(this)" required class="input-soft flex-1" />
-                                <button type="submit" class="btn-brand px-6 py-3 rounded-xl font-semibold shrink-0">Buscar Reservas</button>
+                                <button type="submit" class="btn-brand px-6 py-3 rounded-xl font-bold tracking-wide shrink-0">Buscar Reservas</button>
                             </div>
                         </form>
 
-                        <div id="cancel-empty" class="hidden text-center py-8 bg-slate-50 rounded-2xl border border-slate-100">
-                            <p class="text-slate-500 font-medium">No se encontraron reservas activas vinculadas a este RUT.</p>
+                        <div id="cancel-empty" class="hidden text-center py-8 bg-slate-50 rounded-2xl border border-slate-200">
+                            <p class="text-slate-600 font-semibold">No se encontraron reservas activas vinculadas a este RUT.</p>
                         </div>
 
                         <div id="cancel-results" class="hidden">
-                            <h3 class="text-sm font-semibold text-slate-800 mb-4 ml-1">Selecciona la reserva que deseas gestionar:</h3>
-                            <div id="cancel-appointments-list" class="space-y-3 mb-6">
-                                <!-- JS: Inyecta reservas -->
-                            </div>
+                            <h3 class="text-sm font-bold text-slate-800 mb-4 ml-1">Selecciona la reserva que deseas gestionar:</h3>
+                            <div id="cancel-appointments-list" class="space-y-3 mb-6"></div>
                             
-                            <div id="cancel-confirm-section" class="hidden border-t border-slate-100 pt-6">
-                                <label class="block text-xs font-medium text-slate-500 mb-3 ml-1 uppercase tracking-wide">¿Qué deseas hacer?</label>
+                            <div id="cancel-confirm-section" class="hidden border-t border-slate-200 pt-6">
+                                <label class="block text-xs font-bold text-slate-600 mb-3 ml-1 uppercase tracking-wider">¿Qué deseas hacer?</label>
                                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 custom-radio pl-1 mb-6">
                                     <label class="flex items-center gap-2 cursor-pointer group">
                                         <input type="radio" name="cancel_action" value="cancel" checked onchange="toggleCancelAction()" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                        <span class="text-sm font-medium text-slate-700">Anular definitivamente</span>
+                                        <span class="text-sm font-semibold text-slate-700">Anular definitivamente</span>
                                     </label>
                                     <label class="flex items-center gap-2 cursor-pointer group">
                                         <input type="radio" name="cancel_action" value="reschedule" onchange="toggleCancelAction()" class="w-4 h-4 text-brand-500 focus:ring-brand-400">
-                                        <span class="text-sm font-medium text-slate-700">Reprogramar (Cambiar fecha/hora)</span>
+                                        <span class="text-sm font-semibold text-slate-700">Reprogramar (Cambiar fecha/hora)</span>
                                     </label>
                                 </div>
 
-                                <!-- Selector de Nueva Fecha y Hora -->
-                                <div id="cancel-reschedule-section" class="hidden bg-slate-50 p-5 rounded-2xl border border-slate-200 mb-6">
+                                <div id="cancel-reschedule-section" class="hidden bg-slate-50 p-5 rounded-2xl border border-slate-300 mb-6">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-600 mb-2 ml-1">Nueva fecha</label>
+                                            <label class="block text-xs font-bold text-slate-700 mb-2 ml-1">Nueva fecha</label>
                                             <input type="date" id="cancel-input-date" onchange="handleCancelDateChange(event)" class="input-soft bg-white text-sm" />
                                         </div>
                                         <div id="cancel-time-container" class="opacity-30 pointer-events-none transition-opacity duration-300">
-                                            <label class="block text-xs font-medium text-slate-600 mb-2 ml-1">Nuevos horarios disponibles</label>
+                                            <label class="block text-xs font-bold text-slate-700 mb-2 ml-1">Nuevos horarios disponibles</label>
                                             <div id="cancel-time-slots-container" class="grid grid-cols-3 gap-2"></div>
-                                            <div id="cancel-no-time-message" class="hidden text-xs text-amber-600 bg-amber-50 p-2 rounded-lg border border-amber-100">Sin horas.</div>
+                                            <div id="cancel-no-time-message" class="hidden text-xs font-medium text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200">Sin horas.</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <label class="block text-xs font-medium text-slate-500 mb-2 ml-1 uppercase tracking-wide">Motivo (Requerido)</label>
+                                <label class="block text-xs font-bold text-slate-600 mb-2 ml-1 uppercase tracking-wider">Motivo (Requerido)</label>
                                 <textarea id="cancel-reason" required placeholder="Por favor indícanos el motivo de la anulación o cambio..." class="input-soft resize-none h-20 mb-4 text-sm"></textarea>
                                 
-                                <button onclick="submitCancellation(event)" class="btn-brand w-full py-3.5 md:py-4 rounded-xl font-semibold text-base md:text-lg flex items-center justify-center gap-2">
+                                <button onclick="submitCancellation(event)" class="btn-brand w-full py-3.5 md:py-4 rounded-xl font-bold tracking-wide text-base md:text-lg flex items-center justify-center gap-2">
                                     Confirmar Operación <i data-lucide="check-circle" class="w-5 h-5"></i>
                                 </button>
                             </div>
@@ -461,10 +443,9 @@
 
                 <!-- VISTA ADMINISTRADOR -->
                 <section id="view-admin" class="hidden p-5 md:p-8 mx-auto min-h-[500px]">
-                    <!-- PANTALLA DE LOGIN -->
                     <div id="admin-login-screen" class="flex flex-col items-center justify-center py-8">
-                        <div class="bg-white p-6 md:p-10 rounded-3xl shadow-xl border border-slate-100 w-full max-w-md relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-400 to-rose-400"></div>
+                        <div class="bg-white p-6 md:p-10 rounded-3xl shadow-xl border border-slate-200 w-full max-w-md relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-400 to-rose-500"></div>
                             
                             <form onsubmit="handleLogin(event)" class="space-y-4 md:space-y-5">
                                 <div>
@@ -473,44 +454,39 @@
                                 <div>
                                     <input type="password" id="login-pass" class="input-soft" placeholder="Contraseña" required>
                                 </div>
-                                <div id="login-error" class="hidden text-red-500 bg-red-50 p-2 rounded-lg text-sm text-center font-medium border border-red-100">Credenciales incorrectas</div>
-                                <button type="submit" class="btn-brand w-full py-3 rounded-xl font-semibold">
+                                <div id="login-error" class="hidden text-red-600 bg-red-50 p-2 rounded-lg text-sm text-center font-bold border border-red-200">Credenciales incorrectas</div>
+                                <button type="submit" class="btn-brand w-full py-3 rounded-xl font-bold tracking-wide">
                                     Ingresar al Sistema
                                 </button>
-                                <p class="text-[11px] text-center text-slate-400 mt-4">Acceso exclusivo para administradores y profesionales</p>
+                                <p class="text-[11px] text-center text-slate-500 font-medium mt-4">Acceso exclusivo para administradores y profesionales</p>
                             </form>
                         </div>
                     </div>
 
-                    <!-- DASHBOARD ADMIN -->
                     <div id="admin-dashboard" class="hidden">
-                        
-                        <!-- Header Dashboard -->
-                        <div class="p-5 md:p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 bg-white/50 rounded-2xl mb-6 shadow-sm border">
+                        <div class="p-5 md:p-6 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 bg-white/80 rounded-2xl mb-6 shadow-sm border">
                             <div class="flex items-center gap-3 md:gap-4 w-full md:w-auto">
-                                <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center text-brand-500 shadow-sm border border-brand-100 shrink-0">
+                                <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center text-brand-600 shadow-sm border border-brand-200 shrink-0">
                                     <i data-lucide="layout-dashboard" class="w-5 h-5 md:w-6 md:h-6"></i>
                                 </div>
                                 <div>
                                     <h2 class="text-lg md:text-xl font-bold text-slate-800" id="dash-user-name">Centro Clínico</h2>
-                                    <p class="text-xs text-slate-500" id="dash-user-role">Gestión general del sistema</p>
+                                    <p class="text-xs font-medium text-slate-600" id="dash-user-role">Gestión general del sistema</p>
                                 </div>
                             </div>
                             
-                            <!-- Navegación interna Admin -->
-                            <div class="flex flex-wrap justify-center w-full lg:w-auto bg-slate-50 rounded-xl p-1 border border-slate-200 shadow-inner gap-1">
-                                <button onclick="switchAdminTab('reservas')" id="tab-admin-reservas" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors bg-white text-brand-600 shadow-sm border border-slate-200 flex-1 text-center">Citas</button>
-                                <button onclick="switchAdminTab('profesionales')" id="tab-admin-profesionales" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center">Profesionales</button>
-                                <button onclick="switchAdminTab('horarios')" id="tab-admin-horarios" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center">Horarios</button>
-                                <button onclick="switchAdminTab('banners')" id="tab-admin-banners" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center">Banners</button>
-                                <button onclick="switchAdminTab('ficha')" id="tab-admin-ficha" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center">Fichas Clínicas</button>
-                                <button onclick="switchAdminTab('ajustes')" id="tab-admin-ajustes" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center">Ajustes</button>
+                            <div class="flex flex-wrap justify-center w-full lg:w-auto bg-slate-100 rounded-xl p-1 border border-slate-200 shadow-inner gap-1">
+                                <button onclick="switchAdminTab('reservas')" id="tab-admin-reservas" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-colors bg-white text-brand-600 shadow-sm border border-slate-300 flex-1 text-center">Citas</button>
+                                <button onclick="switchAdminTab('profesionales')" id="tab-admin-profesionales" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-colors text-slate-600 hover:text-slate-800 border border-transparent flex-1 text-center">Profesionales</button>
+                                <button onclick="switchAdminTab('horarios')" id="tab-admin-horarios" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-colors text-slate-600 hover:text-slate-800 border border-transparent flex-1 text-center">Horarios</button>
+                                <button onclick="switchAdminTab('banners')" id="tab-admin-banners" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-colors text-slate-600 hover:text-slate-800 border border-transparent flex-1 text-center">Banners</button>
+                                <button onclick="switchAdminTab('ficha')" id="tab-admin-ficha" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-colors text-slate-600 hover:text-slate-800 border border-transparent flex-1 text-center">Fichas Clínicas</button>
+                                <button onclick="switchAdminTab('ajustes')" id="tab-admin-ajustes" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-colors text-slate-600 hover:text-slate-800 border border-transparent flex-1 text-center">Ajustes</button>
                             </div>
-                            <button onclick="logout()" class="p-2 text-slate-400 hover:text-red-500 transition-colors hidden lg:block" title="Cerrar Sesión">
+                            <button onclick="logout()" class="p-2 text-slate-500 hover:text-red-600 transition-colors hidden lg:block" title="Cerrar Sesión">
                                 <i data-lucide="log-out" class="w-5 h-5"></i>
                             </button>
-                            <!-- Botón salir móvil -->
-                            <button onclick="logout()" class="w-full py-2 mt-2 lg:hidden text-red-500 bg-red-50 rounded-lg text-sm font-medium border border-red-100">
+                            <button onclick="logout()" class="w-full py-2 mt-2 lg:hidden text-red-600 bg-red-50 rounded-lg text-sm font-bold border border-red-200">
                                 Cerrar Sesión
                             </button>
                         </div>
@@ -519,29 +495,29 @@
                         <div id="admin-view-reservas">
                             <div class="flex justify-between items-center mb-4 md:mb-6">
                                 <h3 class="text-base md:text-lg font-bold text-slate-800">Agenda General</h3>
-                                <div class="bg-brand-50 text-brand-700 border border-brand-100 px-3 py-1.5 md:px-4 md:py-1.5 rounded-lg font-semibold text-xs md:text-sm shrink-0">
+                                <div class="bg-brand-50 text-brand-700 border border-brand-200 px-3 py-1.5 md:px-4 md:py-1.5 rounded-lg font-bold text-xs md:text-sm shrink-0">
                                     Registros: <span id="admin-total-count">0</span>
                                 </div>
                             </div>
                             
                             <div id="admin-empty-state" class="text-center py-16 md:py-20 hidden bg-white rounded-2xl border border-slate-200">
-                                <div class="w-14 h-14 md:w-16 md:h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 border border-slate-100 text-slate-400">
+                                <div class="w-14 h-14 md:w-16 md:h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 border border-slate-200 text-slate-500">
                                     <i data-lucide="inbox" class="w-6 h-6 md:w-8 h-8"></i>
                                 </div>
-                                <p class="text-slate-500 text-sm">No hay actividad en la agenda.</p>
+                                <p class="text-slate-600 font-medium text-sm">No hay actividad en la agenda.</p>
                             </div>
 
                             <div id="admin-table-container" class="overflow-x-auto rounded-xl md:rounded-2xl border border-slate-200 hidden bg-white">
                                 <table class="w-full text-left border-collapse whitespace-nowrap">
                                     <thead>
-                                        <tr class="bg-slate-50 text-slate-500 text-[10px] md:text-xs uppercase tracking-wider border-b border-slate-200">
-                                            <th class="p-3 md:p-4 font-semibold">Fecha y Hora</th>
-                                            <th class="p-3 md:p-4 font-semibold">Profesional</th>
-                                            <th class="p-3 md:p-4 font-semibold">Paciente / Detalles</th>
-                                            <th class="p-3 md:p-4 font-semibold text-right">Acción</th>
+                                        <tr class="bg-slate-100 text-slate-600 text-[10px] md:text-xs font-bold uppercase tracking-wider border-b border-slate-300">
+                                            <th class="p-3 md:p-4">Fecha y Hora</th>
+                                            <th class="p-3 md:p-4">Profesional</th>
+                                            <th class="p-3 md:p-4">Paciente / Detalles</th>
+                                            <th class="p-3 md:p-4 text-right">Acción</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="admin-table-body" class="divide-y divide-slate-100"></tbody>
+                                    <tbody id="admin-table-body" class="divide-y divide-slate-200"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -551,62 +527,59 @@
                             <h3 class="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6">Directorio de Profesionales</h3>
                             
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                                <!-- Form Agregar / Editar -->
                                 <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
-                                    <h4 id="pro-form-title" class="font-semibold text-slate-700 mb-4 md:mb-5 flex items-center gap-2 text-xs md:text-sm uppercase tracking-wide">
-                                        <i data-lucide="user-plus" class="w-4 h-4 text-brand-500"></i> Nuevo Profesional
+                                    <h4 id="pro-form-title" class="font-bold text-slate-800 mb-4 md:mb-5 flex items-center gap-2 text-xs md:text-sm uppercase tracking-wide">
+                                        <i data-lucide="user-plus" class="w-4 h-4 text-brand-600"></i> Nuevo Profesional
                                     </h4>
                                     <div class="space-y-4">
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Nombre</label>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">Nombre</label>
                                             <input type="text" id="new-pro-name" placeholder="Ej. Ps. Ana" class="input-soft py-2 text-sm">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Especialidad</label>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">Especialidad</label>
                                             <input type="text" id="new-pro-spec" placeholder="Ej. Psicología Adultos" class="input-soft py-2 text-sm">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Cód. Fonasa</label>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">Cód. Fonasa</label>
                                             <input type="text" id="new-pro-code" placeholder="Ej. 092001 (Opcional)" class="input-soft py-2 text-sm">
                                         </div>
-                                        <div class="border-t border-slate-100 pt-3 mt-2">
-                                            <label class="block text-xs font-medium text-brand-600 mb-2 ml-1 uppercase tracking-wide"><i data-lucide="key" class="w-3 h-3 inline"></i> Credenciales de Acceso</label>
+                                        <div class="border-t border-slate-200 pt-3 mt-2">
+                                            <label class="block text-xs font-bold text-brand-700 mb-2 ml-1 uppercase tracking-wider"><i data-lucide="key" class="w-3 h-3 inline"></i> Credenciales de Acceso</label>
                                             <div class="grid grid-cols-2 gap-3">
                                                 <div>
-                                                    <label class="block text-[10px] font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">RUT Acceso</label>
+                                                    <label class="block text-[10px] font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">RUT Acceso</label>
                                                     <input type="text" id="new-pro-rut" oninput="formatRut(this)" placeholder="Ej: 11.222.333-4" class="input-soft py-2 text-sm" required>
                                                 </div>
                                                 <div>
-                                                    <label class="block text-[10px] font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Contraseña</label>
+                                                    <label class="block text-[10px] font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">Contraseña</label>
                                                     <input type="password" id="new-pro-pass" placeholder="Clave asignada" class="input-soft py-2 text-sm" required>
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Biografía / Reseña</label>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">Biografía / Reseña</label>
                                             <textarea id="new-pro-bio" placeholder="Breve reseña que verá el paciente..." class="input-soft py-2 text-sm resize-none h-16"></textarea>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 ml-1 uppercase tracking-wide">Datos Bancarios</label>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1 ml-1 uppercase tracking-wider">Datos Bancarios</label>
                                             <textarea id="new-pro-bank" placeholder="Para consultas particulares..." class="input-soft py-2 text-sm resize-none h-20"></textarea>
                                         </div>
                                         <div class="flex gap-2 pt-2">
-                                            <button id="pro-form-btn" onclick="saveProfessional()" class="w-full py-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors text-sm font-semibold">
+                                            <button id="pro-form-btn" onclick="saveProfessional()" class="w-full py-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors text-sm font-bold tracking-wide">
                                                 Agregar a Nómina
                                             </button>
-                                            <button id="pro-cancel-btn" onclick="cancelEditPro()" class="hidden w-1/3 py-2.5 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors text-sm font-semibold border border-red-100">
+                                            <button id="pro-cancel-btn" onclick="cancelEditPro()" class="hidden w-1/3 py-2.5 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors text-sm font-bold border border-red-200">
                                                 Cancelar
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <!-- Lista Actual -->
                                 <div class="lg:col-span-2">
                                     <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
                                         <table class="w-full text-left border-collapse whitespace-nowrap">
-                                            <tbody id="admin-pro-list" class="divide-y divide-slate-100">
-                                                <!-- JS: Lista -->
+                                            <tbody id="admin-pro-list" class="divide-y divide-slate-200">
                                             </tbody>
                                         </table>
                                     </div>
@@ -618,31 +591,31 @@
                         <div id="admin-view-horarios" class="hidden">
                             <div class="max-w-3xl mx-auto">
                                 <h3 class="text-base md:text-lg font-bold text-slate-800 mb-1 md:mb-2">Disponibilidad Horaria</h3>
-                                <p class="text-xs md:text-sm text-slate-500 mb-6 md:mb-8">Administra los bloques de tiempo en los que atenderá cada especialista.</p>
+                                <p class="text-xs md:text-sm font-medium text-slate-600 mb-6 md:mb-8">Administra los bloques de tiempo en los que atenderá cada especialista.</p>
                                 
                                 <div class="bg-white p-5 md:p-8 rounded-2xl md:rounded-3xl border border-slate-200 shadow-sm space-y-6">
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                                         <div>
-                                            <label class="block text-[10px] md:text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide ml-1">1. Especialista</label>
-                                            <select id="sched-pro-select" onchange="loadScheduleConfig()" class="input-soft text-sm bg-slate-50">
+                                            <label class="block text-[10px] md:text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider ml-1">1. Especialista</label>
+                                            <select id="sched-pro-select" onchange="loadScheduleConfig()" class="input-soft text-sm bg-slate-50 font-semibold text-slate-800">
                                             </select>
                                         </div>
                                         <div>
-                                            <label class="block text-[10px] md:text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide ml-1">2. Fecha a modificar</label>
-                                            <input type="date" id="sched-date-select" onchange="loadScheduleConfig()" class="input-soft text-sm bg-slate-50">
+                                            <label class="block text-[10px] md:text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider ml-1">2. Fecha a modificar</label>
+                                            <input type="date" id="sched-date-select" onchange="loadScheduleConfig()" class="input-soft text-sm bg-slate-50 font-semibold text-slate-800">
                                         </div>
                                     </div>
 
-                                    <div id="sched-hours-container" class="opacity-30 pointer-events-none transition-opacity duration-300 pt-5 md:pt-6 border-t border-slate-100">
-                                        <label class="block text-[10px] md:text-xs font-medium text-slate-500 mb-4 uppercase tracking-wide ml-1">3. Selecciona bloques activos</label>
+                                    <div id="sched-hours-container" class="opacity-30 pointer-events-none transition-opacity duration-300 pt-5 md:pt-6 border-t border-slate-200">
+                                        <label class="block text-[10px] md:text-xs font-bold text-slate-600 mb-4 uppercase tracking-wider ml-1">3. Selecciona bloques activos</label>
                                         <div id="sched-checkboxes" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 md:gap-3">
                                         </div>
                                         
-                                        <button onclick="saveScheduleConfig()" class="btn-brand w-full mt-6 md:mt-8 py-3 rounded-xl font-semibold text-sm md:text-base">
+                                        <button onclick="saveScheduleConfig()" class="btn-brand w-full mt-6 md:mt-8 py-3 rounded-xl font-bold tracking-wide text-sm md:text-base">
                                             Guardar Horario del Día
                                         </button>
-                                        <div id="sched-save-msg" class="hidden text-center text-xs md:text-sm font-medium text-brand-600 mt-4 flex items-center justify-center gap-2 bg-brand-50 py-2 rounded-lg border border-brand-100">
-                                            <i data-lucide="check" class="w-4 h-4 shrink-0"></i> Horario guardado
+                                        <div id="sched-save-msg" class="hidden text-center text-xs md:text-sm font-bold text-brand-700 mt-4 flex items-center justify-center gap-2 bg-brand-50 py-2 rounded-lg border border-brand-200">
+                                            <i data-lucide="check" class="w-4 h-4 shrink-0"></i> Horario guardado exitosamente
                                         </div>
                                     </div>
                                 </div>
@@ -655,30 +628,31 @@
                             
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                                 <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
-                                    <h4 class="font-semibold text-slate-700 mb-4 md:mb-5 flex items-center gap-2 text-xs md:text-sm uppercase tracking-wide">
-                                        <i data-lucide="image-plus" class="w-4 h-4 text-brand-500"></i> Nuevo Banner
+                                    <h4 class="font-bold text-slate-800 mb-4 md:mb-5 flex items-center gap-2 text-xs md:text-sm uppercase tracking-wide">
+                                        <i data-lucide="image-plus" class="w-4 h-4 text-brand-600"></i> Nuevo Banner
                                     </h4>
                                     <div class="space-y-4">
                                         <div>
-                                            <label class="block text-xs text-slate-500 mb-1 ml-1">URL Imagen</label>
-                                            <input type="text" id="new-banner-img" placeholder="https://ejemplo.com/imagen.jpg" class="input-soft py-2 text-sm">
+                                            <label class="block text-xs font-bold text-slate-700 mb-1 ml-1">Imagen del Banner</label>
+                                            <input type="file" id="new-banner-file" accept="image/*" class="input-soft py-2 text-sm w-full">
+                                            <p class="text-[10px] text-slate-500 font-medium mt-1 ml-1">Selecciona imagen de tu equipo (se comprimirá).</p>
                                         </div>
                                         <div>
-                                            <label class="block text-xs text-slate-500 mb-1 ml-1">Título</label>
+                                            <label class="block text-xs font-bold text-slate-700 mb-1 ml-1">Título</label>
                                             <input type="text" id="new-banner-title" placeholder="Ej. Bienestar Integral" class="input-soft py-2 text-sm">
                                         </div>
                                         <div>
-                                            <label class="block text-xs text-slate-500 mb-1 ml-1">Texto</label>
+                                            <label class="block text-xs font-bold text-slate-700 mb-1 ml-1">Texto Corto</label>
                                             <input type="text" id="new-banner-text" placeholder="Te acompañamos..." class="input-soft py-2 text-sm">
                                         </div>
-                                        <button onclick="addBanner()" class="w-full py-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors text-sm font-semibold mt-2">
+                                        <button id="btn-add-banner" onclick="addBanner()" class="w-full py-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors text-sm font-bold tracking-wide mt-2">
                                             Añadir al Slider
                                         </button>
                                     </div>
                                 </div>
                                 
                                 <div class="lg:col-span-2 space-y-4">
-                                    <p class="text-sm text-slate-500">Banners activos en el Slider:</p>
+                                    <p class="text-sm font-bold text-slate-600">Banners activos en el Slider:</p>
                                     <div id="admin-banner-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     </div>
                                 </div>
@@ -690,68 +664,79 @@
                             <h3 class="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6">Fichas Clínicas de Pacientes</h3>
                             
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                                <!-- Buscador y Lista de Sesiones -->
                                 <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
                                     <form onsubmit="searchPatientRecords(event)">
-                                        <label class="block text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide ml-1">Buscar por RUT</label>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider ml-1">Buscar por RUT</label>
                                         <div class="flex gap-2">
                                             <input type="text" id="search-record-rut" placeholder="Ej: 12.345.678-9" oninput="formatRut(this)" required class="input-soft py-2 text-sm flex-1">
-                                            <button type="submit" class="btn-brand px-4 py-2 rounded-xl text-sm font-semibold" title="Buscar"><i data-lucide="search" class="w-4 h-4 mx-auto"></i></button>
+                                            <button type="submit" class="btn-brand px-4 py-2 rounded-xl text-sm font-bold" title="Buscar"><i data-lucide="search" class="w-4 h-4 mx-auto"></i></button>
                                         </div>
                                     </form>
                                     
                                     <div id="record-list-container" class="mt-6 hidden">
-                                        <h5 class="text-xs font-bold text-slate-600 mb-3 uppercase tracking-wider ml-1">Sesiones Encontradas</h5>
-                                        <div id="record-appointments-list" class="space-y-2 max-h-64 overflow-y-auto pr-1">
-                                            <!-- JS injected list -->
-                                        </div>
+                                        <h5 class="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wider ml-1">Sesiones Encontradas</h5>
+                                        <div id="record-appointments-list" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
                                     </div>
                                     <div id="record-empty-state" class="mt-6 text-center hidden">
-                                        <p class="text-xs text-slate-500 font-medium">No se encontraron sesiones para este RUT.</p>
+                                        <p class="text-xs font-bold text-slate-500">No se encontraron sesiones para este RUT.</p>
                                     </div>
                                 </div>
                                 
-                                <!-- Editor de Ficha Clínica -->
                                 <div class="lg:col-span-2">
                                     <div id="record-editor-container" class="bg-white p-5 md:p-8 rounded-2xl border border-slate-200 shadow-sm hidden">
-                                        <div class="flex justify-between items-start mb-6 border-b border-slate-100 pb-4">
+                                        <div class="flex justify-between items-start mb-6 border-b border-slate-200 pb-4">
                                             <div>
                                                 <h4 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                                                    <i data-lucide="file-text" class="w-5 h-5 text-brand-500"></i> Informe Clínico
+                                                    <i data-lucide="file-text" class="w-5 h-5 text-brand-600"></i> Informe Clínico
                                                 </h4>
-                                                <p id="record-patient-name" class="text-sm text-slate-600 font-medium mt-1">Nombre Paciente</p>
-                                                <p id="record-session-info" class="text-xs text-slate-500 mt-0.5">Fecha - Profesional</p>
+                                                <p id="record-patient-name" class="text-sm font-bold text-slate-700 mt-1">Nombre Paciente</p>
+                                                <p id="record-session-info" class="text-xs font-medium text-slate-600 mt-0.5">Fecha - Profesional</p>
                                             </div>
                                             <div class="flex gap-2">
-                                                <button onclick="printClinicalRecord()" class="p-2.5 bg-slate-50 text-slate-600 border border-slate-200 hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 rounded-lg transition-all" title="Exportar a PDF / Imprimir">
+                                                <button onclick="printClinicalRecord()" class="p-2.5 bg-slate-50 text-slate-700 border border-slate-300 hover:bg-brand-50 hover:text-brand-700 hover:border-brand-300 rounded-lg transition-all shadow-sm" title="Exportar a PDF / Imprimir">
                                                     <i data-lucide="printer" class="w-5 h-5"></i>
                                                 </button>
                                             </div>
                                         </div>
 
-                                        <div class="space-y-5">
+                                        <div class="space-y-6">
                                             <input type="hidden" id="current-record-id">
+                                            
+                                            <!-- Campo Motivo -->
                                             <div>
-                                                <label class="block text-xs font-medium text-slate-500 mb-2 ml-1 uppercase tracking-wide">Motivo de Consulta</label>
-                                                <textarea id="record-reason" placeholder="Describa el motivo por el que asiste el paciente..." class="input-soft resize-y h-24 text-sm leading-relaxed"></textarea>
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider ml-1">Motivo de Consulta</label>
+                                                    <button type="button" onclick="toggleDictation('record-reason', this)" class="text-slate-500 hover:text-brand-600 transition-colors px-2 py-1 bg-slate-50 rounded border border-slate-200 flex items-center gap-1 text-[10px] font-bold uppercase" title="Dictar por voz">
+                                                        <i data-lucide="mic" class="w-3.5 h-3.5"></i> Dictar
+                                                    </button>
+                                                </div>
+                                                <textarea id="record-reason" placeholder="Describa el motivo por el que asiste el paciente..." class="input-soft resize-y h-24 text-sm leading-relaxed font-normal"></textarea>
                                             </div>
+                                            
+                                            <!-- Campo Informe -->
                                             <div>
-                                                <label class="block text-xs font-medium text-slate-500 mb-2 ml-1 uppercase tracking-wide">Informe Clínico / Evolución</label>
-                                                <textarea id="record-report" placeholder="Redacte aquí el informe clínico, observaciones y plan a seguir de la sesión..." class="input-soft resize-y h-48 text-sm leading-relaxed"></textarea>
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider ml-1">Informe Clínico / Evolución</label>
+                                                    <button type="button" onclick="toggleDictation('record-report', this)" class="text-slate-500 hover:text-brand-600 transition-colors px-2 py-1 bg-slate-50 rounded border border-slate-200 flex items-center gap-1 text-[10px] font-bold uppercase" title="Dictar por voz">
+                                                        <i data-lucide="mic" class="w-3.5 h-3.5"></i> Dictar
+                                                    </button>
+                                                </div>
+                                                <textarea id="record-report" placeholder="Redacte aquí el informe clínico, observaciones y plan a seguir de la sesión..." class="input-soft resize-y h-48 text-sm leading-relaxed font-normal"></textarea>
                                             </div>
-                                            <button onclick="saveClinicalRecord()" class="btn-brand w-full py-3.5 rounded-xl font-semibold mt-2 flex justify-center items-center gap-2 text-sm md:text-base">
+
+                                            <button onclick="saveClinicalRecord()" class="btn-brand w-full py-3.5 rounded-xl font-bold tracking-wide mt-2 flex justify-center items-center gap-2 text-sm md:text-base">
                                                 Guardar Ficha <i data-lucide="save" class="w-4 h-4"></i>
                                             </button>
-                                            <div id="record-save-msg" class="hidden text-center text-xs md:text-sm font-medium text-brand-600 mt-2 bg-brand-50 py-2.5 rounded-lg border border-brand-100 flex items-center justify-center gap-2">
+                                            <div id="record-save-msg" class="hidden text-center text-xs md:text-sm font-bold text-brand-700 mt-2 bg-brand-50 py-2.5 rounded-lg border border-brand-200 flex items-center justify-center gap-2">
                                                 <i data-lucide="check" class="w-4 h-4"></i> Ficha guardada exitosamente
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div id="record-editor-placeholder" class="bg-slate-50 border border-slate-200 border-dashed rounded-2xl h-full min-h-[300px] md:min-h-[400px] flex flex-col items-center justify-center text-slate-400 p-6 text-center">
+                                    <div id="record-editor-placeholder" class="bg-slate-50 border border-slate-300 border-dashed rounded-2xl h-full min-h-[300px] md:min-h-[400px] flex flex-col items-center justify-center text-slate-500 p-6 text-center">
                                         <i data-lucide="clipboard-list" class="w-12 h-12 md:w-16 md:h-16 mb-4 opacity-50"></i>
-                                        <p class="text-sm md:text-base font-medium">Seleccione una sesión en el panel lateral</p>
-                                        <p class="text-xs mt-2">Podrá visualizar, editar y exportar a PDF la ficha clínica del paciente.</p>
+                                        <p class="text-sm md:text-base font-bold text-slate-600">Seleccione una sesión en el panel lateral</p>
+                                        <p class="text-xs font-medium mt-2">Podrá visualizar, editar y exportar a PDF la ficha clínica del paciente.</p>
                                     </div>
                                 </div>
                             </div>
@@ -763,34 +748,34 @@
                             
                             <div class="max-w-2xl mx-auto bg-white p-5 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                                 <div>
-                                    <h4 class="font-semibold text-slate-700 flex items-center gap-2 mb-4 border-b border-slate-100 pb-2">
-                                        <i data-lucide="map-pin" class="w-5 h-5 text-brand-500"></i> Información de Ubicación
+                                    <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-4 border-b border-slate-200 pb-2">
+                                        <i data-lucide="map-pin" class="w-5 h-5 text-brand-600"></i> Información de Ubicación
                                     </h4>
                                     <div class="space-y-4">
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide ml-1">Nombre del Centro</label>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1 uppercase tracking-wider ml-1">Nombre del Centro</label>
                                             <input type="text" id="config-clinic-name" class="input-soft bg-slate-50">
                                         </div>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
-                                                <label class="block text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide ml-1">Dirección (Calle y N°)</label>
+                                                <label class="block text-xs font-bold text-slate-600 mb-1 uppercase tracking-wider ml-1">Dirección (Calle y N°)</label>
                                                 <input type="text" id="config-clinic-address" class="input-soft bg-slate-50">
                                             </div>
                                             <div>
-                                                <label class="block text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide ml-1">Ciudad / Región</label>
+                                                <label class="block text-xs font-bold text-slate-600 mb-1 uppercase tracking-wider ml-1">Ciudad / Región</label>
                                                 <input type="text" id="config-clinic-city" class="input-soft bg-slate-50">
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide ml-1 flex justify-between">
+                                            <label class="block text-xs font-bold text-slate-600 mb-1 uppercase tracking-wider ml-1 flex justify-between">
                                                 <span>Enlace Iframe de Google Maps (Opcional)</span>
                                             </label>
                                             <input type="text" id="config-clinic-map" class="input-soft bg-slate-50 text-xs" placeholder="URL src del iframe">
                                         </div>
-                                        <button onclick="saveClinicInfo()" class="btn-brand w-full py-3 rounded-xl font-semibold mt-4">
+                                        <button onclick="saveClinicInfo()" class="btn-brand w-full py-3 rounded-xl font-bold tracking-wide mt-4">
                                             Guardar Configuración
                                         </button>
-                                        <div id="config-save-msg" class="hidden text-center text-xs md:text-sm font-medium text-brand-600 mt-2 bg-brand-50 py-2 rounded-lg border border-brand-100">
+                                        <div id="config-save-msg" class="hidden text-center text-xs md:text-sm font-bold text-brand-700 mt-2 bg-brand-50 py-2 rounded-lg border border-brand-200">
                                             <i data-lucide="check" class="w-4 h-4 inline"></i> Datos actualizados
                                         </div>
                                     </div>
@@ -804,27 +789,27 @@
             </main>
         </div>
 
-        <!-- SECCIÓN UBICACIÓN / MAPA (COMPARTIDA) -->
+        <!-- SECCIÓN UBICACIÓN / MAPA -->
         <section id="shared-location-section" class="mx-auto mt-6 md:mt-8">
             <div class="glass-card rounded-2xl md:rounded-[2rem] overflow-hidden shadow-lg mb-4">
                 <div class="p-5 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8 items-center">
                     <div class="flex-1 text-center md:text-left w-full">
-                        <div class="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-brand-100 text-brand-500 mb-4 shadow-sm border border-brand-50 mx-auto md:mx-0">
+                        <div class="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-brand-100 text-brand-600 mb-4 shadow-sm border border-brand-200 mx-auto md:mx-0">
                             <i data-lucide="map-pin" class="w-6 h-6 md:w-7 md:h-7"></i>
                         </div>
                         <h3 class="text-xl md:text-2xl font-bold text-slate-800 mb-2">Visítanos</h3>
-                        <p id="clinic-name-display" class="text-slate-600 mb-2 text-sm md:text-base font-medium">Centro de Psicología Integral</p>
-                        <p class="text-slate-500 mb-6 text-sm md:text-base">
+                        <p id="clinic-name-display" class="text-slate-700 mb-2 text-sm md:text-base font-bold">Centro de Psicología Integral</p>
+                        <p class="text-slate-600 font-medium mb-6 text-sm md:text-base">
                             <span id="clinic-address-display">Antonio Varas 708</span><br>
                             <span id="clinic-city-display">Temuco centro, Chile</span>
                         </p>
-                        <a id="clinic-map-link-1" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3 btn-brand rounded-xl font-medium transition-transform hover:-translate-y-1 shadow-md">
+                        <a id="clinic-map-link-1" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3 btn-brand rounded-xl font-bold tracking-wide transition-transform hover:-translate-y-1 shadow-md">
                             <i data-lucide="navigation" class="w-5 h-5"></i>
                             Cómo llegar
                         </a>
                     </div>
                     
-                    <div class="w-full md:w-1/2 h-48 md:h-64 rounded-xl overflow-hidden relative shadow-sm border border-slate-200 group bg-slate-100">
+                    <div class="w-full md:w-1/2 h-48 md:h-64 rounded-xl overflow-hidden relative shadow-sm border border-slate-300 group bg-slate-100">
                         <iframe 
                             id="clinic-map-iframe"
                             src="" 
@@ -835,9 +820,9 @@
                             loading="lazy" 
                              referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
-                        <a id="clinic-map-link-2" href="#" target="_blank" rel="noopener noreferrer" class="absolute inset-0 z-10 bg-transparent flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
-                            <div class="bg-white text-slate-800 px-4 py-2 rounded-lg font-semibold shadow-lg flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                                <i data-lucide="external-link" class="w-4 h-4 text-brand-500"></i> Abrir en App
+                        <a id="clinic-map-link-2" href="#" target="_blank" rel="noopener noreferrer" class="absolute inset-0 z-10 bg-transparent flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/30 backdrop-blur-[2px]">
+                            <div class="bg-white text-slate-800 px-4 py-2 rounded-lg font-bold shadow-lg flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                <i data-lucide="external-link" class="w-4 h-4 text-brand-600"></i> Abrir en App
                             </div>
                         </a>
                     </div>
@@ -849,7 +834,6 @@
 
     <!-- LÓGICA JAVASCRIPT -->
     <script>
-        // Elementos reactivos conectados a Firebase
         let currentUser = null;
         let editingProId = null; 
         
@@ -867,12 +851,7 @@
         ];
 
         let appointments = [];
-
-        let sliderBanners = [
-            { id: 'slide_1', img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200&auto=format&fit=crop', title: 'Cuidado Mental Integral', text: 'Acompañamiento profesional en cada etapa de tu vida.' },
-            { id: 'slide_2', img: 'https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?q=80&w=1200&auto=format&fit=crop', title: 'Espacios de Confianza', text: 'Un ambiente seguro, privado y empático diseñado para ti.' }
-        ];
-        
+        let sliderBanners = [];
         let currentSlide = 0;
         let slideIntervalId = null;
 
@@ -886,140 +865,142 @@
         let cancelSelectedDate = '';
         let cancelSelectedTime = '';
 
-        // Manejo seguro de la inicialización de Lucide Icons
         function safeCreateIcons() {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            } else {
-                console.warn("Lucide no cargó a tiempo. Reintentando...");
-                setTimeout(safeCreateIcons, 300);
-            }
+            if (typeof lucide !== 'undefined') { lucide.createIcons(); } 
+            else { setTimeout(safeCreateIcons, 300); }
         }
 
-        // ==========================================
-        // SYNC FIREBASE REALTIME LISTENERS
-        // ==========================================
         async function initFirebaseSync() {
             const db = window.firebaseDb;
             const auth = window.firebaseAuth;
             const appId = window.firebaseAppId;
 
-            if (!db || !auth) {
-                console.warn("Firebase no ha inicializado por completo. Reintentando...");
-                setTimeout(initFirebaseSync, 500);
-                return;
-            }
+            if (!db || !auth) { setTimeout(initFirebaseSync, 500); return; }
 
             try {
-                // Iniciar autenticación anónima para poder consultar la base de datos de manera segura (Alineación con RULE 3)
                 await signInAnonymously(auth);
-                console.log("Autenticación completada con éxito en Firebase.");
+                if (!auth.currentUser) return;
 
-                // Guard de seguridad de autenticación antes de queries
-                if (!auth.currentUser) {
-                    console.error("No se pudo comprobar la sesión autenticada.");
-                    return;
-                }
-
-                // Cargar y escuchar Información de la Clínica (Se corrigió la ruta de 5 segmentos a 6 segmentos para evitar crasheo)
                 const infoRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info', 'main');
                 onSnapshot(infoRef, (snap) => {
-                    if (snap.exists()) {
-                        clinicInfo = snap.data();
-                        updatePatientLocationUI();
-                    } else {
-                        // Crear primer documento de ajustes si no existe con merge seguro
-                        setDoc(infoRef, clinicInfo);
-                    }
-                }, (error) => console.error("Error cargando ajustes:", error));
+                    if (snap.exists()) { clinicInfo = snap.data(); updatePatientLocationUI(); } 
+                    else { setDoc(infoRef, clinicInfo); }
+                });
 
-                // Escuchar Colección de Profesionales
                 const prosRef = collection(db, 'artifacts', appId, 'public', 'data', 'professionals');
                 onSnapshot(prosRef, (querySnap) => {
                     const tempPros = [];
-                    querySnap.forEach((doc) => {
-                        tempPros.push({ id: doc.id, ...doc.data() });
-                    });
-                    if (tempPros.length > 0) {
-                        professionals = tempPros;
-                    } else {
-                        // Crear base de profesionales iniciales de respaldo en Firestore
-                        professionals.forEach(p => {
-                            setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'professionals', p.id), p);
-                        });
-                    }
+                    querySnap.forEach(doc => tempPros.push({ id: doc.id, ...doc.data() }));
+                    if (tempPros.length > 0) professionals = tempPros;
+                    else professionals.forEach(p => setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'professionals', p.id), p));
                     renderPatientProfessionals();
                     if (currentUser && currentUser.role === 'admin') renderAdminProfesionales();
-                }, (error) => console.error("Error cargando profesionales:", error));
+                });
 
-                // Escuchar Colección de Citas
                 const appsRef = collection(db, 'artifacts', appId, 'public', 'data', 'appointments');
                 onSnapshot(appsRef, (querySnap) => {
                     appointments = [];
-                    querySnap.forEach((doc) => {
-                        appointments.push({ id: doc.id, ...doc.data() });
-                    });
+                    querySnap.forEach(doc => appointments.push({ id: doc.id, ...doc.data() }));
                     if (selectedDate) renderTimeSlots();
-                    if (currentUser) {
-                        renderAdminReservas();
-                    }
-                }, (error) => console.error("Error cargando citas:", error));
+                    if (currentUser) renderAdminReservas();
+                });
 
-                // Escuchar Colección de Horarios
                 const schedsRef = collection(db, 'artifacts', appId, 'public', 'data', 'schedules');
                 onSnapshot(schedsRef, (querySnap) => {
                     schedules = {};
-                    querySnap.forEach((doc) => {
-                        schedules[doc.id] = doc.data();
-                    });
+                    querySnap.forEach(doc => schedules[doc.id] = doc.data());
                     if (selectedDate) renderTimeSlots();
-                }, (error) => console.error("Error cargando disponibilidad:", error));
+                });
 
-                // Escuchar Colección de Banners
                 const bannersRef = collection(db, 'artifacts', appId, 'public', 'data', 'banners');
                 onSnapshot(bannersRef, (querySnap) => {
                     const tempBanners = [];
-                    querySnap.forEach((doc) => {
-                        tempBanners.push({ id: doc.id, ...doc.data() });
-                    });
-                    if (tempBanners.length > 0) {
-                        sliderBanners = tempBanners;
-                    } else {
-                        sliderBanners.forEach(b => {
-                            setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'banners', b.id), b);
-                        });
-                    }
+                    querySnap.forEach(doc => tempBanners.push({ id: doc.id, ...doc.data() }));
+                    sliderBanners = tempBanners;
                     renderAdminBanners();
                     renderPatientSlider();
-                }, (error) => console.error("Error cargando banners:", error));
+                });
 
-            } catch (err) {
-                console.error("Error de inicialización de conexión en Firebase:", err);
-            }
+            } catch (err) { console.error("Error Firebase:", err); }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             safeCreateIcons();
-            // Corregido: .toISOString().split('T') ahora extrae correctamente la cadena "YYYY-MM-DD"
             const today = new Date().toISOString().split('T');
             document.getElementById('input-date').min = today;
             document.getElementById('sched-date-select').min = today;
             document.getElementById('cancel-input-date').min = today;
-            
             updatePatientLocationUI();
-            renderPatientProfessionals();
-            renderPatientSlider();
-
-            // Iniciar sincronización en tiempo real con Firebase Firestore
             initFirebaseSync();
         });
 
-        function formatRut(input) {
-            let value = input.value.replace(/[^0-9kK]/g, '').toUpperCase();
-            if (value.length <= 1) {
-                input.value = value;
+        // ------------------ Transcripción de Voz ------------------ //
+        let speechRecognition;
+        let isDictating = false;
+        let currentDictationTarget = null;
+        let currentDictationBtn = null;
+
+        function toggleDictation(targetId, btnElement) {
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRec) {
+                alert("Tu navegador no soporta transcripción por voz nativa. Usa Chrome, Edge o Safari recientes.");
                 return;
             }
+
+            // Detener si ya está grabando
+            if (isDictating) {
+                speechRecognition.stop();
+                if (currentDictationTarget === targetId) return; // Si era el mismo, solo lo paramos
+            }
+
+            speechRecognition = new SpeechRec();
+            speechRecognition.lang = 'es-CL';
+            speechRecognition.continuous = true;
+            speechRecognition.interimResults = true;
+
+            currentDictationTarget = targetId;
+            currentDictationBtn = btnElement;
+
+            speechRecognition.onstart = function() {
+                isDictating = true;
+                btnElement.classList.add('text-brand-600', 'bg-brand-50', 'border-brand-200');
+                btnElement.innerHTML = '<i data-lucide="mic-off" class="w-3.5 h-3.5 animate-pulse text-brand-600"></i> Grabando...';
+                safeCreateIcons();
+            };
+
+            const targetInput = document.getElementById(targetId);
+            let originalValue = targetInput.value;
+            let finalTranscript = '';
+
+            speechRecognition.onresult = function(event) {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) finalTranscript += event.results[i].transcript;
+                    else interimTranscript += event.results[i].transcript;
+                }
+                const space = originalValue.trim() && finalTranscript.trim() ? ' ' : '';
+                targetInput.value = originalValue + space + finalTranscript + interimTranscript;
+            };
+
+            speechRecognition.onerror = function(event) { stopDictationUI(); };
+            speechRecognition.onend = function() { stopDictationUI(); };
+            
+            speechRecognition.start();
+        }
+
+        function stopDictationUI() {
+            isDictating = false;
+            if(currentDictationBtn) {
+                currentDictationBtn.classList.remove('text-brand-600', 'bg-brand-50', 'border-brand-200');
+                currentDictationBtn.innerHTML = '<i data-lucide="mic" class="w-3.5 h-3.5"></i> Dictar';
+                safeCreateIcons();
+            }
+        }
+
+        // ------------------ Utilidades ------------------ //
+        function formatRut(input) {
+            let value = input.value.replace(/[^0-9kK]/g, '').toUpperCase();
+            if (value.length <= 1) { input.value = value; return; }
             let body = value.slice(0, -1);
             let dv = value.slice(-1);
             body = body.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -1028,23 +1009,20 @@
 
         function formatPhone(input) {
             let val = input.value;
-            if (!val.startsWith('+56 9 ')) {
-                input.value = '+56 9 ';
-            } else {
-                let prefix = '+56 9 ';
+            if (!val.startsWith('+56 9 ')) input.value = '+56 9 ';
+            else {
                 let digits = val.substring(6).replace(/[^0-9]/g, '');
-                input.value = prefix + digits;
+                input.value = '+56 9 ' + digits;
             }
         }
 
+        // ------------------ Vistas Generales ------------------ //
         function updatePatientLocationUI() {
             document.getElementById('clinic-name-display').innerText = clinicInfo.name;
             document.getElementById('clinic-address-display').innerText = clinicInfo.address;
             document.getElementById('clinic-city-display').innerText = clinicInfo.city;
-            
             const mapQuery = encodeURIComponent(`${clinicInfo.address}, ${clinicInfo.city}`);
             const mapsAppUrl = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
-            
             document.getElementById('clinic-map-link-1').href = mapsAppUrl;
             document.getElementById('clinic-map-link-2').href = mapsAppUrl;
             document.getElementById('clinic-map-iframe').src = clinicInfo.mapEmbed;
@@ -1056,9 +1034,8 @@
             if(!track || !dots) return;
 
             if(sliderBanners.length === 0) {
-                 track.innerHTML = '<div class="w-full h-full flex-shrink-0 bg-brand-50 flex items-center justify-center text-brand-400 font-medium">Sin banners configurados</div>';
-                 dots.innerHTML = '';
-                 return;
+                 track.innerHTML = '<div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-500 font-bold">Sin banners activos</div>';
+                 dots.innerHTML = ''; return;
             }
 
             track.innerHTML = sliderBanners.map(s => `
@@ -1068,9 +1045,7 @@
                 </div>
             `).join('');
 
-            dots.innerHTML = sliderBanners.map((_, i) => `
-                <button onclick="goToSlide(${i})" class="slide-dot-btn w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${i === currentSlide ? 'bg-white w-6 md:w-8' : 'bg-white/50 hover:bg-white/80'}"></button>
-            `).join('');
+            dots.innerHTML = sliderBanners.map((_, i) => `<button onclick="goToSlide(${i})" class="slide-dot-btn w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${i === currentSlide ? 'bg-white w-6 md:w-8 shadow-[0_0_5px_rgba(255,255,255,0.5)]' : 'bg-white/50 hover:bg-white/80'}"></button>`).join('');
 
             updateSliderPosition();
             resetSlideInterval();
@@ -1079,103 +1054,44 @@
         function updateSliderPosition() {
             const track = document.getElementById('slider-track');
             if(track) track.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
             const dots = document.querySelectorAll('.slide-dot-btn');
             dots.forEach((dot, i) => {
                 dot.className = `slide-dot-btn w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${i === currentSlide ? 'bg-white w-6 md:w-8 shadow-[0_0_5px_rgba(255,255,255,0.5)]' : 'bg-white/50 hover:bg-white/80'}`;
             });
         }
-
-        function nextSlide() {
-            if(sliderBanners.length <= 1) return;
-            currentSlide = (currentSlide + 1) % sliderBanners.length;
-            updateSliderPosition();
-            resetSlideInterval();
-        }
-
-        function prevSlide() {
-            if(sliderBanners.length <= 1) return;
-            currentSlide = (currentSlide - 1 + sliderBanners.length) % sliderBanners.length;
-            updateSliderPosition();
-            resetSlideInterval();
-        }
-
-        function goToSlide(index) {
-            currentSlide = index;
-            updateSliderPosition();
-            resetSlideInterval();
-        }
-
+        function nextSlide() { if(sliderBanners.length > 1) { currentSlide = (currentSlide + 1) % sliderBanners.length; updateSliderPosition(); resetSlideInterval(); } }
+        function prevSlide() { if(sliderBanners.length > 1) { currentSlide = (currentSlide - 1 + sliderBanners.length) % sliderBanners.length; updateSliderPosition(); resetSlideInterval(); } }
+        function goToSlide(index) { currentSlide = index; updateSliderPosition(); resetSlideInterval(); }
         function resetSlideInterval() {
             if(slideIntervalId) clearInterval(slideIntervalId);
-            if(sliderBanners.length > 1) {
-                slideIntervalId = setInterval(nextSlide, 5000); 
-            }
+            if(sliderBanners.length > 1) slideIntervalId = setInterval(nextSlide, 5000); 
         }
 
         function switchMainView(viewName) {
-            const tabPatient = document.getElementById('tab-patient');
-            const tabCancel = document.getElementById('tab-cancel');
-            const tabAdmin = document.getElementById('tab-admin');
-            
-            const viewPatient = document.getElementById('view-patient');
-            const viewCancel = document.getElementById('view-cancel');
-            const viewAdmin = document.getElementById('view-admin');
+            const views = ['patient', 'cancel', 'admin'];
+            views.forEach(v => {
+                document.getElementById(`tab-${v}`).className = "px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-bold btn-glass text-sm md:text-base w-full sm:w-auto tracking-wide";
+                document.getElementById(`view-${v}`).classList.add('hidden');
+                document.getElementById(`${v}-banner`).classList.add('hidden');
+            });
+
+            document.getElementById(`tab-${viewName}`).className = "px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-bold btn-brand text-sm md:text-base w-full sm:w-auto tracking-wide";
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            document.getElementById(`${viewName}-banner`).classList.remove('hidden');
+
             const locationSection = document.getElementById('shared-location-section');
-
-            const bannerPatient = document.getElementById('patient-banner');
-            const bannerCancel = document.getElementById('cancel-banner');
-            const bannerAdmin = document.getElementById('admin-banner');
-
-            const inactiveClass = "px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-semibold btn-glass text-sm md:text-base w-full sm:w-auto";
-            const activeClass = "px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-semibold btn-brand text-sm md:text-base w-full sm:w-auto";
-
-            tabPatient.className = inactiveClass;
-            tabCancel.className = inactiveClass;
-            tabAdmin.className = inactiveClass;
+            if (viewName === 'patient') { locationSection.classList.remove('hidden'); resetPatientBookingFlow(); renderPatientProfessionals(); }
+            else if (viewName === 'cancel') { locationSection.classList.remove('hidden'); resetCancelFlow(); }
+            else { locationSection.classList.add('hidden'); checkLoginState(); }
             
-            viewPatient.classList.add('hidden');
-            viewCancel.classList.add('hidden');
-            viewAdmin.classList.add('hidden');
-            
-            bannerPatient.classList.add('hidden');
-            bannerCancel.classList.add('hidden');
-            bannerAdmin.classList.add('hidden');
-
-            if (viewName === 'patient') {
-                tabPatient.className = activeClass;
-                viewPatient.classList.remove('hidden');
-                bannerPatient.classList.remove('hidden');
-                locationSection.classList.remove('hidden');
-                
-                renderPatientProfessionals();
-                resetPatientBookingFlow();
-                renderPatientSlider();
-            } else if (viewName === 'cancel') {
-                tabCancel.className = activeClass;
-                viewCancel.classList.remove('hidden');
-                bannerCancel.classList.remove('hidden');
-                locationSection.classList.remove('hidden');
-                
-                if(slideIntervalId) clearInterval(slideIntervalId);
-                resetCancelFlow();
-            } else { 
-                tabAdmin.className = activeClass;
-                viewAdmin.classList.remove('hidden');
-                bannerAdmin.classList.remove('hidden');
-                locationSection.classList.add('hidden');
-                
-                if(slideIntervalId) clearInterval(slideIntervalId);
-                checkLoginState();
-            }
+            if (viewName !== 'patient' && slideIntervalId) clearInterval(slideIntervalId);
+            else if (viewName === 'patient') renderPatientSlider();
         }
 
+        // ------------------ Flujo de Reservas ------------------ //
         function renderPatientProfessionals() {
             const container = document.getElementById('patient-professionals-container');
-            if (professionals.length === 0) {
-                container.innerHTML = '<p class="col-span-full text-center text-slate-500 text-sm">No hay profesionales registrados.</p>';
-                return;
-            }
+            if (professionals.length === 0) { container.innerHTML = '<p class="col-span-full text-center text-slate-600 font-medium text-sm">No hay profesionales registrados.</p>'; return; }
             container.innerHTML = professionals.map(pro => {
                 const initials = pro.name.replace('Ps. ', '').substring(0, 2).toUpperCase();
                 return `
@@ -1183,32 +1099,29 @@
                     <input type="radio" name="psychologist" value="${pro.id}" class="peer hidden" onchange="handlePsySelect(this)">
                     <div class="p-4 md:p-5 rounded-2xl border-2 border-transparent bg-white shadow-sm peer-checked:border-brand-300 peer-checked:bg-rose-50 transition-all hover:shadow-md h-full flex flex-col relative">
                         <div class="flex items-center gap-3 md:gap-4 mb-2">
-                            <div class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600 font-bold text-base md:text-lg border border-rose-200 transition-colors">${initials}</div>
+                            <div class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600 font-bold text-base md:text-lg border border-rose-200">${initials}</div>
                             <div>
-                                <h4 class="font-semibold text-slate-800 text-sm md:text-base leading-tight mb-0.5 md:mb-1">${pro.name}</h4>
-                                <p class="text-[10px] md:text-xs text-slate-500 font-medium">${pro.specialty}</p>
+                                <h4 class="font-bold text-slate-800 text-sm md:text-base leading-tight mb-0.5">${pro.name}</h4>
+                                <p class="text-[10px] md:text-xs text-slate-600 font-semibold">${pro.specialty}</p>
                             </div>
                         </div>
-                        <p class="text-[10px] text-slate-400 line-clamp-2 leading-tight mt-1" title="${pro.bio || ''}">${pro.bio || ''}</p>
+                        <p class="text-[10px] text-slate-500 line-clamp-2 leading-tight mt-1 font-medium" title="${pro.bio || ''}">${pro.bio || ''}</p>
                     </div>
                 </label>`;
             }).join('');
         }
 
-        function handlePsySelect(radioInput) {
-            selectedPsychologistId = radioInput.value;
-            const step2 = document.getElementById('step-2');
-            step2.classList.remove('step-hidden');
-            step2.classList.add('step-visible');
+        function handlePsySelect(radio) {
+            selectedPsychologistId = radio.value;
+            document.getElementById('step-2').classList.remove('step-hidden');
+            document.getElementById('step-2').classList.add('step-visible');
             toggleFonasaMessage();
             if(selectedDate) renderTimeSlots();
         }
 
-        function handleDateChange(event) {
-            selectedDate = event.target.value;
-            selectedTime = ''; 
-            const timeContainer = document.getElementById('time-container');
-            timeContainer.classList.remove('opacity-30', 'pointer-events-none');
+        function handleDateChange(e) {
+            selectedDate = e.target.value; selectedTime = ''; 
+            document.getElementById('time-container').classList.remove('opacity-30', 'pointer-events-none');
             document.getElementById('step-3').classList.add('step-hidden');
             document.getElementById('step-3').classList.remove('step-visible');
             renderTimeSlots();
@@ -1219,83 +1132,50 @@
             const noTimeMessage = document.getElementById('no-time-message');
             container.innerHTML = ''; 
             
-            let proHoursForDay = standardHours;
-            if (schedules[selectedPsychologistId] && schedules[selectedPsychologistId][selectedDate]) {
-                proHoursForDay = schedules[selectedPsychologistId][selectedDate].hours || standardHours;
-            }
-            const bookedSlots = appointments
-                .filter(app => app.date === selectedDate && app.psychologistId === selectedPsychologistId && (!app.status || app.status === 'active'))
-                .map(app => app.time);
-            
-            const availableSlots = proHoursForDay.filter(slot => !bookedSlots.includes(slot));
+            let proHours = schedules[selectedPsychologistId]?.[selectedDate]?.hours || standardHours;
+            const bookedSlots = appointments.filter(a => a.date === selectedDate && a.psychologistId === selectedPsychologistId && (!a.status || a.status === 'active')).map(a => a.time);
+            const availableSlots = proHours.filter(slot => !bookedSlots.includes(slot));
 
             if (availableSlots.length > 0) {
-                container.classList.remove('hidden');
-                noTimeMessage.classList.add('hidden');
+                container.classList.remove('hidden'); noTimeMessage.classList.add('hidden');
                 availableSlots.forEach(time => {
                     const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.innerText = time;
+                    btn.type = 'button'; btn.innerText = time;
                     btn.onclick = () => selectTime(time, btn);
-                    btn.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-brand-300 hover:text-brand-600 hover:shadow-[0_4px_10px_rgba(244,63,94,0.1)] transition-all font-medium text-xs md:text-sm";
+                    btn.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border border-slate-300 bg-white text-slate-700 hover:border-brand-400 hover:text-brand-600 hover:shadow-[0_4px_10px_rgba(244,63,94,0.1)] transition-all font-bold text-xs md:text-sm";
                     container.appendChild(btn);
                 });
-            } else {
-                container.classList.add('hidden');
-                noTimeMessage.classList.remove('hidden');
-            }
+            } else { container.classList.add('hidden'); noTimeMessage.classList.remove('hidden'); }
         }
 
-        function selectTime(time, buttonElement) {
+        function selectTime(time, btnEl) {
             selectedTime = time;
-            document.querySelectorAll('.time-slot-btn').forEach(btn => {
-                btn.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-brand-300 hover:text-brand-600 hover:shadow-[0_4px_10px_rgba(244,63,94,0.1)] transition-all font-medium text-xs md:text-sm";
-            });
-            buttonElement.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border-transparent bg-brand-50 text-brand-700 font-bold shadow-[0_0_0_2px_#f43f5e,0_4px_15px_rgba(244,63,94,0.2)] text-xs md:text-sm";
-
+            document.querySelectorAll('.time-slot-btn').forEach(b => b.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border border-slate-300 bg-white text-slate-700 hover:border-brand-400 hover:text-brand-600 hover:shadow-[0_4px_10px_rgba(244,63,94,0.1)] transition-all font-bold text-xs md:text-sm");
+            btnEl.className = "time-slot-btn py-2 px-1.5 md:py-2.5 md:px-2 rounded-xl border-transparent bg-brand-50 text-brand-700 font-bold shadow-[0_0_0_2px_#f43f5e,0_4px_15px_rgba(244,63,94,0.2)] text-xs md:text-sm";
             const step3 = document.getElementById('step-3');
-            step3.classList.remove('step-hidden');
-            step3.classList.add('step-visible');
-            setTimeout(() => { document.getElementById('step-3').scrollIntoView({ behavior: 'smooth', block: 'end' }); }, 100);
+            step3.classList.remove('step-hidden'); step3.classList.add('step-visible');
+            setTimeout(() => { step3.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, 100);
         }
 
         function toggleFonasaMessage() {
-            const methodNode = document.querySelector('input[name="payment_method"]:checked');
-            const msgContainer = document.getElementById('fonasa-message-container');
-            
-            if (methodNode && methodNode.value === 'Fonasa' && selectedPsychologistId) {
+            const method = document.querySelector('input[name="payment_method"]:checked')?.value;
+            const container = document.getElementById('fonasa-message-container');
+            if (method === 'Fonasa' && selectedPsychologistId) {
                 const pro = professionals.find(p => p.id === selectedPsychologistId);
-                const codeDisplay = document.getElementById('display-pro-code');
-                codeDisplay.innerText = pro.code ? pro.code : 'No configurado';
-                msgContainer.classList.remove('hidden');
-            } else {
-                msgContainer.classList.add('hidden');
-            }
+                document.getElementById('display-pro-code').innerText = pro.code || 'No configurado';
+                container.classList.remove('hidden');
+            } else { container.classList.add('hidden'); }
         }
 
-        async function handleBookingSubmit(event) {
-            event.preventDefault(); 
+        async function handleBookingSubmit(e) {
+            e.preventDefault(); 
             const submitBtn = document.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerHTML;
-            
-            const rut = document.getElementById('input-rut').value;
-            const name = document.getElementById('input-name').value;
-            const phone = document.getElementById('input-phone').value;
-            const email = document.getElementById('input-email').value; 
-            
-            const paymentMethodNode = document.querySelector('input[name="payment_method"]:checked');
-            if (!paymentMethodNode) {
-                alert("Por favor, selecciona una Modalidad de Pago."); return;
-            }
-            const paymentMethod = paymentMethodNode.value;
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
+            const attentionType = document.querySelector('input[name="attention_type"]:checked')?.value;
 
-            const attentionTypeNode = document.querySelector('input[name="attention_type"]:checked');
-            if (!attentionTypeNode) {
-                alert("Por favor, selecciona el Tipo de Atención."); return;
-            }
-            const attentionType = attentionTypeNode.value;
-
-            if (!selectedDate || !selectedTime || !rut || !name || !email || !selectedPsychologistId) return;
+            if (!paymentMethod) { alert("Selecciona Modalidad de Pago."); return; }
+            if (!attentionType) { alert("Selecciona Tipo de Atención."); return; }
+            if (!selectedDate || !selectedTime || !selectedPsychologistId) return;
 
             submitBtn.innerHTML = 'Procesando... <i data-lucide="loader" class="w-5 h-5 animate-spin"></i>';
             submitBtn.disabled = true;
@@ -1304,25 +1184,18 @@
             const docId = Date.now().toString();
 
             const newAppointment = {
-                date: selectedDate, 
-                time: selectedTime,
-                psychologistId: pro.id, 
-                psychologistName: pro.name,
-                patientRut: rut, 
-                patientName: name, 
-                patientPhone: phone, 
-                patientEmail: email,
-                paymentMethod: paymentMethod, 
-                attentionType: attentionType,
-                status: 'active'
+                date: selectedDate, time: selectedTime,
+                psychologistId: pro.id, psychologistName: pro.name,
+                patientRut: document.getElementById('input-rut').value, 
+                patientName: document.getElementById('input-name').value, 
+                patientPhone: document.getElementById('input-phone').value, 
+                patientEmail: document.getElementById('input-email').value,
+                paymentMethod, attentionType, status: 'active'
             };
 
             try {
-                // Guardar en Firebase Firestore de forma asíncrona
-                const db = window.firebaseDb;
-                const appId = window.firebaseAppId;
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', docId);
-                await setDoc(docRef, newAppointment);
+                const db = window.firebaseDb; const appId = window.firebaseAppId;
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'appointments', docId), newAppointment);
 
                 document.getElementById('booking-form').classList.add('hidden');
                 document.getElementById('success-message').classList.remove('hidden');
@@ -1333,812 +1206,327 @@
                 document.getElementById('success-time').innerText = selectedTime;
                 document.getElementById('success-method').innerText = `${paymentMethod} - ${attentionType}`;
                 
-                const extraInfoDiv = document.getElementById('success-extra-info');
-                extraInfoDiv.classList.remove('hidden');
-                if (paymentMethod === 'Fonasa') {
-                    extraInfoDiv.innerHTML = `<span class="text-xs font-bold text-slate-400 uppercase">Código de Prestación Fonasa</span><br><span class="text-brand-600 font-semibold text-lg">${pro.code || 'No configurado'}</span>`;
-                } else {
-                    extraInfoDiv.innerHTML = `<span class="text-xs font-bold text-slate-400 uppercase">Datos para Transferencia</span><br><span class="text-slate-700 whitespace-pre-wrap">${pro.bankDetails || 'No configurados por el profesional'}</span>`;
-                }
-                
-                submitBtn.innerHTML = originalBtnText;
-                submitBtn.disabled = false;
-                safeCreateIcons();
-            } catch(e) {
-                console.error("Error al guardar en Firebase: ", e);
-                alert("No se pudo agendar la hora. Por favor reintente.");
-                submitBtn.innerHTML = originalBtnText;
-                submitBtn.disabled = false;
+                const extraDiv = document.getElementById('success-extra-info');
+                extraDiv.classList.remove('hidden');
+                if (paymentMethod === 'Fonasa') extraDiv.innerHTML = `<span class="text-xs font-bold text-slate-500 uppercase">Código de Prestación Fonasa</span><br><span class="text-brand-600 font-bold text-lg">${pro.code || 'No configurado'}</span>`;
+                else extraDiv.innerHTML = `<span class="text-xs font-bold text-slate-500 uppercase">Datos para Transferencia</span><br><span class="text-slate-800 font-medium whitespace-pre-wrap">${pro.bankDetails || 'No configurados por el profesional'}</span>`;
+            } catch(err) {
+                alert("Error al agendar. Reintente.");
+            } finally {
+                submitBtn.innerHTML = 'Confirmar Reserva <i data-lucide="calendar-check" class="w-5 h-5"></i>';
+                submitBtn.disabled = false; safeCreateIcons();
             }
         }
 
-        function resetBooking() {
-            resetPatientBookingFlow();
-            document.getElementById('success-message').classList.add('hidden');
-            document.getElementById('success-extra-info').classList.add('hidden');
-            document.getElementById('booking-form').classList.remove('hidden');
-        }
-
+        function resetBooking() { resetPatientBookingFlow(); document.getElementById('success-message').classList.add('hidden'); document.getElementById('success-extra-info').classList.add('hidden'); document.getElementById('booking-form').classList.remove('hidden'); }
         function resetPatientBookingFlow() {
             selectedDate = ''; selectedTime = ''; selectedPsychologistId = '';
-            document.getElementById('input-rut').value = '';
-            document.getElementById('input-name').value = '';
-            document.getElementById('input-phone').value = '+56 9 ';
-            document.getElementById('input-email').value = ''; 
+            document.getElementById('input-rut').value = ''; document.getElementById('input-name').value = '';
+            document.getElementById('input-phone').value = '+56 9 '; document.getElementById('input-email').value = ''; 
             document.getElementById('input-date').value = '';
-            
-            document.querySelectorAll('input[name="psychologist"]').forEach(r => r.checked = false);
-            document.querySelectorAll('input[name="payment_method"]').forEach(r => r.checked = false);
-            document.querySelectorAll('input[name="attention_type"]').forEach(r => r.checked = false);
+            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
             toggleFonasaMessage();
-            
-            document.getElementById('step-2').classList.add('step-hidden');
-            document.getElementById('step-2').classList.remove('step-visible');
-            document.getElementById('step-3').classList.add('step-hidden');
-            document.getElementById('step-3').classList.remove('step-visible');
+            document.getElementById('step-2').classList.remove('step-visible'); document.getElementById('step-2').classList.add('step-hidden');
+            document.getElementById('step-3').classList.remove('step-visible'); document.getElementById('step-3').classList.add('step-hidden');
             document.getElementById('time-container').classList.add('opacity-30', 'pointer-events-none');
         }
 
+        // ------------------ Anular/Reprogramar ------------------ //
         function resetCancelFlow() {
-            document.getElementById('cancel-rut').value = '';
-            document.getElementById('cancel-results').classList.add('hidden');
-            document.getElementById('cancel-empty').classList.add('hidden');
-            document.getElementById('cancel-success').classList.add('hidden');
-            document.getElementById('cancel-form').classList.remove('hidden');
-            document.getElementById('cancel-confirm-section').classList.add('hidden');
-            document.getElementById('cancel-reason').value = '';
-            document.getElementById('cancel-reschedule-section').classList.add('hidden');
+            document.getElementById('cancel-rut').value = ''; document.getElementById('cancel-results').classList.add('hidden');
+            document.getElementById('cancel-empty').classList.add('hidden'); document.getElementById('cancel-success').classList.add('hidden');
+            document.getElementById('cancel-form').classList.remove('hidden'); document.getElementById('cancel-confirm-section').classList.add('hidden');
+            document.getElementById('cancel-reason').value = ''; document.getElementById('cancel-reschedule-section').classList.add('hidden');
             document.getElementById('cancel-input-date').value = '';
-            
-            cancelSelectedAppointmentId = null;
-            cancelSelectedDate = '';
-            cancelSelectedTime = '';
+            cancelSelectedAppointmentId = null; cancelSelectedDate = ''; cancelSelectedTime = '';
         }
 
         function searchAppointmentsToCancel(e) {
             e.preventDefault();
             const rut = document.getElementById('cancel-rut').value.trim();
-            if(!rut) return;
-
-            const userAppointments = appointments.filter(a => a.patientRut === rut && (!a.status || a.status === 'active'));
-            const resultsContainer = document.getElementById('cancel-appointments-list');
-            resultsContainer.innerHTML = '';
+            const apps = appointments.filter(a => a.patientRut === rut && (!a.status || a.status === 'active'));
+            const container = document.getElementById('cancel-appointments-list');
             
-            if(userAppointments.length === 0) {
-                document.getElementById('cancel-empty').classList.remove('hidden');
-                document.getElementById('cancel-results').classList.add('hidden');
-            } else {
-                document.getElementById('cancel-empty').classList.add('hidden');
-                document.getElementById('cancel-results').classList.remove('hidden');
+            if(apps.length === 0) { document.getElementById('cancel-empty').classList.remove('hidden'); document.getElementById('cancel-results').classList.add('hidden'); } 
+            else {
+                document.getElementById('cancel-empty').classList.add('hidden'); document.getElementById('cancel-results').classList.remove('hidden');
                 document.getElementById('cancel-confirm-section').classList.add('hidden');
-                
-                resultsContainer.innerHTML = userAppointments.map(app => {
+                container.innerHTML = apps.map(app => {
                     const [y, m, d] = app.date.split('-');
                     return `
-                    <label class="flex items-start gap-4 p-4 border-2 border-slate-100 rounded-xl cursor-pointer hover:bg-brand-50 hover:border-brand-200 transition-all custom-radio">
+                    <label class="flex items-start gap-4 p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-brand-50 hover:border-brand-300 transition-all custom-radio bg-white">
                         <input type="radio" name="cancel_appointment" value="${app.id}" onchange="selectAppointmentToCancel(this)" class="mt-1 w-4 h-4 text-brand-500 focus:ring-brand-400">
                         <div class="flex-1">
                             <p class="font-bold text-slate-800">${d}/${m}/${y} a las ${app.time} hrs</p>
-                            <p class="text-sm text-slate-600 font-medium">${app.psychologistName}</p>
-                            <p class="text-[11px] text-slate-500 mt-1 uppercase tracking-wider">${app.attentionType} | ${app.paymentMethod}</p>
+                            <p class="text-sm text-slate-700 font-semibold">${app.psychologistName}</p>
+                            <p class="text-[11px] text-slate-600 mt-1 font-bold uppercase tracking-wider">${app.attentionType} | ${app.paymentMethod}</p>
                         </div>
-                    </label>
-                `}).join('');
+                    </label>`
+                }).join('');
             }
         }
 
-        function selectAppointmentToCancel(radio) {
-            cancelSelectedAppointmentId = radio.value;
-            document.getElementById('cancel-confirm-section').classList.remove('hidden');
-            toggleCancelAction();
-        }
-
+        function selectAppointmentToCancel(radio) { cancelSelectedAppointmentId = radio.value; document.getElementById('cancel-confirm-section').classList.remove('hidden'); toggleCancelAction(); }
         function toggleCancelAction() {
-            const actionNode = document.querySelector('input[name="cancel_action"]:checked');
-            const rescheduleSection = document.getElementById('cancel-reschedule-section');
-            if (actionNode && actionNode.value === 'reschedule') {
-                rescheduleSection.classList.remove('hidden');
-            } else {
-                rescheduleSection.classList.add('hidden');
-                cancelSelectedDate = '';
-                cancelSelectedTime = '';
-                document.getElementById('cancel-input-date').value = '';
-                document.getElementById('cancel-time-container').classList.add('opacity-30', 'pointer-events-none');
-            }
+            const isReschedule = document.querySelector('input[name="cancel_action"]:checked')?.value === 'reschedule';
+            const sect = document.getElementById('cancel-reschedule-section');
+            if (isReschedule) sect.classList.remove('hidden');
+            else { sect.classList.add('hidden'); cancelSelectedDate = ''; cancelSelectedTime = ''; document.getElementById('cancel-input-date').value = ''; document.getElementById('cancel-time-container').classList.add('opacity-30', 'pointer-events-none'); }
         }
 
-        function handleCancelDateChange(event) {
-            cancelSelectedDate = event.target.value;
-            cancelSelectedTime = '';
-            const timeContainer = document.getElementById('cancel-time-container');
-            timeContainer.classList.remove('opacity-30', 'pointer-events-none');
-            renderCancelTimeSlots();
-        }
-
+        function handleCancelDateChange(e) { cancelSelectedDate = e.target.value; cancelSelectedTime = ''; document.getElementById('cancel-time-container').classList.remove('opacity-30', 'pointer-events-none'); renderCancelTimeSlots(); }
         function renderCancelTimeSlots() {
             const container = document.getElementById('cancel-time-slots-container');
-            const noTimeMessage = document.getElementById('cancel-no-time-message');
+            const noTime = document.getElementById('cancel-no-time-message');
             container.innerHTML = '';
             
             if(!cancelSelectedAppointmentId || !cancelSelectedDate) return;
-            
             const originalApp = appointments.find(a => a.id === cancelSelectedAppointmentId);
-            const psyId = originalApp.psychologistId;
+            const proHours = schedules[originalApp.psychologistId]?.[cancelSelectedDate]?.hours || standardHours;
+            const booked = appointments.filter(a => a.date === cancelSelectedDate && a.psychologistId === originalApp.psychologistId && (!a.status || a.status === 'active')).map(a => a.time);
+            const available = proHours.filter(t => !booked.includes(t));
 
-            let proHoursForDay = standardHours;
-            if (schedules[psyId] && schedules[psyId][cancelSelectedDate]) {
-                proHoursForDay = schedules[psyId][cancelSelectedDate].hours || standardHours;
-            }
-            
-            const bookedSlots = appointments
-                .filter(app => app.date === cancelSelectedDate && app.psychologistId === psyId && (!app.status || app.status === 'active'))
-                .map(app => app.time);
-            
-            const availableSlots = proHoursForDay.filter(slot => !bookedSlots.includes(slot));
-
-            if (availableSlots.length > 0) {
-                container.classList.remove('hidden');
-                noTimeMessage.classList.add('hidden');
-                availableSlots.forEach(time => {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.innerText = time;
-                    btn.onclick = () => selectCancelTime(time, btn);
-                    btn.className = "cancel-time-slot-btn py-1.5 px-1 rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-brand-300 hover:text-brand-600 transition-all font-medium text-xs";
+            if (available.length > 0) {
+                container.classList.remove('hidden'); noTime.classList.add('hidden');
+                available.forEach(time => {
+                    const btn = document.createElement('button'); btn.type = 'button'; btn.innerText = time;
+                    btn.onclick = () => { cancelSelectedTime = time; document.querySelectorAll('.cancel-time-slot-btn').forEach(b => b.className="cancel-time-slot-btn py-1.5 px-1 rounded-lg border border-slate-300 bg-white text-slate-700 hover:border-brand-400 hover:text-brand-600 transition-all font-bold text-xs"); btn.className="cancel-time-slot-btn py-1.5 px-1 rounded-lg border-transparent bg-brand-50 text-brand-700 font-bold shadow-[0_0_0_2px_#f43f5e] text-xs"; };
+                    btn.className = "cancel-time-slot-btn py-1.5 px-1 rounded-lg border border-slate-300 bg-white text-slate-700 hover:border-brand-400 hover:text-brand-600 transition-all font-bold text-xs";
                     container.appendChild(btn);
                 });
-            } else {
-                container.classList.add('hidden');
-                noTimeMessage.classList.remove('hidden');
-            }
-        }
-
-        function selectCancelTime(time, buttonElement) {
-            cancelSelectedTime = time;
-            document.querySelectorAll('.cancel-time-slot-btn').forEach(btn => {
-                btn.className = "cancel-time-slot-btn py-1.5 px-1 rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-brand-300 hover:text-brand-600 transition-all font-medium text-xs";
-            });
-            buttonElement.className = "cancel-time-slot-btn py-1.5 px-1 rounded-lg border-transparent bg-brand-50 text-brand-700 font-bold shadow-[0_0_0_2px_#f43f5e] text-xs";
+            } else { container.classList.add('hidden'); noTime.classList.remove('hidden'); }
         }
 
         async function submitCancellation(e) {
             e.preventDefault();
-            if(!cancelSelectedAppointmentId) {
-                alert("Selecciona una cita para gestionar.");
-                return;
-            }
-            
+            if(!cancelSelectedAppointmentId) return;
             const reason = document.getElementById('cancel-reason').value.trim();
-            if(!reason) {
-                alert("Por favor ingresa un motivo.");
-                return;
-            }
-
-            const actionNode = document.querySelector('input[name="cancel_action"]:checked');
-            const action = actionNode ? actionNode.value : 'cancel';
-
+            if(!reason) { alert("Ingresa un motivo."); return; }
+            
+            const action = document.querySelector('input[name="cancel_action"]:checked')?.value || 'cancel';
             const app = appointments.find(a => a.id === cancelSelectedAppointmentId);
-            if(!app) return;
+            const db = window.firebaseDb; const appId = window.firebaseAppId;
 
-            const db = window.firebaseDb;
-            const appId = window.firebaseAppId;
-
-            if (action === 'cancel') {
-                if(confirm("¿Confirmas la anulación de esta reserva? La hora quedará libre inmediatamente.")) {
-                    try {
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', cancelSelectedAppointmentId);
-                        await updateDoc(docRef, {
-                            status: 'cancelled',
-                            cancelReason: reason
-                        });
-
-                        document.getElementById('cancel-success-title').innerText = "Reserva Anulada";
-                        document.getElementById('cancel-success-text').innerText = "Su anulación se ha realizado exitosamente y la hora ha sido liberada.";
-                        
-                        document.getElementById('cancel-form').classList.add('hidden');
-                        document.getElementById('cancel-success').classList.remove('hidden');
-                    } catch(e) {
-                        alert("Error al anular la hora. Reintente.");
-                    }
-                }
-            } else if (action === 'reschedule') {
-                if(!cancelSelectedDate || !cancelSelectedTime) {
-                    alert("Debes seleccionar una nueva fecha y hora para reprogramar.");
-                    return;
-                }
+            try {
+                if (action === 'cancel' && confirm("¿Confirmas la anulación?")) {
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'appointments', app.id), { status: 'cancelled', cancelReason: reason });
+                    document.getElementById('cancel-success-title').innerText = "Reserva Anulada";
+                    document.getElementById('cancel-success-text').innerText = "Anulación exitosa, la hora fue liberada.";
+                } else if (action === 'reschedule' && cancelSelectedDate && cancelSelectedTime && confirm("¿Confirmar reprogramación?")) {
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'appointments', app.id), { status: 'rescheduled', cancelReason: "Reprogramada. Motivo original: " + reason });
+                    const newApp = { ...app, date: cancelSelectedDate, time: cancelSelectedTime, status: 'active', cancelReason: null };
+                    delete newApp.id;
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'appointments', Date.now().toString()), newApp);
+                    document.getElementById('cancel-success-title').innerText = "Reserva Reprogramada";
+                    document.getElementById('cancel-success-text').innerText = "Reprogramación exitosa.";
+                } else return;
                 
-                if(confirm(`¿Confirmas la reprogramación de esta reserva para el ${cancelSelectedDate} a las ${cancelSelectedTime} hrs?`)) {
-                    try {
-                        // 1. Anular cita previa
-                        const prevDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', cancelSelectedAppointmentId);
-                        await updateDoc(prevDocRef, {
-                            status: 'rescheduled',
-                            cancelReason: "Reprogramada. Motivo original: " + reason
-                        });
-
-                        // 2. Crear nueva cita
-                        const newId = Date.now().toString();
-                        const newDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', newId);
-                        const newApp = { 
-                            ...app, 
-                            date: cancelSelectedDate, 
-                            time: cancelSelectedTime,
-                            status: 'active',
-                            cancelReason: null
-                        };
-                        delete newApp.id; // Remover la ID interna si existía
-                        await setDoc(newDocRef, newApp);
-
-                        const [y, m, d] = cancelSelectedDate.split('-');
-                        document.getElementById('cancel-success-title').innerText = "Reserva Reprogramada";
-                        document.getElementById('cancel-success-text').innerText = `Su reprogramación se ha realizado exitosamente para el ${d}/${m}/${y} a las ${cancelSelectedTime} hrs.`;
-                        
-                        document.getElementById('cancel-form').classList.add('hidden');
-                        document.getElementById('cancel-success').classList.remove('hidden');
-                    } catch(e) {
-                        alert("Error al procesar la reprogramación.");
-                    }
-                }
-            }
+                document.getElementById('cancel-form').classList.add('hidden');
+                document.getElementById('cancel-success').classList.remove('hidden');
+            } catch(e) { alert("Error en operación."); }
         }
 
-        // ==========================================
-        // LÓGICA DE ADMINISTRACIÓN Y FILTRADO DE ROLES
-        // ==========================================
+        // ------------------ Administración ------------------ //
         function checkLoginState() {
             if (currentUser) {
                 document.getElementById('admin-login-screen').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
-                
                 const isAdmin = currentUser.role === 'admin';
-                document.getElementById('tab-admin-profesionales').style.display = isAdmin ? 'block' : 'none';
-                document.getElementById('tab-admin-banners').style.display = isAdmin ? 'block' : 'none';
-                document.getElementById('tab-admin-ajustes').style.display = isAdmin ? 'block' : 'none';
-
-                if (isAdmin) {
-                    document.getElementById('dash-user-name').innerText = "Administrador Clínico";
-                    document.getElementById('dash-user-role').innerText = "Acceso Administrativo Total";
-                } else {
-                    document.getElementById('dash-user-name').innerText = currentUser.name;
-                    document.getElementById('dash-user-role').innerText = "Panel Profesional - " + currentUser.specialty;
-                }
-
+                ['profesionales', 'banners', 'ajustes'].forEach(t => document.getElementById(`tab-admin-${t}`).style.display = isAdmin ? 'block' : 'none');
+                document.getElementById('dash-user-name').innerText = isAdmin ? "Administrador Clínico" : currentUser.name;
+                document.getElementById('dash-user-role').innerText = isAdmin ? "Acceso Total" : "Panel Profesional - " + currentUser.specialty;
                 switchAdminTab('reservas');
             } else {
-                document.getElementById('admin-login-screen').classList.remove('hidden');
-                document.getElementById('admin-dashboard').classList.add('hidden');
+                document.getElementById('admin-login-screen').classList.remove('hidden'); document.getElementById('admin-dashboard').classList.add('hidden');
             }
         }
-
         function handleLogin(e) {
             e.preventDefault();
-            const user = document.getElementById('login-user').value.trim();
-            const pass = document.getElementById('login-pass').value.trim();
-            
-            if(user === '16.843.499-5' && pass === '01082017') {
-                currentUser = { role: 'admin' };
-                document.getElementById('login-error').classList.add('hidden');
-                document.getElementById('login-user').value = '';
-                document.getElementById('login-pass').value = '';
-                checkLoginState();
-                return;
-            } 
-            
-            const pro = professionals.find(p => p.rut === user && p.pass === pass);
-            if(pro) {
-                currentUser = { role: 'pro', ...pro };
-                document.getElementById('login-error').classList.add('hidden');
-                document.getElementById('login-user').value = '';
-                document.getElementById('login-pass').value = '';
-                checkLoginState();
-                return;
+            const u = document.getElementById('login-user').value.trim(); const p = document.getElementById('login-pass').value.trim();
+            if(u === '16.843.499-5' && p === '01082017') { currentUser = { role: 'admin' }; }
+            else {
+                const pro = professionals.find(pr => pr.rut === u && pr.pass === p);
+                if(pro) currentUser = { role: 'pro', ...pro };
             }
-
-            document.getElementById('login-error').classList.remove('hidden');
+            if(currentUser) { document.getElementById('login-error').classList.add('hidden'); checkLoginState(); }
+            else document.getElementById('login-error').classList.remove('hidden');
         }
+        function logout() { currentUser = null; checkLoginState(); }
 
-        function logout() {
-            currentUser = null;
-            checkLoginState();
-        }
-
-        function switchAdminTab(tabName) {
-            const tabs = ['reservas', 'profesionales', 'horarios', 'banners', 'ajustes', 'ficha'];
-            tabs.forEach(t => {
-                const btn = document.getElementById(`tab-admin-${t}`);
-                const view = document.getElementById(`admin-view-${t}`);
-                if (!btn || !view) return; 
-                if (t === tabName) {
-                    btn.className = "px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors bg-white text-brand-600 shadow-sm border border-slate-200 flex-1 text-center";
-                    view.classList.remove('hidden');
-                } else {
-                    btn.className = "px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-500 hover:text-slate-800 border border-transparent flex-1 text-center";
-                    view.classList.add('hidden');
-                }
+        function switchAdminTab(tName) {
+            ['reservas', 'profesionales', 'horarios', 'banners', 'ajustes', 'ficha'].forEach(t => {
+                const b = document.getElementById(`tab-admin-${t}`); const v = document.getElementById(`admin-view-${t}`);
+                if (!b || !v) return;
+                if (t === tName) { b.className = "px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-colors bg-white text-brand-600 shadow-sm border border-slate-300 flex-1 text-center"; v.classList.remove('hidden'); }
+                else { b.className = "px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-colors text-slate-600 hover:text-slate-800 border border-transparent flex-1 text-center"; v.classList.add('hidden'); }
             });
-
-            if (tabName === 'reservas') renderAdminReservas();
-            if (tabName === 'profesionales') renderAdminProfesionales();
-            if (tabName === 'horarios') initAdminHorarios();
-            if (tabName === 'banners') renderAdminBanners();
-            if (tabName === 'ajustes') renderAdminAjustes();
+            if (tName === 'reservas') renderAdminReservas(); if (tName === 'profesionales') renderAdminProfesionales();
+            if (tName === 'horarios') initAdminHorarios(); if (tName === 'banners') renderAdminBanners();
+            if (tName === 'ajustes') renderAdminAjustes();
         }
 
         function renderAdminReservas() {
-            const tableBody = document.getElementById('admin-table-body');
-            const emptyState = document.getElementById('admin-empty-state');
-            const tableContainer = document.getElementById('admin-table-container');
+            const table = document.getElementById('admin-table-body');
+            let apps = currentUser?.role === 'pro' ? appointments.filter(a => a.psychologistId === currentUser.id) : appointments;
+            document.getElementById('admin-total-count').innerText = apps.length;
+            if (apps.length === 0) { document.getElementById('admin-empty-state').classList.remove('hidden'); document.getElementById('admin-table-container').classList.add('hidden'); return; }
+            document.getElementById('admin-empty-state').classList.add('hidden'); document.getElementById('admin-table-container').classList.remove('hidden');
             
-            let filteredAppointments = appointments;
-            if (currentUser && currentUser.role === 'pro') {
-                filteredAppointments = appointments.filter(a => a.psychologistId === currentUser.id);
-            }
-
-            document.getElementById('admin-total-count').innerText = filteredAppointments.length;
-            if (filteredAppointments.length === 0) {
-                emptyState.classList.remove('hidden');
-                tableContainer.classList.add('hidden');
-                return;
-            }
-            emptyState.classList.add('hidden');
-            tableContainer.classList.remove('hidden');
-            tableBody.innerHTML = '';
-
-            const sorted = [...filteredAppointments].sort((a, b) => {
-                if (a.date !== b.date) return a.date.localeCompare(b.date);
-                return a.time.localeCompare(b.time);
-            });
-
-            sorted.forEach(app => {
-                const tr = document.createElement('tr');
-                const [year, month, day] = app.date.split('-');
+            table.innerHTML = apps.sort((a,b) => a.date !== b.date ? a.date.localeCompare(b.date) : a.time.localeCompare(b.time)).map(app => {
+                const [y, m, d] = app.date.split('-');
+                let statClass = "bg-white", statBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 border border-emerald-300 ml-1">Activa</span>`;
+                if(app.status === 'cancelled') { statClass = "bg-red-50"; statBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-red-100 text-red-700 border border-red-300 ml-1">Anulada</span>`; }
+                else if(app.status === 'rescheduled') { statClass = "bg-blue-50"; statBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700 border border-blue-300 ml-1">Reprogramada</span>`; }
                 
-                const methodBadgeColor = app.paymentMethod === 'Fonasa' ? 'bg-blue-50 text-blue-600 border border-blue-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100';
-                const attentionBadgeColor = app.attentionType === 'Online' ? 'bg-purple-50 text-purple-600 border border-purple-100' : 'bg-orange-50 text-orange-600 border border-orange-100';
-                
-                let statusClass = "bg-white"; 
-                let statusBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-600 border border-emerald-200 ml-1">Activa</span>`;
-                
-                if (app.status === 'cancelled') {
-                    statusClass = "bg-red-50 opacity-80";
-                    statusBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-red-100 text-red-600 border border-red-200 ml-1">Anulada</span>`;
-                } else if (app.status === 'rescheduled') {
-                    statusClass = "bg-blue-50 opacity-80";
-                    statusBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-blue-100 text-blue-600 border border-blue-200 ml-1">Reprogramada</span>`;
-                }
-
-                tr.className = `hover:bg-slate-50 transition-colors ${statusClass}`;
-                
-                tr.innerHTML = `
-                    <td class="p-3 md:p-4 align-top">
-                        <div class="flex items-center gap-2 md:gap-3">
-                            <div class="bg-white border border-slate-200 rounded-lg md:rounded-xl p-1.5 md:p-2 text-center w-10 md:w-12 shadow-sm shrink-0">
-                                <div class="text-[8px] md:text-[10px] text-brand-500 font-bold uppercase leading-none">${month}</div>
-                                <div class="text-sm md:text-base text-slate-800 font-bold leading-tight mt-0.5 md:mt-1">${day}</div>
-                            </div>
-                            <div class="bg-slate-50 border border-slate-100 text-slate-600 px-1.5 md:px-2 py-0.5 md:py-1 rounded-md text-[10px] md:text-xs font-semibold flex items-center gap-1">
-                                <i data-lucide="clock" class="w-2.5 h-2.5 md:w-3 md:h-3"></i> ${app.time}
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-3 md:p-4 align-top">
-                        <span class="font-medium text-slate-700 text-xs md:text-sm">${app.psychologistName}</span>
-                    </td>
-                    <td class="p-3 md:p-4 align-top">
-                        <p class="font-semibold text-slate-800 text-xs md:text-sm flex flex-wrap items-center gap-1">
-                            ${app.patientName} ${statusBadge}
-                        </p>
-                        <p class="mt-1 flex flex-wrap gap-1">
-                            <span class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${methodBadgeColor}">${app.paymentMethod}</span>
-                            <span class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${attentionBadgeColor}">${app.attentionType || 'N/A'}</span>
-                        </p>
-                        <p class="text-[9px] md:text-[11px] text-slate-500 mt-1">${app.patientRut} | ${app.patientPhone}</p>
-                        ${app.cancelReason ? `<p class="text-[10px] md:text-xs ${app.status === 'cancelled' ? 'text-red-600' : 'text-blue-600'} mt-1.5 bg-white/50 border border-slate-200 p-2 rounded shadow-sm"><strong>Motivo:</strong> ${app.cancelReason}</p>` : ''}
-                    </td>
-                    <td class="p-3 md:p-4 text-right align-top">
-                        <button onclick="adminCancelAppointment('${app.id}')" ${app.status !== 'active' ? 'disabled' : ''} class="p-1.5 md:p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all ${app.status !== 'active' ? 'opacity-30 cursor-not-allowed' : ''}" title="Anular cita">
-                            <i data-lucide="calendar-x" class="w-4 h-4 mx-auto"></i>
-                        </button>
-                    </td>
-                `;
-                tableBody.appendChild(tr);
-            });
+                return `
+                <tr class="hover:bg-slate-50/50 transition-colors ${statClass}">
+                    <td class="p-3 md:p-4"><div class="flex items-center gap-2"><div class="bg-white border border-slate-300 rounded-lg p-1.5 text-center w-10 shadow-sm"><div class="text-[9px] text-brand-600 font-bold uppercase">${m}</div><div class="text-sm text-slate-800 font-bold">${d}</div></div><div class="bg-slate-100 border border-slate-200 text-slate-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${app.time}</div></div></td>
+                    <td class="p-3 md:p-4"><span class="font-bold text-slate-700 text-xs">${app.psychologistName}</span></td>
+                    <td class="p-3 md:p-4"><p class="font-bold text-slate-800 text-xs">${app.patientName} ${statBadge}</p><p class="mt-1"><span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200 mr-1">${app.paymentMethod}</span><span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">${app.attentionType}</span></p><p class="text-[10px] text-slate-600 mt-1 font-medium">${app.patientRut} | ${app.patientPhone}</p></td>
+                    <td class="p-3 md:p-4 text-right"><button onclick="adminCancelAppointment('${app.id}')" ${app.status !== 'active' ? 'disabled' : ''} class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all ${app.status !== 'active' ? 'opacity-30' : ''}"><i data-lucide="calendar-x" class="w-4 h-4 mx-auto"></i></button></td>
+                </tr>`;
+            }).join('');
             safeCreateIcons();
         }
 
         async function adminCancelAppointment(id) {
             const app = appointments.find(a => a.id === id);
             if (!app || app.status !== 'active') return;
-            
-            const reason = prompt('¿Motivo de la anulación? La hora será liberada para nuevos pacientes.');
-            if (reason !== null) {
-                try {
-                    const db = window.firebaseDb;
-                    const appId = window.firebaseAppId;
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', id);
-                    await updateDoc(docRef, {
-                        status: 'cancelled',
-                        cancelReason: reason || 'Anulada por la administración'
-                    });
-                } catch(e) {
-                    alert("No se pudo actualizar la cita.");
-                }
-            }
+            const r = prompt('Motivo de anulación (la hora se liberará):');
+            if (r !== null) await updateDoc(doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'appointments', id), { status: 'cancelled', cancelReason: r || 'Admin' });
         }
 
+        // PROFESIONALES Y HORARIOS (Admin)
         function renderAdminProfesionales() {
-            const list = document.getElementById('admin-pro-list');
-            list.innerHTML = professionals.map(pro => `
+            document.getElementById('admin-pro-list').innerHTML = professionals.map(pro => `
                 <tr class="hover:bg-slate-50 transition-colors group">
-                    <td class="p-3 md:p-4 font-sans">
-                        <p class="font-semibold text-slate-800 text-sm">${pro.name}</p>
-                        <p class="text-[10px] md:text-xs text-slate-500">${pro.specialty}</p>
-                        <p class="text-[10px] text-slate-400 mt-1">RUT: ${pro.rut || 'No asignado'} | Clave: ${pro.pass || 'No asignada'}</p>
-                        <p class="text-[10px] text-brand-600 mt-0.5 font-medium">Cód: ${pro.code || 'N/A'}</p>
-                    </td>
-                    <td class="p-3 md:p-4 text-right flex justify-end gap-2 items-center h-full pt-4">
-                        <button onclick="editProfessional('${pro.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2.5 md:px-3 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-semibold transition-colors">
-                            Editar
-                        </button>
-                        <button onclick="deleteProfessional('${pro.id}')" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2.5 md:px-3 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-semibold transition-colors">
-                            Eliminar
-                        </button>
-                    </td>
+                    <td class="p-3 md:p-4"><p class="font-bold text-slate-800 text-sm">${pro.name}</p><p class="text-xs font-semibold text-slate-600">${pro.specialty}</p><p class="text-[10px] text-slate-500 mt-1 font-medium">RUT: ${pro.rut} | Clave: ${pro.pass}</p></td>
+                    <td class="p-3 md:p-4 text-right flex justify-end gap-2 items-center h-full pt-4"><button onclick="editProfessional('${pro.id}')" class="text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg text-xs font-bold">Editar</button><button onclick="deleteProfessional('${pro.id}')" class="text-red-600 hover:text-red-800 bg-red-50 px-3 py-1.5 rounded-lg text-xs font-bold">Eliminar</button></td>
                 </tr>
             `).join('');
         }
-
         function editProfessional(id) {
-            editingProId = id;
-            const pro = professionals.find(p => p.id === id);
-            
-            document.getElementById('new-pro-name').value = pro.name;
-            document.getElementById('new-pro-spec').value = pro.specialty;
-            document.getElementById('new-pro-code').value = pro.code || '';
-            document.getElementById('new-pro-bio').value = pro.bio || '';
-            document.getElementById('new-pro-bank').value = pro.bankDetails || '';
-            document.getElementById('new-pro-rut').value = pro.rut || '';
-            document.getElementById('new-pro-pass').value = pro.pass || '';
-            
-            document.getElementById('pro-form-title').innerHTML = `<i data-lucide="edit-3" class="w-4 h-4 text-brand-500"></i> Editar Profesional`;
-            document.getElementById('pro-form-btn').innerText = "Actualizar Datos";
-            document.getElementById('pro-cancel-btn').classList.remove('hidden');
-            safeCreateIcons();
+            editingProId = id; const p = professionals.find(x => x.id === id);
+            ['name','specialty','code','bio','bankDetails','rut','pass'].forEach(k => document.getElementById(`new-pro-${k === 'specialty'?'spec':k === 'bankDetails'?'bank':k}`).value = p[k] || '');
+            document.getElementById('pro-form-title').innerHTML = `<i data-lucide="edit-3" class="w-4 h-4 text-brand-600"></i> Editar Profesional`;
+            document.getElementById('pro-form-btn').innerText = "Actualizar Datos"; document.getElementById('pro-cancel-btn').classList.remove('hidden'); safeCreateIcons();
         }
-
         function cancelEditPro() {
-            editingProId = null;
-            document.getElementById('new-pro-name').value = ''; 
-            document.getElementById('new-pro-spec').value = ''; 
-            document.getElementById('new-pro-code').value = '';
-            document.getElementById('new-pro-bio').value = '';
-            document.getElementById('new-pro-bank').value = '';
-            document.getElementById('new-pro-rut').value = '';
-            document.getElementById('new-pro-pass').value = '';
-            
-            document.getElementById('pro-form-title').innerHTML = `<i data-lucide="user-plus" class="w-4 h-4 text-brand-500"></i> Nuevo Profesional`;
-            document.getElementById('pro-form-btn').innerText = "Agregar a Nómina";
-            document.getElementById('pro-cancel-btn').classList.add('hidden');
-            safeCreateIcons();
+            editingProId = null; ['name','spec','code','bio','bank','rut','pass'].forEach(k => document.getElementById(`new-pro-${k}`).value = '');
+            document.getElementById('pro-form-title').innerHTML = `<i data-lucide="user-plus" class="w-4 h-4 text-brand-600"></i> Nuevo Profesional`;
+            document.getElementById('pro-form-btn').innerText = "Agregar a Nómina"; document.getElementById('pro-cancel-btn').classList.add('hidden'); safeCreateIcons();
         }
-
         async function saveProfessional() {
-            const name = document.getElementById('new-pro-name').value.trim();
-            const spec = document.getElementById('new-pro-spec').value.trim();
-            const code = document.getElementById('new-pro-code').value.trim();
-            const bio = document.getElementById('new-pro-bio').value.trim();
-            const bank = document.getElementById('new-pro-bank').value.trim();
-            const rut = document.getElementById('new-pro-rut').value.trim();
-            const pass = document.getElementById('new-pro-pass').value.trim();
-            
-            if(!name || !spec || !rut || !pass) { alert("Por favor ingresa nombre, especialidad, RUT de acceso y contraseña."); return; }
-            
-            const db = window.firebaseDb;
-            const appId = window.firebaseAppId;
-            const targetId = editingProId || ('pro_' + Date.now());
-
-            const formattedName = name.startsWith('Ps. ') ? name : 'Ps. ' + name;
-            const colors = ['teal', 'blue', 'indigo', 'rose', 'purple'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-            const proData = {
-                name: formattedName,
-                specialty: spec,
-                code: code,
-                bio: bio,
-                bankDetails: bank,
-                rut: rut,
-                pass: pass
-            };
-
-            // Conservar el color si ya existía
-            if (editingProId) {
-                const currentPro = professionals.find(p => p.id === editingProId);
-                proData.color = currentPro?.color || randomColor;
-            } else {
-                proData.color = randomColor;
-            }
-
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'professionals', targetId);
-                await setDoc(docRef, proData);
-
-                cancelEditPro();
-                renderAdminProfesionales();
-            } catch(e) {
-                alert("Error al guardar profesional en Firebase.");
-            }
+            const data = { name: document.getElementById('new-pro-name').value.trim(), specialty: document.getElementById('new-pro-spec').value.trim(), code: document.getElementById('new-pro-code').value.trim(), bio: document.getElementById('new-pro-bio').value.trim(), bankDetails: document.getElementById('new-pro-bank').value.trim(), rut: document.getElementById('new-pro-rut').value.trim(), pass: document.getElementById('new-pro-pass').value.trim() };
+            if(!data.name || !data.specialty || !data.rut || !data.pass) { alert("Faltan datos."); return; }
+            if(!data.name.startsWith('Ps. ')) data.name = 'Ps. ' + data.name;
+            try { await setDoc(doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'professionals', editingProId || 'pro_'+Date.now()), data); cancelEditPro(); } catch(e) { alert("Error guardando."); }
         }
-
-        async function deleteProfessional(id) {
-            if(confirm('¿Eliminar este profesional del directorio?')) {
-                try {
-                    const db = window.firebaseDb;
-                    const appId = window.firebaseAppId;
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'professionals', id);
-                    await deleteDoc(docRef);
-                } catch(e) {
-                    alert("Error al eliminar profesional.");
-                }
-            }
-        }
+        async function deleteProfessional(id) { if(confirm('¿Eliminar?')) await deleteDoc(doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'professionals', id)); }
 
         function initAdminHorarios() {
-            const select = document.getElementById('sched-pro-select');
-            
-            if (currentUser && currentUser.role === 'pro') {
-                select.innerHTML = `<option value="${currentUser.id}" selected>${currentUser.name}</option>`;
-                select.disabled = true;
-                setTimeout(loadScheduleConfig, 100);
-            } else {
-                select.innerHTML = '<option value="" disabled selected>-- SELECCIONAR --</option>' + 
-                    professionals.map(pro => `<option value="${pro.id}">${pro.name}</option>`).join('');
-                select.disabled = false;
-            }
-            
-            const checksContainer = document.getElementById('sched-checkboxes');
-            checksContainer.innerHTML = standardHours.map(time => `
-                <label class="cursor-pointer">
-                    <input type="checkbox" value="${time}" class="peer hidden sched-time-chk">
-                    <div class="border border-slate-200 text-slate-500 bg-white shadow-sm rounded-xl p-2 md:p-3 text-center transition-all peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-400 peer-checked:shadow-[0_0_10px_rgba(244,63,94,0.15)] hover:border-brand-300 text-[10px] md:text-xs font-semibold">
-                        ${time}
-                    </div>
-                </label>
-            `).join('');
-            document.getElementById('sched-date-select').value = '';
-            document.getElementById('sched-hours-container').classList.add('opacity-30', 'pointer-events-none');
+            const sel = document.getElementById('sched-pro-select');
+            if (currentUser?.role === 'pro') { sel.innerHTML = `<option value="${currentUser.id}" selected>${currentUser.name}</option>`; sel.disabled = true; setTimeout(loadScheduleConfig, 100); }
+            else { sel.innerHTML = '<option value="" disabled selected>-- SELECCIONAR --</option>' + professionals.map(p => `<option value="${p.id}">${p.name}</option>`).join(''); sel.disabled = false; }
+            document.getElementById('sched-checkboxes').innerHTML = standardHours.map(t => `<label class="cursor-pointer"><input type="checkbox" value="${t}" class="peer hidden sched-time-chk"><div class="border border-slate-300 text-slate-600 bg-white shadow-sm rounded-xl p-2 text-center transition-all peer-checked:bg-brand-50 peer-checked:text-brand-700 peer-checked:border-brand-400 peer-checked:shadow-[0_0_10px_rgba(244,63,94,0.15)] font-bold text-xs">${t}</div></label>`).join('');
+            document.getElementById('sched-date-select').value = ''; document.getElementById('sched-hours-container').classList.add('opacity-30', 'pointer-events-none');
         }
-
         function loadScheduleConfig() {
-            const proId = document.getElementById('sched-pro-select').value;
-            const date = document.getElementById('sched-date-select').value;
-            const container = document.getElementById('sched-hours-container');
-            const msg = document.getElementById('sched-save-msg');
-            msg.classList.add('hidden');
-
-            if(proId && date) {
-                container.classList.remove('opacity-30', 'pointer-events-none');
-                let currentHours = schedules[proId] && schedules[proId][date] ? schedules[proId][date].hours || standardHours : standardHours;
-                document.querySelectorAll('.sched-time-chk').forEach(chk => {
-                    chk.checked = currentHours.includes(chk.value);
-                });
-            } else {
-                container.classList.add('opacity-30', 'pointer-events-none');
-            }
+            const pId = document.getElementById('sched-pro-select').value, d = document.getElementById('sched-date-select').value, c = document.getElementById('sched-hours-container');
+            document.getElementById('sched-save-msg').classList.add('hidden');
+            if(pId && d) { c.classList.remove('opacity-30', 'pointer-events-none'); const h = schedules[pId]?.[d]?.hours || standardHours; document.querySelectorAll('.sched-time-chk').forEach(chk => chk.checked = h.includes(chk.value)); } 
+            else c.classList.add('opacity-30', 'pointer-events-none');
+        }
+        async function saveScheduleConfig() {
+            const pId = document.getElementById('sched-pro-select').value, d = document.getElementById('sched-date-select').value, h = Array.from(document.querySelectorAll('.sched-time-chk:checked')).map(c => c.value);
+            try { await setDoc(doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'schedules', pId), { [d]: { hours: h } }, { merge: true }); const msg = document.getElementById('sched-save-msg'); msg.classList.remove('hidden'); setTimeout(()=>msg.classList.add('hidden'), 3000); } catch(e) { alert("Error"); }
         }
 
-        async function saveScheduleConfig() {
-            const proId = document.getElementById('sched-pro-select').value;
-            const date = document.getElementById('sched-date-select').value;
-            const selectedHours = Array.from(document.querySelectorAll('.sched-time-chk:checked')).map(chk => chk.value);
-            
-            try {
-                const db = window.firebaseDb;
-                const appId = window.firebaseAppId;
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', proId);
-                
-                // Actualizar o setear el documento en Firestore
-                await setDoc(docRef, {
-                    [date]: { hours: selectedHours }
-                }, { merge: true });
-
-                const msg = document.getElementById('sched-save-msg');
-                msg.classList.remove('hidden');
-                setTimeout(() => msg.classList.add('hidden'), 3000);
-            } catch(e) {
-                alert("Error al guardar el horario en Firebase.");
-            }
+        // BANNERS: CARGA DE IMAGEN LOCAL (Canvas Compress Base64)
+        function processImageFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 1200;
+                        let width = img.width, height = img.height;
+                        if (width > MAX_WIDTH) { height = Math.round((height * MAX_WIDTH) / width); width = MAX_WIDTH; }
+                        canvas.width = width; canvas.height = height;
+                        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.7)); // 70% compresión JPEG segura
+                    };
+                    img.onerror = reject; img.src = e.target.result;
+                };
+                reader.onerror = reject; reader.readAsDataURL(file);
+            });
         }
 
         function renderAdminBanners() {
-            const list = document.getElementById('admin-banner-list');
-            if (sliderBanners.length === 0) {
-                list.innerHTML = '<p class="text-sm text-slate-400 italic">No hay banners.</p>'; return;
-            }
-            list.innerHTML = sliderBanners.map((banner, index) => `
-                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col">
-                    <div class="h-24 w-full bg-slate-100 relative">
-                        <img src="${banner.img}" class="w-full h-full object-cover" alt="preview">
-                        <div class="absolute inset-0 bg-black/40"></div>
-                        <span class="absolute top-2 left-2 bg-brand-500 text-white text-[10px] px-2 py-0.5 rounded font-bold">#${index + 1}</span>
-                    </div>
-                    <div class="p-3 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h5 class="font-bold text-slate-800 text-xs truncate" title="${banner.title}">${banner.title}</h5>
-                            <p class="text-[10px] text-slate-500 line-clamp-2 mt-0.5">${banner.text}</p>
-                        </div>
-                        <button onclick="deleteBanner('${banner.id}')" class="mt-3 text-red-500 hover:text-red-700 text-xs font-semibold self-start flex items-center gap-1">
-                            <i data-lucide="trash-2" class="w-3 h-3"></i> Eliminar
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-            safeCreateIcons();
+            document.getElementById('admin-banner-list').innerHTML = sliderBanners.map((b, i) => `
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                    <div class="h-24 w-full relative"><img src="${b.img}" class="w-full h-full object-cover rounded-t-xl" alt="preview"><span class="absolute top-2 left-2 bg-brand-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">#${i + 1}</span></div>
+                    <div class="p-3 flex-1 flex flex-col"><h5 class="font-bold text-slate-800 text-xs truncate">${b.title}</h5><p class="text-[10px] font-medium text-slate-600 line-clamp-2">${b.text}</p><button onclick="deleteBanner('${b.id}')" class="mt-2 text-red-600 hover:text-red-800 text-xs font-bold self-start"><i data-lucide="trash-2" class="w-3 h-3 inline"></i> Eliminar</button></div>
+                </div>`).join(''); safeCreateIcons();
         }
 
         async function addBanner() {
-            const img = document.getElementById('new-banner-img').value.trim();
+            const fileInput = document.getElementById('new-banner-file');
             const title = document.getElementById('new-banner-title').value.trim();
             const text = document.getElementById('new-banner-text').value.trim();
-            if(!img || !title) { alert("Por favor ingresa URL y título."); return; }
+            const btn = document.getElementById('btn-add-banner');
 
-            const id = 'slide_' + Date.now();
-            const db = window.firebaseDb;
-            const appId = window.firebaseAppId;
+            if(!title || !fileInput.files || fileInput.files.length === 0) { alert("Selecciona una imagen y escribe un título."); return; }
+
+            btn.innerHTML = 'Procesando... <i data-lucide="loader" class="w-4 h-4 animate-spin inline"></i>'; btn.disabled = true;
 
             try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'banners', id);
-                await setDoc(docRef, { img, title, text });
-
-                document.getElementById('new-banner-img').value = ''; 
-                document.getElementById('new-banner-title').value = ''; 
-                document.getElementById('new-banner-text').value = '';
-            } catch(e) {
-                alert("Error al añadir banner.");
-            }
+                const base64Img = await processImageFile(fileInput.files);
+                await setDoc(doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'banners', 'slide_' + Date.now()), { img: base64Img, title, text });
+                fileInput.value = ''; document.getElementById('new-banner-title').value = ''; document.getElementById('new-banner-text').value = '';
+            } catch(e) { alert("Error guardando banner."); }
+            finally { btn.innerHTML = 'Añadir al Slider'; btn.disabled = false; safeCreateIcons(); }
         }
+        async function deleteBanner(id) { if(confirm('¿Eliminar banner?')) await deleteDoc(doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'banners', id)); }
 
-        async function deleteBanner(id) {
-            if(confirm('¿Eliminar este banner del slider principal?')) {
-                try {
-                    const db = window.firebaseDb;
-                    const appId = window.firebaseAppId;
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'banners', id);
-                    await deleteDoc(docRef);
-                } catch(e) {
-                    alert("Error al eliminar banner.");
-                }
-            }
-        }
-
-        function renderAdminAjustes() {
-            document.getElementById('config-clinic-name').value = clinicInfo.name;
-            document.getElementById('config-clinic-address').value = clinicInfo.address;
-            document.getElementById('config-clinic-city').value = clinicInfo.city;
-            document.getElementById('config-clinic-map').value = clinicInfo.mapEmbed;
-        }
-
+        // AJUSTES
+        function renderAdminAjustes() { ['name', 'address', 'city'].forEach(k => document.getElementById(`config-clinic-${k}`).value = clinicInfo[k]); document.getElementById('config-clinic-map').value = clinicInfo.mapEmbed; }
         async function saveClinicInfo() {
-            const name = document.getElementById('config-clinic-name').value.trim();
-            const address = document.getElementById('config-clinic-address').value.trim();
-            const city = document.getElementById('config-clinic-city').value.trim();
-            const mapEmbed = document.getElementById('config-clinic-map').value.trim();
-            if(!name || !address || !city) { alert("Completa nombre, dirección y ciudad."); return; }
-            
-            try {
-                const db = window.firebaseDb;
-                const appId = window.firebaseAppId;
-                // Corregido a 6 segmentos para que la escritura sea válida
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info', 'main');
-                await setDoc(docRef, { name, address, city, mapEmbed });
-
-                const msg = document.getElementById('config-save-msg');
-                msg.classList.remove('hidden');
-                setTimeout(() => msg.classList.add('hidden'), 3000);
-            } catch(e) {
-                alert("Error al guardar ajustes.");
-            }
+            const data = { name: document.getElementById('config-clinic-name').value.trim(), address: document.getElementById('config-clinic-address').value.trim(), city: document.getElementById('config-clinic-city').value.trim(), mapEmbed: document.getElementById('config-clinic-map').value.trim() };
+            if(!data.name || !data.address || !data.city) return;
+            try { await setDoc(doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'clinic_info', 'main'), data); document.getElementById('config-save-msg').classList.remove('hidden'); setTimeout(()=>document.getElementById('config-save-msg').classList.add('hidden'), 3000); } catch(e) {}
         }
 
+        // FICHA CLÍNICA
         function searchPatientRecords(e) {
-            e.preventDefault();
-            const rut = document.getElementById('search-record-rut').value.trim();
-            let results = appointments.filter(a => a.patientRut === rut);
-            
-            if (currentUser && currentUser.role === 'pro') {
-                results = results.filter(a => a.psychologistId === currentUser.id);
-            }
-            
-            const listContainer = document.getElementById('record-list-container');
-            const emptyState = document.getElementById('record-empty-state');
-            const listEl = document.getElementById('record-appointments-list');
-            
-            document.getElementById('record-editor-container').classList.add('hidden');
-            document.getElementById('record-editor-placeholder').classList.remove('hidden');
-
-            if(results.length === 0) {
-                listContainer.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-            } else {
-                listContainer.classList.remove('hidden');
-                emptyState.classList.add('hidden');
-                
-                listEl.innerHTML = results.map(app => {
-                    const [y, m, d] = app.date.split('-');
-                    let statusColor = 'text-emerald-500';
-                    let statusText = 'Activa';
-                    if (app.status === 'cancelled') { statusColor = 'text-red-500'; statusText = 'Anulada'; }
-                    else if (app.status === 'rescheduled') { statusColor = 'text-blue-500'; statusText = 'Reprogramada'; }
-                    
-                    return `
-                    <div onclick="openClinicalRecord('${app.id}')" class="p-3 border border-slate-200 rounded-xl cursor-pointer hover:border-brand-300 hover:bg-brand-50 transition-colors bg-white">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <span class="font-bold text-slate-800 text-sm">${d}/${m}/${y}</span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider ${statusColor} bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">${statusText}</span>
-                        </div>
-                        <p class="text-xs font-medium text-slate-700 truncate">${app.psychologistName}</p>
-                        <p class="text-[10px] text-slate-500 mt-0.5"><i data-lucide="clock" class="w-3 h-3 inline pb-0.5"></i> ${app.time} hrs</p>
-                    </div>
-                    `;
-                }).join('');
-                safeCreateIcons();
+            e.preventDefault(); const r = document.getElementById('search-record-rut').value.trim();
+            const apps = currentUser?.role === 'pro' ? appointments.filter(a => a.patientRut === r && a.psychologistId === currentUser.id) : appointments.filter(a => a.patientRut === r);
+            document.getElementById('record-editor-container').classList.add('hidden'); document.getElementById('record-editor-placeholder').classList.remove('hidden');
+            if(apps.length === 0) { document.getElementById('record-list-container').classList.add('hidden'); document.getElementById('record-empty-state').classList.remove('hidden'); }
+            else {
+                document.getElementById('record-list-container').classList.remove('hidden'); document.getElementById('record-empty-state').classList.add('hidden');
+                document.getElementById('record-appointments-list').innerHTML = apps.map(app => `<div onclick="openClinicalRecord('${app.id}')" class="p-3 border border-slate-300 rounded-xl cursor-pointer hover:border-brand-400 hover:bg-brand-50 bg-white"><div class="flex justify-between items-center mb-1"><span class="font-bold text-slate-800 text-sm">${app.date.split('-').reverse().join('/')}</span></div><p class="text-xs font-bold text-slate-700">${app.psychologistName}</p></div>`).join('');
             }
         }
-
         function openClinicalRecord(id) {
-            const app = appointments.find(a => a.id === id);
-            if(!app) return;
-
-            document.getElementById('record-editor-placeholder').classList.add('hidden');
-            document.getElementById('record-editor-container').classList.remove('hidden');
-            
-            document.getElementById('current-record-id').value = app.id;
-            document.getElementById('record-patient-name').innerText = `${app.patientName} (RUT: ${app.patientRut})`;
-            
-            const [y, m, d] = app.date.split('-');
-            document.getElementById('record-session-info').innerText = `Sesión: ${d}/${m}/${y} a las ${app.time} hrs | Prof: ${app.psychologistName}`;
-            
-            document.getElementById('record-reason').value = app.clinicalReason || '';
-            document.getElementById('record-report').value = app.clinicalReport || '';
-            
+            const app = appointments.find(a => a.id === id); if(!app) return;
+            document.getElementById('record-editor-placeholder').classList.add('hidden'); document.getElementById('record-editor-container').classList.remove('hidden');
+            document.getElementById('current-record-id').value = app.id; document.getElementById('record-patient-name').innerText = `${app.patientName} (RUT: ${app.patientRut})`;
+            document.getElementById('record-session-info').innerText = `Sesión: ${app.date.split('-').reverse().join('/')} a las ${app.time} hrs`;
+            document.getElementById('record-reason').value = app.clinicalReason || ''; document.getElementById('record-report').value = app.clinicalReport || '';
             document.getElementById('record-save-msg').classList.add('hidden');
         }
-
         async function saveClinicalRecord() {
-            const id = document.getElementById('current-record-id').value;
-            const reason = document.getElementById('record-reason').value;
-            const report = document.getElementById('record-report').value;
-            
-            try {
-                const db = window.firebaseDb;
-                const appId = window.firebaseAppId;
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appointments', id);
-                await updateDoc(docRef, {
-                    clinicalReason: reason,
-                    clinicalReport: report
-                });
-
-                const msg = document.getElementById('record-save-msg');
-                msg.classList.remove('hidden');
-                setTimeout(() => msg.classList.add('hidden'), 3000);
-            } catch(e) {
-                alert("Error al guardar la ficha clínica.");
-            }
+            try { await updateDoc(doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'appointments', document.getElementById('current-record-id').value), { clinicalReason: document.getElementById('record-reason').value, clinicalReport: document.getElementById('record-report').value }); document.getElementById('record-save-msg').classList.remove('hidden'); setTimeout(()=>document.getElementById('record-save-msg').classList.add('hidden'), 3000); } catch(e) { alert("Error guardando."); }
         }
 
+        // IMPRIMIR FICHA
         function printClinicalRecord() {
-            const id = document.getElementById('current-record-id').value;
-            const app = appointments.find(a => a.id === id);
-            if(!app) {
-                alert("Seleccione una sesión primero."); return;
-            }
-            
+            const app = appointments.find(a => a.id === document.getElementById('current-record-id').value); if(!app) return;
             const pro = professionals.find(p => p.id === app.psychologistId) || {};
             saveClinicalRecord(); 
-
             const printWindow = window.open('', '_blank');
-            const [y, m, d] = app.date.split('-');
-            const printDate = `${d}/${m}/${y}`;
             
             const html = `
                 <!DOCTYPE html>
@@ -2147,28 +1535,33 @@
                     <meta charset="UTF-8">
                     <title>Informe Clínico - ${app.patientName}</title>
                     <style>
-                        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; padding: 40px; color: #333; max-width: 800px; margin: auto; }
-                        .header { text-align: center; border-bottom: 2px solid #f43f5e; padding-bottom: 20px; margin-bottom: 30px; }
+                        /* Configuración Carta y Evitar Cortes */
+                        @media print {
+                            @page { size: letter; margin: 20mm; }
+                            body { -webkit-print-color-adjust: exact; }
+                        }
+                        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #1e293b; max-width: 800px; margin: auto; padding: 20px; }
+                        .header { text-align: center; border-bottom: 2px solid #e11d48; padding-bottom: 20px; margin-bottom: 30px; }
                         .title { font-size: 24px; font-weight: bold; color: #be123c; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; }
-                        .clinic-name { font-size: 14px; color: #666; }
+                        .clinic-name { font-size: 14px; color: #475569; font-weight: bold;}
                         .section { margin-bottom: 25px; page-break-inside: avoid; }
-                        .section-title { font-size: 16px; font-weight: bold; background: #f8f9fa; padding: 8px 12px; border-left: 4px solid #f43f5e; margin-bottom: 15px; color: #1f2937; }
+                        .section-title { font-size: 16px; font-weight: bold; background: #f8f9fa; padding: 8px 12px; border-left: 4px solid #e11d48; margin-bottom: 15px; color: #0f172a; }
                         .row { display: flex; margin-bottom: 10px; font-size: 14px; }
-                        .label { font-weight: bold; width: 180px; color: #4b5563; }
-                        .value { flex: 1; color: #111827; }
-                        .content-box { border: 1px solid #e5e7eb; padding: 15px; border-radius: 6px; white-space: pre-wrap; min-height: 80px; font-size: 14px; color: #1f2937; background: #fff; }
-                        .footer { margin-top: 50px; text-align: center; font-size: 11px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 20px; }
-                        .signature { margin-top: 80px; text-align: center; float: right; width: 280px; page-break-inside: avoid; }
-                        .sig-line { border-bottom: 1px solid #111827; margin-bottom: 10px; }
-                        .sig-name { font-weight: bold; font-size: 15px; color: #111827; }
-                        .sig-role { font-size: 13px; color: #4b5563; }
-                        .clear { clear: both; }
+                        .label { font-weight: bold; width: 180px; color: #334155; }
+                        .value { flex: 1; color: #0f172a; font-weight: 500;}
+                        .content-box { border: 1px solid #cbd5e1; padding: 15px; border-radius: 6px; white-space: pre-wrap; min-height: 80px; font-size: 14px; color: #0f172a; background: #fff; font-weight: 500;}
+                        .footer { margin-top: 50px; text-align: center; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 20px; page-break-inside: avoid; }
+                        /* Firma Centrada y sin quebrar hoja */
+                        .signature { margin: 80px auto 0 auto; text-align: center; width: 300px; page-break-inside: avoid; }
+                        .sig-line { border-bottom: 1px solid #0f172a; margin-bottom: 10px; }
+                        .sig-name { font-weight: bold; font-size: 15px; color: #0f172a; }
+                        .sig-role { font-size: 13px; color: #475569; font-weight: bold;}
                     </style>
                 </head>
                 <body>
                     <div class="header">
                         <h1 class="title">Informe Clínico</h1>
-                        <div class="clinic-name"><strong>${clinicInfo.name}</strong></div>
+                        <div class="clinic-name">${clinicInfo.name}</div>
                         <div class="clinic-name">${clinicInfo.address}, ${clinicInfo.city}</div>
                     </div>
 
@@ -2177,15 +1570,12 @@
                         <div class="row"><div class="label">Nombre Completo:</div><div class="value">${app.patientName}</div></div>
                         <div class="row"><div class="label">RUT:</div><div class="value">${app.patientRut}</div></div>
                         <div class="row"><div class="label">Teléfono:</div><div class="value">${app.patientPhone}</div></div>
-                        <div class="row"><div class="label">Correo Electrónico:</div><div class="value">${app.patientEmail}</div></div>
                     </div>
 
                     <div class="section">
                         <div class="section-title">Antecedentes de la Atención</div>
                         <div class="row"><div class="label">Profesional Tratante:</div><div class="value">${app.psychologistName}</div></div>
-                        <div class="row"><div class="label">Fecha de Sesión:</div><div class="value">${printDate} a las ${app.time} hrs</div></div>
-                        <div class="row"><div class="label">Modalidad:</div><div class="value">${app.attentionType || 'No especificada'}</div></div>
-                        <div class="row"><div class="label">Previsión:</div><div class="value">${app.paymentMethod || 'No especificada'}</div></div>
+                        <div class="row"><div class="label">Fecha de Sesión:</div><div class="value">${app.date.split('-').reverse().join('/')} a las ${app.time} hrs</div></div>
                     </div>
 
                     <div class="section">
@@ -2204,7 +1594,6 @@
                         <div class="sig-role">Psicólogo/a Clínico</div>
                         <div class="sig-role">RUT Prestador: ${pro.code || 'No registrado'}</div>
                     </div>
-                    <div class="clear"></div>
 
                     <div class="footer">
                         Documento confidencial generado el ${new Date().toLocaleDateString('es-CL')} mediante plataforma de gestión clínica.
@@ -2212,12 +1601,8 @@
                 </body>
                 </html>
             `;
-            printWindow.document.write(html);
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => {
-                printWindow.print();
-            }, 800);
+            printWindow.document.write(html); printWindow.document.close(); printWindow.focus();
+            setTimeout(() => { printWindow.print(); }, 800);
         }
     </script>
 </body>
