@@ -1080,7 +1080,7 @@
 
             track.innerHTML = sliderBanners.map(s => `
                 <div class="w-full h-full flex-shrink-0 relative">
-                    <img src="${s.img}" class="w-full h-full object-cover" alt="Banner">
+                    <img src="${s.img}" class="w-full h-full object-contain" alt="Banner">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent flex flex-col justify-end p-6 md:p-10"></div>
                 </div>
             `).join('');
@@ -1977,7 +1977,7 @@
             list.innerHTML = sliderBanners.map((banner, index) => `
                 <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col">
                     <div class="h-24 w-full bg-slate-100 relative">
-                        <img src="${banner.img}" class="w-full h-full object-cover" alt="preview">
+                        <img src="${banner.img}" class="w-full h-full object-contain" alt="preview">
                         <div class="absolute inset-0 bg-black/40"></div>
                         <span class="absolute top-2 left-2 bg-brand-500 text-white text-[10px] px-2 py-0.5 rounded font-bold">#${index + 1}</span>
                     </div>
