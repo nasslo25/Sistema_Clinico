@@ -9,7 +9,9 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- EmailJS SDK para notificaciones automatizadas -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -569,6 +571,10 @@
                                             <input type="text" id="new-pro-spec" placeholder="Ej. Psicología Adultos" class="input-soft py-2 text-sm">
                                         </div>
                                         <div>
+                                            <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Correo Electrónico (Notificaciones)</label>
+                                            <input type="email" id="new-pro-email" placeholder="profesional@clinica.cl" class="input-soft py-2 text-sm">
+                                        </div>
+                                        <div>
                                             <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Cód. Fonasa</label>
                                             <input type="text" id="new-pro-code" placeholder="Ej. 092001 (Opcional)" class="input-soft py-2 text-sm">
                                         </div>
@@ -790,12 +796,44 @@
                                             </label>
                                             <input type="text" id="config-clinic-map" class="input-soft bg-slate-50 text-xs" placeholder="URL src del iframe">
                                         </div>
-                                        <button onclick="saveClinicInfo()" class="btn-brand w-full py-3 rounded-xl font-semibold mt-4">
-                                            Guardar Configuración
-                                        </button>
-                                        <div id="config-save-msg" class="hidden text-center text-xs md:text-sm font-medium text-brand-600 mt-2 bg-brand-50 py-2 rounded-lg border border-brand-100">
-                                            <i data-lucide="check" class="w-4 h-4 inline"></i> Datos actualizados
+                                    </div>
+                                </div>
+
+                                <!-- SECCIÓN INTEGRACIÓN EMAILJS (NUEVA MEJORA INTEGRADORA) -->
+                                <div class="border-t border-slate-100 pt-6">
+                                    <h4 class="font-semibold text-slate-700 flex items-center gap-2 mb-4 border-b border-slate-100 pb-2">
+                                        <i data-lucide="mail" class="w-5 h-5 text-brand-500"></i> Notificaciones de Correo (EmailJS)
+                                    </h4>
+                                    <div class="space-y-4 text-xs text-slate-600 mb-4 bg-slate-50 p-3.5 rounded-xl border">
+                                        <span class="font-bold text-slate-800">¿Cómo activarlo?</span>
+                                        <span>Regístrate en <a href="https://www.emailjs.com/" target="_blank" class="text-brand-600 hover:underline font-bold">EmailJS</a>, crea tus plantillas de correo y pega aquí tus claves de acceso. Las citas se notificarán automáticamente al correo del paciente y del profesional clínico asignado.</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs text-slate-700 mb-1 ml-1">Public Key (User ID)</label>
+                                            <input type="text" id="config-emailjs-public" class="input-soft bg-slate-50 text-xs" placeholder="Ej. user_Haks8D7as8d...">
                                         </div>
+                                        <div>
+                                            <label class="block text-xs text-slate-700 mb-1 ml-1">Service ID</label>
+                                            <input type="text" id="config-emailjs-service" class="input-soft bg-slate-50 text-xs" placeholder="Ej. service_gmail_id">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-slate-700 mb-1 ml-1">Template ID - Paciente</label>
+                                            <input type="text" id="config-emailjs-temp-patient" class="input-soft bg-slate-50 text-xs" placeholder="Ej. template_confirmacion">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-slate-700 mb-1 ml-1">Template ID - Profesional</label>
+                                            <input type="text" id="config-emailjs-temp-pro" class="input-soft bg-slate-50 text-xs" placeholder="Ej. template_aviso_pro">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pt-4">
+                                    <button onclick="saveClinicInfo()" class="btn-brand w-full py-3 rounded-xl font-semibold">
+                                        Guardar Configuración General
+                                    </button>
+                                    <div id="config-save-msg" class="hidden text-center text-xs md:text-sm font-medium text-brand-600 mt-2 bg-brand-50 py-2 rounded-lg border border-brand-100">
+                                        <i data-lucide="check" class="w-4 h-4 inline"></i> Datos actualizados en Firebase
                                     </div>
                                 </div>
                             </div>
@@ -860,19 +898,23 @@
             name: "Centro de Psicología Integral",
             address: "Antonio Varas 708",
             city: "Temuco centro, Chile",
-            mapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3112.9238382995393!2d-72.59161208465451!3d-38.7366304795954!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9614d3e8e25d2c2f%3A0x1d950d5ec42c0eb4!2sAntonio%20Varas%20708%2C%20Temuco%2C%20Araucan%C3%ADa!5e0!3m2!1ses-419!2scl!4v1716492000000!5m2!1ses-419!2scl"
+            mapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3112.9238382995393!2d-72.59161208465451!3d-38.7366304795954!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9614d3e8e25d2c2f%3A0x1d950d5ec42c0eb4!2sAntonio%20Varas%20708%2C%20Temuco%2C%20Araucan%C3%ADa!5e0!3m2!1ses-419!2scl!4v1716492000000!5m2!1ses-419!2scl",
+            emailjs_public: "",
+            emailjs_service: "",
+            emailjs_temp_patient: "",
+            emailjs_temp_pro: ""
         };
         
         // Profesionales semilla (De respaldo, solo si la base de datos se encuentra totalmente vacía)
         const defaultProfessionals = [
-            { id: 'pro_1', name: 'Ps. Constanza Beroiza', specialty: 'Terapia Adultos', color: 'rose', code: '0920011', bio: 'Especialista en manejo de ansiedad y depresión.', bankDetails: 'Banco Estado\nCta Rut: 16.843.499-5\nconstanza@clinica.cl', rut: '11.111.111-1', pass: 'demo1' },
-            { id: 'pro_2', name: 'Ps. Roberto Gómez', specialty: 'Infantil & Adolescentes', color: 'blue', code: '0920012', bio: 'Enfoque lúdico y acompañamiento parental.', bankDetails: 'Banco Santander\nCta Corriente: 12345678\nroberto@clinica.cl', rut: '22.222.222-2', pass: 'demo2' },
-            { id: 'pro_3', name: 'Ps. María Paz', specialty: 'Terapia de Pareja', color: 'purple', code: '0920013', bio: 'Terapia sistémica y resolución de conflictos.', bankDetails: 'Banco BCI\nCta Vista: 98765432\nmariapaz@clinica.cl', rut: '33.333.333-3', pass: 'demo3' }
+            { id: 'pro_1', name: 'Ps. Constanza Beroiza', specialty: 'Terapia Adultos', color: 'rose', code: '0920011', bio: 'Especialista en manejo de ansiedad y depresión.', bankDetails: 'Banco Estado\nCta Rut: 16.843.499-5\nconstanza@clinica.cl', rut: '11.111.111-1', pass: 'demo1', email: 'constanza@clinica.cl' },
+            { id: 'pro_2', name: 'Ps. Roberto Gómez', specialty: 'Infantil & Adolescentes', color: 'blue', code: '0920012', bio: 'Enfoque lúdico y acompañamiento parental.', bankDetails: 'Banco Santander\nCta Corriente: 12345678\nroberto@clinica.cl', rut: '22.222.222-2', pass: 'demo2', email: 'roberto@clinica.cl' },
+            { id: 'pro_3', name: 'Ps. María Paz', specialty: 'Terapia de Pareja', color: 'purple', code: '0920013', bio: 'Terapia sistémica y resolución de conflictos.', bankDetails: 'Banco BCI\nCta Vista: 98765432\nmariapaz@clinica.cl', rut: '33.333.333-3', pass: 'demo3', email: 'mariapaz@clinica.cl' }
         ];
 
         // Se inician con los datos semilla por defecto para una renderización y carga instantánea
         let professionals = [
-            { id: 'pro_1', name: 'Ps. Constanza Beroiza', specialty: 'Terapia Adultos', color: 'rose', code: '0920011', bio: 'Especialista en manejo de ansiedad y depresión.', bankDetails: 'Banco Estado\nCta Rut: 16.843.499-5\nconstanza@clinica.cl', rut: '11.111.111-1', pass: 'demo1' }
+            { id: 'pro_1', name: 'Ps. Constanza Beroiza', specialty: 'Terapia Adultos', color: 'rose', code: '0920011', bio: 'Especialista en manejo de ansiedad y depresión.', bankDetails: 'Banco Estado\nCta Rut: 16.843.499-5\nconstanza@clinica.cl', rut: '11.111.111-1', pass: 'demo1', email: 'constanza@clinica.cl' }
         ];
         let appointments = [];
 
@@ -913,7 +955,7 @@
         }
 
         // ==========================================
-        // SYNC FIREBASE REALTIME LISTENERS
+        // SYNC FIREBASE REALTIME LISTENERS (API INTEGRA)
         // ==========================================
         async function initFirebaseSync() {
             const db = window.firebaseDb;
@@ -927,21 +969,20 @@
             }
 
             try {
-                // Iniciar autenticación anónima para poder consultar la base de datos de manera segura (Alineación con RULE 3)
+                // Autenticación anónima segura
                 await signInAnonymously(auth);
                 console.log("Autenticación completada con éxito en Firebase.");
 
-                // Guard de seguridad de autenticación antes de realizar queries
                 if (!auth.currentUser) {
                     console.error("No se pudo comprobar la sesión autenticada.");
                     return;
                 }
 
-                // Cargar y escuchar Información de la Clínica (Se corrigió la ruta de 5 segmentos a 6 segmentos para evitar crasheo)
+                // Cargar y escuchar Información de la Clínica
                 const infoRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info', 'main');
                 onSnapshot(infoRef, (snap) => {
                     if (snap.exists()) {
-                        clinicInfo = snap.data();
+                        clinicInfo = { ...clinicInfo, ...snap.data() };
                         updatePatientLocationUI();
                     } else {
                         // Crear primer documento de ajustes si no existe con merge seguro
@@ -1017,8 +1058,7 @@
 
         // Evento de escucha para iniciar sincronización cuando Firebase esté disponible
         window.addEventListener('firebase-ready', () => {
-            // Corregido: split('T') de manera explícita para no heredar arreglos
-            const today = new Date().toISOString().split('T');
+            const today = new Date().toISOString().split('T')[0];
             document.getElementById('input-date').min = today;
             document.getElementById('sched-date-select').min = today;
             document.getElementById('cancel-input-date').min = today;
@@ -1290,6 +1330,9 @@
             }
         }
 
+        // ==========================================
+        // AGENDAMIENTO REAL DE RESERVAS Y EMAIL NOTIFICATION
+        // ==========================================
         async function handleBookingSubmit(event) {
             event.preventDefault(); 
             const submitBtn = document.querySelector('button[type="submit"]');
@@ -1335,11 +1378,14 @@
             };
 
             try {
-                // Guardar en Firebase Firestore de forma asíncrona
+                // Guardar de verdad en Firebase Firestore
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
                 const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', docId);
                 await window.setDoc(docRef, newAppointment);
+
+                // GESTIÓN DE NOTIFICACIONES DE CORREO AUTOMÁTICAS (EMAILJS)
+                triggerEmailNotifications(newAppointment, pro);
 
                 document.getElementById('booking-form').classList.add('hidden');
                 document.getElementById('success-message').classList.remove('hidden');
@@ -1366,6 +1412,65 @@
                 alert("No se pudo agendar la hora. Por favor reintente.");
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
+            }
+        }
+
+        // ENVÍO DE CORREOS INTEGRADO CON EMAILJS
+        function triggerEmailNotifications(appointment, professional) {
+            const pubKey = clinicInfo.emailjs_public;
+            const serviceId = clinicInfo.emailjs_service;
+            const patientTempId = clinicInfo.emailjs_temp_patient;
+            const proTempId = clinicInfo.emailjs_temp_pro;
+
+            // Validar que tengamos las llaves configuradas en el panel de Ajustes
+            if (!pubKey || !serviceId || !patientTempId || !proTempId) {
+                console.warn("EmailJS no está configurado por completo en la pestaña de Ajustes de Administración. Saltando envío automático.");
+                return;
+            }
+
+            // Inicializar EmailJS dinámicamente con tu llave pública
+            emailjs.init({ publicKey: pubKey });
+
+            const [year, month, day] = appointment.date.split('-');
+            const prettyDate = `${day}/${month}/${year}`;
+
+            // Plantilla para el Paciente
+            const patientParams = {
+                patient_name: appointment.patientName,
+                patient_email: appointment.patientEmail,
+                professional_name: professional.name,
+                appointment_date: prettyDate,
+                appointment_time: appointment.time,
+                payment_method: appointment.paymentMethod,
+                attention_type: appointment.attentionType,
+                clinic_address: clinicInfo.address + ", " + clinicInfo.city,
+                clinic_name: clinicInfo.name
+            };
+
+            // Plantilla para el Profesional Clínico
+            const proParams = {
+                professional_name: professional.name,
+                professional_email: professional.email || 'correo@clinica.cl',
+                patient_name: appointment.patientName,
+                patient_rut: appointment.patientRut,
+                patient_phone: appointment.patientPhone,
+                patient_email: appointment.patientEmail,
+                appointment_date: prettyDate,
+                appointment_time: appointment.time,
+                payment_method: appointment.paymentMethod,
+                attention_type: appointment.attentionType
+            };
+
+            // Envío al Paciente
+            emailjs.send(serviceId, patientTempId, patientParams)
+                .then(() => console.log("Notificación enviada al paciente con éxito."))
+                .catch(err => console.error("Error enviando correo al paciente:", err));
+
+            // Envío al Profesional Clínico
+            if (professional.email) {
+                emailjs.send(serviceId, proTempId, proParams)
+                    .then(() => console.log("Notificación enviada al especialista con éxito."))
+                    .catch(err => console.error("Error enviando correo al profesional:", err));
             }
         }
 
@@ -1654,7 +1759,6 @@
             document.getElementById('login-error').classList.remove('hidden');
         }
 
-        // logout
         function logout() {
             currentUser = null;
             checkLoginState();
@@ -1791,8 +1895,9 @@
                     <td class="p-3 md:p-4 font-sans">
                         <p class="font-semibold text-slate-850 text-sm">${pro.name}</p>
                         <p class="text-[10px] md:text-xs text-slate-700">${pro.specialty}</p>
+                        <p class="text-[10px] text-slate-400 font-medium">Correo: ${pro.email || 'No asignado'}</p>
                         <p class="text-[10px] text-slate-600 mt-1">RUT Acceso: ${pro.rut || 'No asignado'} | Clave: <span class="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs select-none">••••••••</span></p>
-                        <p class="text-[10px] text-brand-600 mt-0.5 font-medium">Cód: ${pro.code || 'N/A'}</p>
+                        <p class="text-[10px] text-brand-600 mt-0.5 font-medium">Cód Fonasa: ${pro.code || 'N/A'}</p>
                     </td>
                     <td class="p-3 md:p-4 text-right flex justify-end gap-2 items-center h-full pt-4">
                         <button onclick="editProfessional('${pro.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2.5 md:px-3 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-semibold transition-colors">
@@ -1812,6 +1917,7 @@
             
             document.getElementById('new-pro-name').value = pro.name;
             document.getElementById('new-pro-spec').value = pro.specialty;
+            document.getElementById('new-pro-email').value = pro.email || '';
             document.getElementById('new-pro-code').value = pro.code || '';
             document.getElementById('new-pro-bio').value = pro.bio || '';
             document.getElementById('new-pro-bank').value = pro.bankDetails || '';
@@ -1828,6 +1934,7 @@
             editingProId = null;
             document.getElementById('new-pro-name').value = ''; 
             document.getElementById('new-pro-spec').value = ''; 
+            document.getElementById('new-pro-email').value = ''; 
             document.getElementById('new-pro-code').value = '';
             document.getElementById('new-pro-bio').value = '';
             document.getElementById('new-pro-bank').value = '';
@@ -1843,6 +1950,7 @@
         async function saveProfessional() {
             const name = document.getElementById('new-pro-name').value.trim();
             const spec = document.getElementById('new-pro-spec').value.trim();
+            const email = document.getElementById('new-pro-email').value.trim();
             const code = document.getElementById('new-pro-code').value.trim();
             const bio = document.getElementById('new-pro-bio').value.trim();
             const bank = document.getElementById('new-pro-bank').value.trim();
@@ -1862,6 +1970,7 @@
             const proData = {
                 name: formattedName,
                 specialty: spec,
+                email: email,
                 code: code,
                 bio: bio,
                 bankDetails: bank,
@@ -1869,7 +1978,6 @@
                 pass: pass
             };
 
-            // Conservar el color si ya existía
             if (editingProId) {
                 const currentPro = professionals.find(p => p.id === editingProId);
                 proData.color = currentPro?.color || randomColor;
@@ -1955,7 +2063,6 @@
                 const appId = window.firebaseAppId;
                 const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'schedules', proId);
                 
-                // Actualizar o setear el documento en Firestore
                 await window.setDoc(docRef, {
                     [date]: { hours: selectedHours }
                 }, { merge: true });
@@ -2031,10 +2138,14 @@
         }
 
         function renderAdminAjustes() {
-            document.getElementById('config-clinic-name').value = clinicInfo.name;
-            document.getElementById('config-clinic-address').value = clinicInfo.address;
-            document.getElementById('config-clinic-city').value = clinicInfo.city;
-            document.getElementById('config-clinic-map').value = clinicInfo.mapEmbed;
+            document.getElementById('config-clinic-name').value = clinicInfo.name || '';
+            document.getElementById('config-clinic-address').value = clinicInfo.address || '';
+            document.getElementById('config-clinic-city').value = clinicInfo.city || '';
+            document.getElementById('config-clinic-map').value = clinicInfo.mapEmbed || '';
+            document.getElementById('config-emailjs-public').value = clinicInfo.emailjs_public || '';
+            document.getElementById('config-emailjs-service').value = clinicInfo.emailjs_service || '';
+            document.getElementById('config-emailjs-temp-patient').value = clinicInfo.emailjs_temp_patient || '';
+            document.getElementById('config-emailjs-temp-pro').value = clinicInfo.emailjs_temp_pro || '';
         }
 
         async function saveClinicInfo() {
@@ -2042,14 +2153,33 @@
             const address = document.getElementById('config-clinic-address').value.trim();
             const city = document.getElementById('config-clinic-city').value.trim();
             const mapEmbed = document.getElementById('config-clinic-map').value.trim();
+            
+            // EMAILJS CONFIGS
+            const emailjs_public = document.getElementById('config-emailjs-public').value.trim();
+            const emailjs_service = document.getElementById('config-emailjs-service').value.trim();
+            const emailjs_temp_patient = document.getElementById('config-emailjs-temp-patient').value.trim();
+            const emailjs_temp_pro = document.getElementById('config-emailjs-temp-pro').value.trim();
+
             if(!name || !address || !city) { alert("Completa nombre, dirección y ciudad."); return; }
             
             try {
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
-                // Corregido a 6 segmentos para que la escritura sea válida
                 const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info', 'main');
-                await window.setDoc(docRef, { name, address, city, mapEmbed });
+                
+                const updatedInfo = { 
+                    name, 
+                    address, 
+                    city, 
+                    mapEmbed,
+                    emailjs_public,
+                    emailjs_service,
+                    emailjs_temp_patient,
+                    emailjs_temp_pro
+                };
+                
+                await window.setDoc(docRef, updatedInfo);
+                clinicInfo = { ...clinicInfo, ...updatedInfo };
 
                 const msg = document.getElementById('config-save-msg');
                 msg.classList.remove('hidden');
@@ -2167,7 +2297,7 @@
                     <title>Informe Clínico - ${app.patientName}</title>
                     <style>
                         @page {
-                            size: 216mm 330mm; /* Tamaño Oficio estándar */
+                            size: 216mm 330mm;
                             margin: 15mm;
                         }
                         body { 
@@ -2180,9 +2310,9 @@
                         }
                         .wrapper {
                             position: relative;
-                            min-height: 290mm; /* Forzar el fin de hoja de oficio menos márgenes */
+                            min-height: 290mm;
                             box-sizing: border-box;
-                            padding-bottom: 160px; /* Margen para evitar solapamiento con firma */
+                            padding-bottom: 160px;
                         }
                         .header { text-align: center; border-bottom: 2px solid #f43f5e; padding-bottom: 20px; margin-bottom: 30px; }
                         .title { font-size: 24px; font-weight: bold; color: #be123c; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; }
@@ -2192,7 +2322,7 @@
                         .row { display: flex; margin-bottom: 10px; font-size: 14px; }
                         .label { font-weight: bold; width: 180px; color: #4b5563; }
                         .value { flex: 1; color: #111827; }
-                        .content-box { border: 1px solid #e5e7eb; padding: 15px; border-radius: 6px; white-space: pre-wrap; min-height: 80px; font-size: 14px; color: #1f2937; background: #fff; }
+                        .content-box { border: 1px solid #e5e5e5; padding: 15px; border-radius: 6px; white-space: pre-wrap; min-height: 80px; font-size: 14px; color: #1f2937; background: #fff; }
                         .footer { 
                             position: absolute;
                             bottom: 0;
@@ -2216,7 +2346,6 @@
                         .sig-line { border-bottom: 1px solid #111827; margin-bottom: 10px; }
                         .sig-name { font-weight: bold; font-size: 15px; color: #111827; }
                         .sig-role { font-size: 13px; color: #4b5563; }
-                        .clear { clear: both; }
                     </style>
                 </head>
                 <body>
