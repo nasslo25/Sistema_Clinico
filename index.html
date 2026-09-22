@@ -25,6 +25,7 @@
             }
         }
     </script>
+    
     <style>
         body { 
             font-family: 'Poppins', sans-serif; 
@@ -143,7 +144,7 @@
         window.firebaseDb = db;
         window.firebaseAppId = appId;
 
-        // Exportar de forma explícita las funciones de Firebase al objeto global de window para darles visibilidad
+        // Exportar de forma explícita las funciones de Firebase al objeto global
         window.doc = doc;
         window.setDoc = setDoc;
         window.getDoc = getDoc;
@@ -155,10 +156,11 @@
         window.deleteDoc = deleteDoc;
         window.signInAnonymously = signInAnonymously;
 
-        // Disparar la sincronización de Firebase una vez que la carga del SDK haya completado de forma global
+        // Disparar la sincronización de Firebase
         window.dispatchEvent(new CustomEvent('firebase-ready'));
     </script>
 </head>
+
 <body class="min-h-screen relative overflow-x-hidden">
 
     <!-- Fondos decorativos de fondo -->
@@ -167,19 +169,16 @@
 
     <div class="relative z-10 p-3 md:p-8 max-w-5xl mx-auto">
         
-        <!-- Contenedor Principal (Única gran Glass Card) -->
+        <!-- Contenedor Principal -->
         <div class="glass-card rounded-2xl md:rounded-[2rem] overflow-hidden shadow-lg mb-6 md:mb-8">
             
-            <!-- ================= ENCABEZADOS DINÁMICOS ================= -->
-            
-            <!-- Encabezado Paciente (Nueva Opción Moderna) -->
+            <!-- Encabezado Paciente -->
             <div id="patient-banner" class="p-4 md:p-6 pb-0 md:pb-0">
                 <div class="relative w-full h-56 md:h-[22rem] overflow-hidden group bg-slate-900 rounded-2xl md:rounded-3xl shadow-xl border border-slate-200">
                     <div id="slider-track" class="flex transition-transform duration-700 ease-in-out h-full w-full">
                         <!-- JS: Slides -->
                     </div>
                     
-                    <!-- Botones de Navegación Mejorados -->
                     <div class="absolute inset-y-0 left-0 flex items-center pl-2 md:pl-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
                         <button onclick="prevSlide()" class="pointer-events-auto p-2 md:p-3 rounded-xl bg-black/40 hover:bg-black/60 text-white backdrop-blur-md transition-all border border-white/20 hover:scale-105 shadow-lg">
                             <i data-lucide="chevron-left" class="w-5 h-5 md:w-6 md:h-6"></i>
@@ -191,13 +190,11 @@
                         </button>
                     </div>
 
-                    <!-- Puntos de Navegación -->
                     <div id="slider-dots" class="absolute bottom-5 left-0 right-0 flex justify-center gap-2 md:gap-3 z-20">
                         <!-- JS: Puntos -->
                     </div>
                 </div>
 
-                <!-- Título estático rediseñado -->
                 <div class="px-2 py-6 md:py-8 text-center md:text-left flex flex-col md:flex-row items-center gap-4 md:gap-6">
                     <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white flex items-center justify-center shadow-lg shadow-brand-500/30 shrink-0 transform -rotate-3 transition-transform hover:rotate-0">
                         <i data-lucide="sparkles" class="w-8 h-8 md:w-10 md:h-10"></i>
@@ -209,7 +206,7 @@
                 </div>
             </div>
 
-            <!-- Encabezado Anular/Reprogramar (Nueva Opción) -->
+            <!-- Encabezado Anular/Reprogramar -->
             <div id="cancel-banner" class="hidden p-4 md:p-6 pb-0 md:pb-0">
                 <div class="w-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl md:rounded-3xl shadow-xl border border-slate-700 p-6 md:p-10 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-64 h-64 bg-brand-500 rounded-full mix-blend-overlay filter blur-[60px] opacity-30 transform translate-x-1/2 -translate-y-1/2"></div>
@@ -223,10 +220,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="h-6 md:h-8"></div><!-- Espaciador para igualar márgenes -->
+                <div class="h-6 md:h-8"></div>
             </div>
 
-            <!-- Encabezado Administración (Nueva Opción) -->
+            <!-- Encabezado Administración -->
             <div id="admin-banner" class="hidden p-4 md:p-6 pb-0 md:pb-0">
                 <div class="w-full bg-gradient-to-br from-brand-600 to-rose-700 rounded-2xl md:rounded-3xl shadow-xl border border-brand-500 p-6 md:p-10 relative overflow-hidden">
                     <div class="absolute bottom-0 right-0 w-64 h-64 bg-white rounded-full mix-blend-overlay filter blur-[60px] opacity-20 transform translate-x-1/3 translate-y-1/3"></div>
@@ -240,10 +237,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="h-6 md:h-8"></div><!-- Espaciador para igualar márgenes -->
+                <div class="h-6 md:h-8"></div>
             </div>
 
-            <!-- ================= MENÚ DE NAVEGACIÓN GLOBAL ================= -->
             <nav class="bg-brand-50/40 border-y border-brand-100/60 py-5 px-4 flex flex-wrap justify-center gap-3 md:gap-4">
                 <button id="tab-patient" onclick="switchMainView('patient')" class="px-5 py-2.5 md:px-8 md:py-3 rounded-2xl font-semibold btn-brand text-sm md:text-base w-full sm:w-auto">
                     Agendar Sesión
@@ -256,9 +252,7 @@
                 </button>
             </nav>
 
-            <!-- ================= CONTENEDOR DE VISTAS (SECCIONES) ================= -->
             <main>
-                
                 <!-- VISTA PACIENTE -->
                 <section id="view-patient" class="p-5 md:p-8 mx-auto">
                     <!-- Pantalla de Éxito -->
@@ -273,7 +267,6 @@
                             <span class="text-sm mt-2 block text-slate-700">Detalles: <strong id="success-method" class="text-slate-800"></strong></span>
                         </p>
 
-                        <!-- Contenedor para info extra (Bancaria o Fonasa) -->
                         <div id="success-extra-info" class="hidden max-w-md mx-auto mb-6 md:mb-8 mt-4 p-4 bg-brand-50 rounded-xl text-sm text-left border border-brand-100 shadow-inner">
                         </div>
 
@@ -282,7 +275,6 @@
                         </button>
                     </div>
 
-                    <!-- Formulario -->
                     <form id="booking-form" onsubmit="handleBookingSubmit(event)">
                         
                         <!-- PASO 1 -->
@@ -350,7 +342,11 @@
                                     </div>
                                 </div>
 
-                                <!-- Modalidad de Pago -->
+                                <div class="pt-2">
+                                    <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Motivo de consulta / Adelanto (Opcional)</label>
+                                    <textarea id="input-reason" placeholder="Cuéntanos brevemente qué te trae por aquí para que el profesional pueda prepararse..." class="input-soft resize-none h-20 text-sm"></textarea>
+                                </div>
+
                                 <div class="border-t border-slate-100 pt-4 mt-2">
                                     <label class="block text-xs font-medium text-slate-700 mb-3 ml-1 uppercase tracking-wide">Modalidad de Pago</label>
                                     <div class="flex gap-6 custom-radio pl-1">
@@ -364,7 +360,6 @@
                                         </label>
                                     </div>
                                     
-                                    <!-- Mensaje Código Fonasa -->
                                     <div id="fonasa-message-container" class="hidden mt-4 p-3.5 bg-brand-50 rounded-xl border border-brand-100 shadow-sm transition-all">
                                         <div class="flex items-start gap-2.5">
                                             <div class="mt-0.5 w-6 h-6 rounded-full bg-brand-100 flex items-center justify-center shrink-0">
@@ -379,7 +374,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Tipo de Atención -->
                                 <div class="border-t border-slate-100 pt-4 mt-2">
                                     <label class="block text-xs font-medium text-slate-700 mb-3 ml-1 uppercase tracking-wide">Tipo de Atención</label>
                                     <div class="flex gap-6 custom-radio pl-1">
@@ -404,7 +398,6 @@
 
                 <!-- VISTA ANULAR / REPROGRAMAR RESERVA -->
                 <section id="view-cancel" class="hidden p-5 md:p-8 mx-auto">
-                    <!-- Pantalla de Éxito Anulación/Reprogramación -->
                     <div id="cancel-success" class="hidden text-center py-8 md:py-12">
                         <div class="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-sm border border-green-200">
                             <i data-lucide="check" class="w-10 h-10 md:w-12 md:h-12 text-green-500"></i>
@@ -418,7 +411,6 @@
                         </button>
                     </div>
 
-                    <!-- Formulario Búsqueda -->
                     <div id="cancel-form">
                         <form onsubmit="searchAppointmentsToCancel(event)" class="mb-8">
                             <label class="block text-xs font-medium text-slate-700 mb-2 ml-1 uppercase tracking-wide">Busca tus reservas ingresando tu RUT</label>
@@ -435,7 +427,6 @@
                         <div id="cancel-results" class="hidden">
                             <h3 class="text-sm font-semibold text-slate-800 mb-4 ml-1">Selecciona la reserva que deseas gestionar:</h3>
                             <div id="cancel-appointments-list" class="space-y-3 mb-6">
-                                <!-- JS: Inyecta reservas -->
                             </div>
                             
                             <div id="cancel-confirm-section" class="hidden border-t border-slate-100 pt-6">
@@ -451,7 +442,6 @@
                                     </label>
                                 </div>
 
-                                <!-- Selector de Nueva Fecha y Hora -->
                                 <div id="cancel-reschedule-section" class="hidden bg-slate-50 p-5 rounded-2xl border border-slate-200 mb-6">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
@@ -503,7 +493,6 @@
                     <!-- DASHBOARD ADMIN -->
                     <div id="admin-dashboard" class="hidden">
                         
-                        <!-- Header Dashboard -->
                         <div class="p-5 md:p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 bg-white/50 rounded-2xl mb-6 shadow-sm border">
                             <div class="flex items-center gap-3 md:gap-4 w-full md:w-auto">
                                 <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center text-brand-500 shadow-sm border border-brand-100 shrink-0">
@@ -515,7 +504,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Navegación interna Admin -->
                             <div class="flex flex-wrap justify-center w-full lg:w-auto bg-slate-50 rounded-xl p-1 border border-slate-200 shadow-inner gap-1">
                                 <button onclick="switchAdminTab('reservas')" id="tab-admin-reservas" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors bg-white text-brand-600 shadow-sm border border-slate-200 flex-1 text-center">Citas</button>
                                 <button onclick="switchAdminTab('profesionales')" id="tab-admin-profesionales" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors text-slate-700 hover:text-slate-800 border border-transparent flex-1 text-center">Profesionales</button>
@@ -527,7 +515,6 @@
                             <button onclick="logout()" class="p-2 text-slate-400 hover:text-red-500 transition-colors hidden lg:block" title="Cerrar Sesión">
                                 <i data-lucide="log-out" class="w-5 h-5"></i>
                             </button>
-                            <!-- Botón salir móvil -->
                             <button onclick="logout()" class="w-full py-2 mt-2 lg:hidden text-red-500 bg-red-50 rounded-lg text-sm font-medium border border-red-100">
                                 Cerrar Sesión
                             </button>
@@ -569,7 +556,6 @@
                             <h3 class="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6">Directorio de Profesionales</h3>
                             
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                                <!-- Form Agregar / Editar -->
                                 <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
                                     <h4 id="pro-form-title" class="font-semibold text-slate-700 mb-4 md:mb-5 flex items-center gap-2 text-xs md:text-sm uppercase tracking-wide">
                                         <i data-lucide="user-plus" class="w-4 h-4 text-brand-500"></i> Nuevo Profesional
@@ -584,7 +570,7 @@
                                             <input type="text" id="new-pro-spec" placeholder="Ej. Psicología Adultos" class="input-soft py-2 text-sm">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Correo Electrónico (Notificaciones)</label>
+                                            <label class="block text-xs font-medium text-slate-700 mb-1 ml-1 uppercase tracking-wide">Correo Electrónico</label>
                                             <input type="email" id="new-pro-email" placeholder="profesional@clinica.cl" class="input-soft py-2 text-sm">
                                         </div>
                                         <div>
@@ -623,12 +609,10 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Lista Actual -->
                                 <div class="lg:col-span-2">
                                     <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
                                         <table class="w-full text-left border-collapse whitespace-nowrap">
                                             <tbody id="admin-pro-list" class="divide-y divide-slate-100">
-                                                <!-- JS: Lista -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -661,8 +645,44 @@
                                         </div>
                                         
                                         <button onclick="saveScheduleConfig()" class="btn-brand w-full mt-6 md:mt-8 py-3 rounded-xl font-semibold text-sm md:text-base">
-                                            Guardar Horario del Día
+                                            Guardar Horario (Día Específico)
                                         </button>
+
+                                        <!-- NUEVA SECCIÓN: REPLICACIÓN MASIVA (COPIAR HORARIOS) -->
+                                        <div class="mt-8 border-t border-slate-200 pt-6">
+                                            <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                                <i data-lucide="copy" class="w-4 h-4 text-brand-500"></i> Replicar este patrón de horas (Avanzado)
+                                            </h4>
+                                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+                                                <p class="text-xs text-slate-600 mb-2">Se copiarán las horas seleccionadas arriba en el rango de fechas que definas.</p>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-[10px] md:text-xs font-medium text-slate-700 mb-1">Desde la fecha</label>
+                                                        <input type="date" id="repl-start-date" class="input-soft bg-white text-sm py-2">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-[10px] md:text-xs font-medium text-slate-700 mb-1">Hasta la fecha</label>
+                                                        <input type="date" id="repl-end-date" class="input-soft bg-white text-sm py-2">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] md:text-xs font-medium text-slate-700 mb-2">Días de la semana a aplicar</label>
+                                                    <div class="flex flex-wrap gap-2" id="repl-weekdays">
+                                                        <label class="cursor-pointer"><input type="checkbox" value="1" class="peer hidden" checked><div class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-400 transition-colors">Lun</div></label>
+                                                        <label class="cursor-pointer"><input type="checkbox" value="2" class="peer hidden" checked><div class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-400 transition-colors">Mar</div></label>
+                                                        <label class="cursor-pointer"><input type="checkbox" value="3" class="peer hidden" checked><div class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-400 transition-colors">Mié</div></label>
+                                                        <label class="cursor-pointer"><input type="checkbox" value="4" class="peer hidden" checked><div class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-400 transition-colors">Jue</div></label>
+                                                        <label class="cursor-pointer"><input type="checkbox" value="5" class="peer hidden" checked><div class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-400 transition-colors">Vie</div></label>
+                                                        <label class="cursor-pointer"><input type="checkbox" value="6" class="peer hidden"><div class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-400 transition-colors">Sáb</div></label>
+                                                        <label class="cursor-pointer"><input type="checkbox" value="0" class="peer hidden"><div class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-400 transition-colors">Dom</div></label>
+                                                    </div>
+                                                </div>
+                                                <button onclick="replicateSchedule()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+                                                    <i data-lucide="copy-check" class="w-4 h-4"></i> Aplicar Replicación Masiva
+                                                </button>
+                                            </div>
+                                        </div>
+
                                         <div id="sched-save-msg" class="hidden text-center text-xs md:text-sm font-medium text-brand-600 mt-4 flex items-center justify-center gap-2 bg-brand-50 py-2 rounded-lg border border-brand-100">
                                             <i data-lucide="check" class="w-4 h-4 shrink-0"></i> Horario guardado
                                         </div>
@@ -694,14 +714,12 @@
                                             <input type="text" id="new-banner-text" placeholder="Te acompañamos..." class="input-soft py-2 text-sm">
                                         </div>
                                         
-                                        <!-- NUEVO EDITOR INTERACTIVO VISUAL -->
                                         <div id="banner-preview-container" class="hidden relative w-full h-32 bg-slate-100 rounded-xl overflow-hidden border-2 border-brand-200 cursor-grab active:cursor-grabbing shadow-inner group select-none touch-none"
                                              onmousedown="startBannerDrag(event)" onmousemove="dragBanner(event)" onmouseup="stopBannerDrag()" onmouseleave="stopBannerDrag()"
                                              ontouchstart="startBannerDrag(event)" ontouchmove="dragBanner(event)" ontouchend="stopBannerDrag()">
                                             
                                             <img id="banner-preview-img" src="" class="w-full h-full pointer-events-none origin-top-left" style="object-fit: cover; object-position: 50% 50%; transform: scale(1);" alt="Preview">
                                             
-                                            <!-- Overlay instructivo -->
                                             <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                                                 <i data-lucide="move" class="w-6 h-6 text-white mb-1 drop-shadow-md"></i>
                                                 <span class="text-white text-[10px] font-bold uppercase tracking-wider drop-shadow-md">Arrastrar para ajustar</span>
@@ -737,7 +755,6 @@
                             <h3 class="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6">Fichas Clínicas de Pacientes</h3>
                             
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                                <!-- Buscador y Lista de Sesiones -->
                                 <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
                                     <form onsubmit="searchPatientRecords(event)">
                                         <label class="block text-xs font-medium text-slate-700 mb-2 uppercase tracking-wide ml-1">Buscar por RUT</label>
@@ -750,7 +767,6 @@
                                     <div id="record-list-container" class="mt-6 hidden">
                                         <h5 class="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wider ml-1">Sesiones Encontradas</h5>
                                         <div id="record-appointments-list" class="space-y-2 max-h-64 overflow-y-auto pr-1">
-                                            <!-- JS injected list -->
                                         </div>
                                     </div>
                                     <div id="record-empty-state" class="mt-6 text-center hidden">
@@ -758,7 +774,6 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Editor de Ficha Clínica -->
                                 <div class="lg:col-span-2">
                                     <div id="record-editor-container" class="bg-white p-5 md:p-8 rounded-2xl border border-slate-200 shadow-sm hidden">
                                         <div class="flex justify-between items-start mb-6 border-b border-slate-100 pb-4">
@@ -837,7 +852,6 @@
                                     </div>
                                 </div>
 
-                                <!-- SECCIÓN INTEGRACIÓN EMAILJS (NUEVA MEJORA INTEGRADORA) -->
                                 <div class="border-t border-slate-100 pt-6">
                                     <h4 class="font-semibold text-slate-700 flex items-center gap-2 mb-4 border-b border-slate-100 pb-2">
                                         <i data-lucide="mail" class="w-5 h-5 text-brand-500"></i> Notificaciones de Correo (EmailJS)
@@ -928,7 +942,6 @@
 
     <!-- LÓGICA JAVASCRIPT PRINCIPAL -->
     <script>
-        // Elementos reactivos conectados a Firebase
         let currentUser = null;
         let editingProId = null; 
         
@@ -943,20 +956,17 @@
             emailjs_temp_pro: ""
         };
         
-        // Profesionales semilla (De respaldo, solo si la base de datos se encuentra totalmente vacía)
         const defaultProfessionals = [
             { id: 'pro_1', name: 'Ps. Constanza Beroiza', specialty: 'Terapia Adultos', color: 'rose', code: '0920011', bio: 'Especialista en manejo de ansiedad y depresión.', bankDetails: 'Banco Estado\nCta Rut: 16.843.499-5\nconstanza@clinica.cl', rut: '11.111.111-1', pass: 'demo1', email: 'constanza@clinica.cl' },
             { id: 'pro_2', name: 'Ps. Roberto Gómez', specialty: 'Infantil & Adolescentes', color: 'blue', code: '0920012', bio: 'Enfoque lúdico y acompañamiento parental.', bankDetails: 'Banco Santander\nCta Corriente: 12345678\nroberto@clinica.cl', rut: '22.222.222-2', pass: 'demo2', email: 'roberto@clinica.cl' },
             { id: 'pro_3', name: 'Ps. María Paz', specialty: 'Terapia de Pareja', color: 'purple', code: '0920013', bio: 'Terapia sistémica y resolución de conflictos.', bankDetails: 'Banco BCI\nCta Vista: 98765432\nmariapaz@clinica.cl', rut: '33.333.333-3', pass: 'demo3', email: 'mariapaz@clinica.cl' }
         ];
 
-        // Se inician con los datos semilla por defecto para una renderización y carga instantánea
         let professionals = [
             { id: 'pro_1', name: 'Ps. Constanza Beroiza', specialty: 'Terapia Adultos', color: 'rose', code: '0920011', bio: 'Especialista en manejo de ansiedad y depresión.', bankDetails: 'Banco Estado\nCta Rut: 16.843.499-5\nconstanza@clinica.cl', rut: '11.111.111-1', pass: 'demo1', email: 'constanza@clinica.cl' }
         ];
         let appointments = [];
 
-        // Banners semilla con temática de Clínica Psicológica y alta resolución (Pre-poblados)
         const defaultBanners = [
             { id: 'slide_1', img: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop', title: 'Un Espacio Seguro para Ti', text: 'Te ofrecemos un ambiente cálido, privado y de absoluta confianza para iniciar tu proceso.', pos: 'object-center' },
             { id: 'slide_2', img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200&auto=format&fit=crop', title: 'Acompañamiento Profesional', text: 'Psicólogos calificados comprometidos con tu bienestar emocional y tu crecimiento personal.', pos: 'object-top' },
@@ -982,53 +992,37 @@
         let cancelSelectedDate = '';
         let cancelSelectedTime = '';
 
-        // Manejo seguro de la inicialización de Lucide Icons
         function safeCreateIcons() {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             } else {
-                console.warn("Lucide no cargó a tiempo. Reintentando...");
                 setTimeout(safeCreateIcons, 300);
             }
         }
 
-        // ==========================================
-        // SYNC FIREBASE REALTIME LISTENERS (API INTEGRA)
-        // ==========================================
         async function initFirebaseSync() {
             const db = window.firebaseDb;
             const auth = window.firebaseAuth;
             const appId = window.firebaseAppId;
 
             if (!db || !auth) {
-                console.warn("Firebase no ha inicializado por completo. Reintentando...");
                 setTimeout(initFirebaseSync, 500);
                 return;
             }
 
             try {
-                // Autenticación anónima segura
                 await signInAnonymously(auth);
-                console.log("Autenticación completada con éxito en Firebase.");
 
-                if (!auth.currentUser) {
-                    console.error("No se pudo comprobar la sesión autenticada.");
-                    return;
-                }
-
-                // Cargar y escuchar Información de la Clínica
                 const infoRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info', 'main');
                 onSnapshot(infoRef, (snap) => {
                     if (snap.exists()) {
                         clinicInfo = { ...clinicInfo, ...snap.data() };
                         updatePatientLocationUI();
                     } else {
-                        // Crear primer documento de ajustes si no existe con merge seguro
                         setDoc(infoRef, clinicInfo);
                     }
-                }, (error) => console.error("Error cargando ajustes:", error));
+                });
 
-                // Escuchar Colección de Profesionales
                 const prosRef = collection(db, 'artifacts', appId, 'public', 'data', 'professionals');
                 onSnapshot(prosRef, (querySnap) => {
                     const tempPros = [];
@@ -1040,14 +1034,12 @@
                         renderPatientProfessionals();
                         if (currentUser && currentUser.role === 'admin') renderAdminProfesionales();
                     } else {
-                        // Crear base de profesionales iniciales de respaldo en Firestore si está totalmente vacío
                         defaultProfessionals.forEach(p => {
                             setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'professionals', p.id), p);
                         });
                     }
-                }, (error) => console.error("Error cargando profesionales:", error));
+                });
 
-                // Escuchar Colección de Citas
                 const appsRef = collection(db, 'artifacts', appId, 'public', 'data', 'appointments');
                 onSnapshot(appsRef, (querySnap) => {
                     appointments = [];
@@ -1058,9 +1050,8 @@
                     if (currentUser) {
                         renderAdminReservas();
                     }
-                }, (error) => console.error("Error cargando citas:", error));
+                });
 
-                // Escuchar Colección de Horarios
                 const schedsRef = collection(db, 'artifacts', appId, 'public', 'data', 'schedules');
                 onSnapshot(schedsRef, (querySnap) => {
                     schedules = {};
@@ -1068,9 +1059,8 @@
                         schedules[doc.id] = doc.data();
                     });
                     if (selectedDate) renderTimeSlots();
-                }, (error) => console.error("Error cargando disponibilidad:", error));
+                });
 
-                // Escuchar Colección de Banners
                 const bannersRef = collection(db, 'artifacts', appId, 'public', 'data', 'banners');
                 onSnapshot(bannersRef, (querySnap) => {
                     const tempBanners = [];
@@ -1082,19 +1072,17 @@
                         renderAdminBanners();
                         renderPatientSlider();
                     } else {
-                        // Crear base de banners iniciales si está vacío
                         defaultBanners.forEach(b => {
                             setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'banners', b.id), b);
                         });
                     }
-                }, (error) => console.error("Error cargando banners:", error));
+                });
 
             } catch (err) {
-                console.error("Error de inicialización de conexión en Firebase:", err);
+                console.error("Error de inicialización en Firebase:", err);
             }
         }
 
-        // Evento de escucha para iniciar sincronización cuando Firebase esté disponible
         window.addEventListener('firebase-ready', () => {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('input-date').min = today;
@@ -1105,7 +1093,6 @@
             renderPatientProfessionals();
             renderPatientSlider();
 
-            // Iniciar sincronización en tiempo real con Firebase Firestore
             initFirebaseSync();
         });
 
@@ -1371,9 +1358,6 @@
             }
         }
 
-        // ==========================================
-        // AGENDAMIENTO REAL DE RESERVAS Y EMAIL NOTIFICATION
-        // ==========================================
         async function handleBookingSubmit(event) {
             event.preventDefault(); 
             const submitBtn = document.querySelector('button[type="submit"]');
@@ -1383,6 +1367,7 @@
             const name = document.getElementById('input-name').value;
             const phone = document.getElementById('input-phone').value;
             const email = document.getElementById('input-email').value; 
+            const reason = document.getElementById('input-reason').value.trim();
             
             const paymentMethodNode = document.querySelector('input[name="payment_method"]:checked');
             if (!paymentMethodNode) {
@@ -1413,19 +1398,18 @@
                 patientName: name, 
                 patientPhone: phone, 
                 patientEmail: email,
+                bookingReason: reason,
                 paymentMethod: paymentMethod, 
                 attentionType: attentionType,
                 status: 'active'
             };
 
             try {
-                // Guardar de verdad en Firebase Firestore
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
                 const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', docId);
                 await window.setDoc(docRef, newAppointment);
 
-                // GESTIÓN DE NOTIFICACIONES DE CORREO AUTOMÁTICAS (EMAILJS)
                 triggerEmailNotifications(newAppointment, pro);
 
                 document.getElementById('booking-form').classList.add('hidden');
@@ -1449,33 +1433,26 @@
                 submitBtn.disabled = false;
                 safeCreateIcons();
             } catch(e) {
-                console.error("Error al guardar en Firebase: ", e);
+                console.error("Error al guardar: ", e);
                 alert("No se pudo agendar la hora. Por favor reintente.");
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
             }
         }
 
-        // ENVÍO DE CORREOS INTEGRADO CON EMAILJS
         function triggerEmailNotifications(appointment, professional) {
             const pubKey = clinicInfo.emailjs_public;
             const serviceId = clinicInfo.emailjs_service;
             const patientTempId = clinicInfo.emailjs_temp_patient;
             const proTempId = clinicInfo.emailjs_temp_pro;
 
-            // Validar que tengamos las llaves configuradas en el panel de Ajustes
-            if (!pubKey || !serviceId || !patientTempId || !proTempId) {
-                console.warn("EmailJS no está configurado por completo en la pestaña de Ajustes de Administración. Saltando envío automático.");
-                return;
-            }
+            if (!pubKey || !serviceId || !patientTempId || !proTempId) return;
 
-            // Inicializar EmailJS dinámicamente con tu llave pública
             emailjs.init({ publicKey: pubKey });
 
             const [year, month, day] = appointment.date.split('-');
             const prettyDate = `${day}/${month}/${year}`;
 
-            // Plantilla para el Paciente
             const patientParams = {
                 patient_name: appointment.patientName,
                 patient_email: appointment.patientEmail,
@@ -1488,7 +1465,6 @@
                 clinic_name: clinicInfo.name
             };
 
-            // Plantilla para el Profesional Clínico
             const proParams = {
                 professional_name: professional.name,
                 professional_email: professional.email || 'correo@clinica.cl',
@@ -1496,22 +1472,16 @@
                 patient_rut: appointment.patientRut,
                 patient_phone: appointment.patientPhone,
                 patient_email: appointment.patientEmail,
+                patient_reason: appointment.bookingReason || 'No especificado',
                 appointment_date: prettyDate,
                 appointment_time: appointment.time,
                 payment_method: appointment.paymentMethod,
                 attention_type: appointment.attentionType
             };
 
-            // Envío al Paciente
-            emailjs.send(serviceId, patientTempId, patientParams)
-                .then(() => console.log("Notificación enviada al paciente con éxito."))
-                .catch(err => console.error("Error enviando correo al paciente:", err));
-
-            // Envío al Profesional Clínico
+            emailjs.send(serviceId, patientTempId, patientParams).catch(err => console.error(err));
             if (professional.email) {
-                emailjs.send(serviceId, proTempId, proParams)
-                    .then(() => console.log("Notificación enviada al especialista con éxito."))
-                    .catch(err => console.error("Error enviando correo al profesional:", err));
+                emailjs.send(serviceId, proTempId, proParams).catch(err => console.error(err));
             }
         }
 
@@ -1528,6 +1498,7 @@
             document.getElementById('input-name').value = '';
             document.getElementById('input-phone').value = '+56 9 ';
             document.getElementById('input-email').value = ''; 
+            document.getElementById('input-reason').value = '';
             document.getElementById('input-date').value = '';
             
             document.querySelectorAll('input[name="psychologist"]').forEach(r => r.checked = false);
@@ -1666,20 +1637,12 @@
 
         async function submitCancellation(e) {
             e.preventDefault();
-            if(!cancelSelectedAppointmentId) {
-                alert("Selecciona una cita para gestionar.");
-                return;
-            }
-            
+            if(!cancelSelectedAppointmentId) { alert("Selecciona una cita."); return; }
             const reason = document.getElementById('cancel-reason').value.trim();
-            if(!reason) {
-                alert("Por favor ingresa un motivo.");
-                return;
-            }
+            if(!reason) { alert("Ingresa un motivo."); return; }
 
             const actionNode = document.querySelector('input[name="cancel_action"]:checked');
             const action = actionNode ? actionNode.value : 'cancel';
-
             const app = appointments.find(a => a.id === cancelSelectedAppointmentId);
             if(!app) return;
 
@@ -1687,67 +1650,40 @@
             const appId = window.firebaseAppId;
 
             if (action === 'cancel') {
-                if(confirm("¿Confirmas la anulación de esta reserva? La hora quedará libre inmediatamente.")) {
+                if(confirm("¿Confirmas la anulación?")) {
                     try {
                         const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', cancelSelectedAppointmentId);
-                        await window.updateDoc(docRef, {
-                            status: 'cancelled',
-                            cancelReason: reason
-                        });
+                        await window.updateDoc(docRef, { status: 'cancelled', cancelReason: reason });
 
                         document.getElementById('cancel-success-title').innerText = "Reserva Anulada";
                         document.getElementById('cancel-success-text').innerText = "Su anulación se ha realizado exitosamente y la hora ha sido liberada.";
-                        
                         document.getElementById('cancel-form').classList.add('hidden');
                         document.getElementById('cancel-success').classList.remove('hidden');
-                    } catch(e) {
-                        alert("Error al anular la hora. Reintente.");
-                    }
+                    } catch(e) { alert("Error al anular."); }
                 }
             } else if (action === 'reschedule') {
-                if(!cancelSelectedDate || !cancelSelectedTime) {
-                    alert("Debes seleccionar una nueva fecha y hora para reprogramar.");
-                    return;
-                }
-                
-                if(confirm(`¿Confirmas la reprogramación de esta reserva para el ${cancelSelectedDate} a las ${cancelSelectedTime} hrs?`)) {
+                if(!cancelSelectedDate || !cancelSelectedTime) { alert("Selecciona nueva fecha/hora."); return; }
+                if(confirm(`¿Confirmas la reprogramación para el ${cancelSelectedDate} a las ${cancelSelectedTime} hrs?`)) {
                     try {
-                        // 1. Anular cita previa
                         const prevDocRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', cancelSelectedAppointmentId);
-                        await window.updateDoc(prevDocRef, {
-                            status: 'rescheduled',
-                            cancelReason: "Reprogramada. Motivo original: " + reason
-                        });
+                        await window.updateDoc(prevDocRef, { status: 'rescheduled', cancelReason: "Reprogramada. Motivo original: " + reason });
 
-                        // 2. Crear nueva cita
                         const newId = Date.now().toString();
                         const newDocRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', newId);
-                        const newApp = { 
-                            ...app, 
-                            date: cancelSelectedDate, 
-                            time: cancelSelectedTime,
-                            status: 'active',
-                            cancelReason: null
-                        };
-                        delete newApp.id; // Remover la ID interna si existía
+                        const newApp = { ...app, date: cancelSelectedDate, time: cancelSelectedTime, status: 'active', cancelReason: null };
+                        delete newApp.id;
                         await window.setDoc(newDocRef, newApp);
 
                         const [y, m, d] = cancelSelectedDate.split('-');
                         document.getElementById('cancel-success-title').innerText = "Reserva Reprogramada";
-                        document.getElementById('cancel-success-text').innerText = `Su reprogramación se ha realizado exitosamente para el ${d}/${m}/${y} a las ${cancelSelectedTime} hrs.`;
-                        
+                        document.getElementById('cancel-success-text').innerText = `Reprogramación exitosa: ${d}/${m}/${y} a las ${cancelSelectedTime} hrs.`;
                         document.getElementById('cancel-form').classList.add('hidden');
                         document.getElementById('cancel-success').classList.remove('hidden');
-                    } catch(e) {
-                        alert("Error al procesar la reprogramación.");
-                    }
+                    } catch(e) { alert("Error al procesar."); }
                 }
             }
         }
 
-        // ==========================================
-        // LÓGICA DE ADMINISTRACIÓN Y FILTRADO DE ROLES
-        // ==========================================
         function checkLoginState() {
             if (currentUser) {
                 document.getElementById('admin-login-screen').classList.add('hidden');
@@ -1871,7 +1807,6 @@
                 }
 
                 tr.className = `hover:bg-slate-50 transition-colors ${statusClass}`;
-                
                 tr.innerHTML = `
                     <td class="p-3 md:p-4 align-top">
                         <div class="flex items-center gap-2 md:gap-3">
@@ -1896,6 +1831,7 @@
                             <span class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${attentionBadgeColor}">${app.attentionType || 'N/A'}</span>
                         </p>
                         <p class="text-[9px] md:text-[11px] text-slate-700 mt-1">${app.patientRut} | ${app.patientPhone}</p>
+                        ${app.bookingReason ? `<p class="text-[10px] md:text-[11px] text-slate-600 mt-1.5 bg-slate-100 border border-slate-200 p-2 rounded shadow-sm"><strong>Adelanto del paciente:</strong> ${app.bookingReason}</p>` : ''}
                         ${app.cancelReason ? `<p class="text-[10px] md:text-xs ${app.status === 'cancelled' ? 'text-red-600' : 'text-blue-600'} mt-1.5 bg-white/50 border border-slate-200 p-2 rounded shadow-sm"><strong>Motivo:</strong> ${app.cancelReason}</p>` : ''}
                     </td>
                     <td class="p-3 md:p-4 text-right align-top">
@@ -1923,9 +1859,7 @@
                         status: 'cancelled',
                         cancelReason: reason || 'Anulada por la administración'
                     });
-                } catch(e) {
-                    alert("No se pudo actualizar la cita.");
-                }
+                } catch(e) { alert("Error al anular."); }
             }
         }
 
@@ -1998,7 +1932,7 @@
             const rut = document.getElementById('new-pro-rut').value.trim();
             const pass = document.getElementById('new-pro-pass').value.trim();
             
-            if(!name || !spec || !rut || !pass) { alert("Por favor ingresa nombre, especialidad, RUT de acceso y contraseña."); return; }
+            if(!name || !spec || !rut || !pass) { alert("Datos faltantes."); return; }
             
             const db = window.firebaseDb;
             const appId = window.firebaseAppId;
@@ -2008,17 +1942,7 @@
             const colors = ['teal', 'blue', 'indigo', 'rose', 'purple'];
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-            const proData = {
-                name: formattedName,
-                specialty: spec,
-                email: email,
-                code: code,
-                bio: bio,
-                bankDetails: bank,
-                rut: rut,
-                pass: pass
-            };
-
+            const proData = { name: formattedName, specialty: spec, email, code, bio, bankDetails: bank, rut, pass };
             if (editingProId) {
                 const currentPro = professionals.find(p => p.id === editingProId);
                 proData.color = currentPro?.color || randomColor;
@@ -2029,24 +1953,18 @@
             try {
                 const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'professionals', targetId);
                 await window.setDoc(docRef, proData);
-
                 cancelEditPro();
-                renderAdminProfesionales();
-            } catch(e) {
-                alert("Error al guardar profesional en Firebase.");
-            }
+            } catch(e) { alert("Error al guardar profesional."); }
         }
 
         async function deleteProfessional(id) {
-            if(confirm('¿Eliminar este profesional del directorio?')) {
+            if(confirm('¿Eliminar este profesional?')) {
                 try {
                     const db = window.firebaseDb;
                     const appId = window.firebaseAppId;
                     const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'professionals', id);
                     await window.deleteDoc(docRef);
-                } catch(e) {
-                    alert("Error al eliminar profesional.");
-                }
+                } catch(e) { alert("Error al eliminar."); }
             }
         }
 
@@ -2109,11 +2027,79 @@
                 }, { merge: true });
 
                 const msg = document.getElementById('sched-save-msg');
+                msg.innerHTML = `<i data-lucide="check" class="w-4 h-4 shrink-0"></i> Horario del ${date} guardado`;
                 msg.className = "hidden text-center text-xs md:text-sm font-medium text-brand-600 mt-4 flex items-center justify-center gap-2 bg-brand-50 py-2 rounded-lg border border-brand-100";
                 msg.classList.remove('hidden');
                 setTimeout(() => msg.classList.add('hidden'), 3000);
             } catch(e) {
                 alert("Error al guardar el horario en Firebase.");
+            }
+        }
+
+        async function replicateSchedule() {
+            const proId = document.getElementById('sched-pro-select').value;
+            const startDate = document.getElementById('repl-start-date').value;
+            const endDate = document.getElementById('repl-end-date').value;
+            const selectedHours = Array.from(document.querySelectorAll('.sched-time-chk:checked')).map(chk => chk.value);
+            const selectedDays = Array.from(document.querySelectorAll('#repl-weekdays input:checked')).map(chk => parseInt(chk.value));
+
+            if (!proId || !startDate || !endDate) {
+                alert("Por favor, asegúrate de definir una fecha 'Desde' y 'Hasta'.");
+                return;
+            }
+
+            const start = new Date(startDate + "T00:00:00");
+            const end = new Date(endDate + "T00:00:00");
+            
+            if (start > end) {
+                alert("La fecha de inicio no puede ser mayor que la de fin.");
+                return;
+            }
+
+            const updates = {};
+            let currentDate = new Date(start);
+            
+            // Recorrer fechas y aplicar los bloques solo a los días seleccionados
+            while (currentDate <= end) {
+                const dayOfWeek = currentDate.getDay(); // 0 (Dom) a 6 (Sab)
+                if (selectedDays.includes(dayOfWeek)) {
+                    const yyyy = currentDate.getFullYear();
+                    const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
+                    const dd = String(currentDate.getDate()).padStart(2, '0');
+                    const dateString = `${yyyy}-${mm}-${dd}`;
+                    
+                    updates[dateString] = { hours: selectedHours };
+                }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            if (Object.keys(updates).length === 0) {
+                alert("No hay días en el calendario que coincidan con tu selección en ese rango.");
+                return;
+            }
+
+            if(confirm(`Se actualizará el horario (aplicando los bloques marcados arriba) para ${Object.keys(updates).length} días distintos.\n\n¿Deseas confirmar la replicación?`)) {
+                try {
+                    const db = window.firebaseDb;
+                    const appId = window.firebaseAppId;
+                    const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'schedules', proId);
+                    
+                    // merge: true asegura que los días anteriores que no tocamos se conserven
+                    await window.setDoc(docRef, updates, { merge: true });
+
+                    const msg = document.getElementById('sched-save-msg');
+                    msg.innerHTML = `<i data-lucide="check" class="w-4 h-4 shrink-0"></i> Replicación exitosa en ${Object.keys(updates).length} días`;
+                    msg.className = "hidden text-center text-xs md:text-sm font-medium text-emerald-600 mt-4 flex items-center justify-center gap-2 bg-emerald-50 py-2 rounded-lg border border-emerald-100";
+                    msg.classList.remove('hidden');
+                    
+                    document.getElementById('repl-start-date').value = '';
+                    document.getElementById('repl-end-date').value = '';
+                    setTimeout(() => msg.classList.add('hidden'), 5000);
+                    safeCreateIcons();
+                } catch(e) {
+                    console.error(e);
+                    alert("Error al replicar los horarios en Firebase.");
+                }
             }
         }
 
@@ -2143,10 +2129,7 @@
             safeCreateIcons();
         }
 
-        // --- SISTEMA INTERACTIVO DE ARRASTRE PARA BANNERS ---
-        let bannerPreviewState = {
-            objY: 50, objX: 50, scale: 1, isDragging: false, startY: 0, startX: 0
-        };
+        let bannerPreviewState = { objY: 50, objX: 50, scale: 1, isDragging: false, startY: 0, startX: 0 };
 
         function handleBannerUrlInput(e) {
             const url = e.target.value.trim();
@@ -2158,7 +2141,6 @@
                 imgEl.src = url;
                 container.classList.remove('hidden');
                 zoomContainer.classList.remove('hidden');
-                // Reiniciar al mostrar una nueva
                 bannerPreviewState = { objY: 50, objX: 50, scale: 1, isDragging: false, startY: 0, startX: 0 };
                 document.getElementById('banner-zoom-slider').value = 1;
                 document.getElementById('zoom-val-display').innerText = '100%';
@@ -2179,26 +2161,18 @@
         function dragBanner(e) {
             if (!bannerPreviewState.isDragging) return;
             e.preventDefault(); 
-            
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            
             const deltaY = clientY - bannerPreviewState.startY;
             const deltaX = clientX - bannerPreviewState.startX;
-            
-            // Sensibilidad del arrastre
             const moveSpeed = 0.5; 
             
             bannerPreviewState.objY -= deltaY * moveSpeed;
             bannerPreviewState.objX -= deltaX * moveSpeed;
-            
-            // Limitar los márgenes entre 0% y 100%
             bannerPreviewState.objY = Math.max(0, Math.min(100, bannerPreviewState.objY));
             bannerPreviewState.objX = Math.max(0, Math.min(100, bannerPreviewState.objX));
-            
             bannerPreviewState.startY = clientY;
             bannerPreviewState.startX = clientX;
-            
             updatePreviewStyle();
         }
 
@@ -2226,7 +2200,7 @@
             const title = document.getElementById('new-banner-title').value.trim();
             const text = document.getElementById('new-banner-text').value.trim();
             
-            if(!img || !title) { alert("Por favor ingresa URL y título."); return; }
+            if(!img || !title) { alert("Ingresa URL y título."); return; }
 
             const id = 'slide_' + Date.now();
             const customPos = `${bannerPreviewState.objX}% ${bannerPreviewState.objY}%`;
@@ -2242,24 +2216,19 @@
                 document.getElementById('new-banner-img').value = ''; 
                 document.getElementById('new-banner-title').value = ''; 
                 document.getElementById('new-banner-text').value = '';
-                
                 document.getElementById('banner-preview-container').classList.add('hidden');
                 document.getElementById('banner-zoom-container').classList.add('hidden');
-            } catch(e) {
-                alert("Error al añadir banner.");
-            }
+            } catch(e) { alert("Error al añadir banner."); }
         }
 
         async function deleteBanner(id) {
-            if(confirm('¿Eliminar este banner del slider principal?')) {
+            if(confirm('¿Eliminar este banner?')) {
                 try {
                     const db = window.firebaseDb;
                     const appId = window.firebaseAppId;
                     const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'banners', id);
                     await window.deleteDoc(docRef);
-                } catch(e) {
-                    alert("Error al de eliminar banner.");
-                }
+                } catch(e) { alert("Error al eliminar."); }
             }
         }
 
@@ -2280,39 +2249,26 @@
             const city = document.getElementById('config-clinic-city').value.trim();
             const mapEmbed = document.getElementById('config-clinic-map').value.trim();
             
-            // EMAILJS CONFIGS
             const emailjs_public = document.getElementById('config-emailjs-public').value.trim();
             const emailjs_service = document.getElementById('config-emailjs-service').value.trim();
             const emailjs_temp_patient = document.getElementById('config-emailjs-temp-patient').value.trim();
             const emailjs_temp_pro = document.getElementById('config-emailjs-temp-pro').value.trim();
 
-            if(!name || !address || !city) { alert("Completa nombre, dirección y ciudad."); return; }
+            if(!name || !address || !city) { alert("Datos faltantes."); return; }
             
             try {
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
                 const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'clinic_info', 'main');
                 
-                const updatedInfo = { 
-                    name, 
-                    address, 
-                    city, 
-                    mapEmbed,
-                    emailjs_public,
-                    emailjs_service,
-                    emailjs_temp_patient,
-                    emailjs_temp_pro
-                };
-                
+                const updatedInfo = { name, address, city, mapEmbed, emailjs_public, emailjs_service, emailjs_temp_patient, emailjs_temp_pro };
                 await window.setDoc(docRef, updatedInfo);
                 clinicInfo = { ...clinicInfo, ...updatedInfo };
 
                 const msg = document.getElementById('config-save-msg');
                 msg.classList.remove('hidden');
                 setTimeout(() => msg.classList.add('hidden'), 3000);
-            } catch(e) {
-                alert("Error al guardar ajustes.");
-            }
+            } catch(e) { alert("Error al guardar."); }
         }
 
         function searchPatientRecords(e) {
@@ -2388,25 +2344,18 @@
                 const db = window.firebaseDb;
                 const appId = window.firebaseAppId;
                 const docRef = window.doc(db, 'artifacts', appId, 'public', 'data', 'appointments', id);
-                await window.updateDoc(docRef, {
-                    clinicalReason: reason,
-                    clinicalReport: report
-                });
+                await window.updateDoc(docRef, { clinicalReason: reason, clinicalReport: report });
 
                 const msg = document.getElementById('record-save-msg');
                 msg.classList.remove('hidden');
                 setTimeout(() => msg.classList.add('hidden'), 3000);
-            } catch(e) {
-                alert("Error al guardar la ficha clínica.");
-            }
+            } catch(e) { alert("Error al guardar la ficha clínica."); }
         }
 
         function printClinicalRecord() {
             const id = document.getElementById('current-record-id').value;
             const app = appointments.find(a => a.id === id);
-            if(!app) {
-                alert("Seleccione una sesión primero."); return;
-            }
+            if(!app) { alert("Seleccione una sesión primero."); return; }
             
             const pro = professionals.find(p => p.id === app.psychologistId) || {};
             saveClinicalRecord(); 
@@ -2422,24 +2371,9 @@
                     <meta charset="UTF-8">
                     <title>Informe Clínico - ${app.patientName}</title>
                     <style>
-                        @page {
-                            size: 216mm 330mm;
-                            margin: 15mm;
-                        }
-                        body { 
-                            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-                            line-height: 1.6; 
-                            color: #333; 
-                            margin: 0; 
-                            padding: 0; 
-                            height: 100%;
-                        }
-                        .wrapper {
-                            position: relative;
-                            min-height: 290mm;
-                            box-sizing: border-box;
-                            padding-bottom: 160px;
-                        }
+                        @page { size: 216mm 330mm; margin: 15mm; }
+                        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; height: 100%; }
+                        .wrapper { position: relative; min-height: 290mm; box-sizing: border-box; padding-bottom: 160px; }
                         .header { text-align: center; border-bottom: 2px solid #f43f5e; padding-bottom: 20px; margin-bottom: 30px; }
                         .title { font-size: 24px; font-weight: bold; color: #be123c; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; }
                         .clinic-name { font-size: 14px; color: #666; }
@@ -2449,26 +2383,8 @@
                         .label { font-weight: bold; width: 180px; color: #4b5563; }
                         .value { flex: 1; color: #111827; }
                         .content-box { border: 1px solid #e5e5e5; padding: 15px; border-radius: 6px; white-space: pre-wrap; min-height: 80px; font-size: 14px; color: #1f2937; background: #fff; }
-                        .footer { 
-                            position: absolute;
-                            bottom: 0;
-                            left: 0;
-                            right: 0;
-                            text-align: center; 
-                            font-size: 11px; 
-                            color: #9ca3af; 
-                            border-top: 1px solid #e5e7eb; 
-                            padding-top: 10px; 
-                        }
-                        .signature { 
-                            position: absolute;
-                            bottom: 40mm;
-                            left: 50%;
-                            transform: translateX(-50%);
-                            text-align: center; 
-                            width: 280px; 
-                            page-break-inside: avoid; 
-                        }
+                        .footer { position: absolute; bottom: 0; left: 0; right: 0; text-align: center; font-size: 11px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 10px; }
+                        .signature { position: absolute; bottom: 40mm; left: 50%; transform: translateX(-50%); text-align: center; width: 280px; page-break-inside: avoid; }
                         .sig-line { border-bottom: 1px solid #111827; margin-bottom: 10px; }
                         .sig-name { font-weight: bold; font-size: 15px; color: #111827; }
                         .sig-role { font-size: 13px; color: #4b5563; }
@@ -2523,9 +2439,7 @@
             printWindow.document.write(html);
             printWindow.document.close();
             printWindow.focus();
-            setTimeout(() => {
-                printWindow.print();
-            }, 800);
+            setTimeout(() => { printWindow.print(); }, 800);
         }
     </script>
 </body>
